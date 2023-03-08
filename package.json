@@ -1,12 +1,13 @@
 {
   "name": "destructors-ec-bn",
   "version": "1.0.0",
-  "type": "module",
   "description": "Destructors ecommerce team project",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon --exec npx babel-node src/index",
+    "migrate": "sequelize db:migrate",
+    "migrate:down": "sequelize db:migrate:undo:all"
   },
   "repository": {
     "type": "git",
@@ -19,10 +20,19 @@
   },
   "homepage": "https://github.com/atlp-rwanda/destructors-ec-bn#readme",
   "dependencies": {
+    "@babel/core": "^7.20.12", 
+    "@babel/node": "^7.20.7",   
+    "@babel/preset-env": "^7.20.2",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "path": "^0.12.7",
+    "pg": "^8.10.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.29.1",
+    "sequelize-cli": "^6.6.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.21"
-  }
+  },
+  "keywords": []
 }
