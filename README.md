@@ -1,2 +1,1 @@
 # Destructors
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/atlp-rwanda/destructors-ec-bn/tree/develop.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/atlp-rwanda/destructors-ec-bn/tree/develop)
