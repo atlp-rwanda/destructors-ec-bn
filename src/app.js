@@ -4,6 +4,11 @@ import session from "express-session";
 import "./config/passport.config";
 import allRouter from "./routes/index";
 import { sequelize } from "./database/models";
+import express from 'express';
+import welcomeRoute from './routes/welcomeRoute.js';
+import middleware from './middlewares/middleware.js';
+import welcomeController from './controllers/welcomeController.js';
+
 const app = express();
 
 export const connectDB = async () => {
@@ -33,5 +38,8 @@ try {
 } catch (error) {
   console.log(error);
 }
+// Set up routes
+app.use('/', welcomeRoute);
+app.get('/welcome', welcomeController);
 
 export default app;
