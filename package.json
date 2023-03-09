@@ -51,7 +51,10 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.21",
-    "coveralls": "^3.1.1",
-    "@babel/plugin-transform-modules-commonjs": "^7.20.11"
+    "eslint": "^8.35.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-react": "^7.32.2"
   }
 }
