@@ -1,10 +1,17 @@
 /* eslint-disable no-unused-vars */
-import { BcryptUtil } from "../utils/bcrypt";
+import { BcryptUtil } from '../utils/bcrypt.js';
 
-const { User } = require("../database/models");
+const { User } = require('../database/models/user.js');
 
 const register = async (data) => {
-  const { firstname, lastname, email, password, role, isActive } = data;
+  const {
+    firstname,
+    lastname,
+    email,
+    password,
+    role,
+    isActive
+  } = data;
   const user = await User.create({
     firstname,
     lastname,
@@ -15,4 +22,4 @@ const register = async (data) => {
   });
 };
 
-export { register };
+export default register;

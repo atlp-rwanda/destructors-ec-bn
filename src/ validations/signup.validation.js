@@ -1,8 +1,7 @@
-import Joi from "joi";
-import PasswordComplexity from "joi-password-complexity";
+import Joi from 'joi';
+import PasswordComplexity from 'joi-password-complexity';
 
-const validateForm = (schema) => (payload) =>
-  schema.validate(payload, { abortEarly: false });
+const validateForm = (schema) => (payload) => schema.validate(payload, { abortEarly: false });
 
 const signUpSchema = Joi.object({
   firstname: Joi.string().min(1).trim().required(),
@@ -23,9 +22,7 @@ const signupValidation = (req, res, next) => {
   if (error) {
     res.status(400).json({
       status: 400,
-      error: error.details.map((detail) =>
-        detail.message.replace(/[^a-zA-Z0-9 ]/g, "")
-      ),
+      error: error.details.map((detail) => detail.message.replace(/[^a-zA-Z0-9 ]/g, '')),
     });
   } else {
     next();

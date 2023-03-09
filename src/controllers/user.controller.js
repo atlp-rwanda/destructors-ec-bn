@@ -1,9 +1,16 @@
-import { register } from "../services/user.service";
-import { generateToken } from "../utils/generateToken";
+import { register } from '../services/user.service.js';
+import { generateToken } from '../utils/generateToken.js';
 
 const registerUser = async (req, res) => {
   try {
-    const { firstname, lastname, email, password, role, isActive } = req.body;
+    const {
+      firstname,
+      lastname,
+      email,
+      password,
+      role,
+      isActive
+    } = req.body;
 
     const userData = {
       firstname,
@@ -17,11 +24,11 @@ const registerUser = async (req, res) => {
     const response = await register(userData);
     return res
       .status(201)
-      .json({ message: "Successful registered", user: response, token: token });
+      .json({ message: 'Successful registered', user: response, token });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ status: 500, error: "Server error" });
+    return res.status(500).json({ status: 500, error: 'Server error' });
   }
 };
 
-export { registerUser };
+export default registerUser;
