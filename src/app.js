@@ -1,10 +1,16 @@
 import express from 'express';
 import welcomeRoute from './routes/welcomeRoute.js';
 import middleware from './middlewares/middleware.js';
+import authRoute from './routes/authRoute.js'
 import welcomeController from './controllers/welcomeController.js';
+import './googleAuth.js'
+import session from 'express-session';
+import passport from 'passport';
 import {sequelize} from './database/models'
 const app = express();
-
+app.use(session({secret:'cats'}));
+app.use(passport.initialize())
+app.use(passport.session());
 
 export const connectDB = async () => {
     try {
@@ -26,7 +32,8 @@ export const connectDB = async () => {
 app.use(middleware);
 
 // Set up routes
-app.use('/', welcomeRoute);
+app.use('/middle', welcomeRoute);
+app.use('/',authRoute)
 
 app.get('/welcome', welcomeController);
 
