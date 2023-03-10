@@ -10,14 +10,40 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+  
+  static async findOrCreate({ where, defaults }) {
+       const [user, created] = await this.findOrCreate({ where, defaults });
+        return user;
+       }
   }
   User.init({
     name: DataTypes.STRING,
     email: DataTypes.STRING,
-    address: DataTypes.STRING
+    googleId:DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',
   });
   return User;
 };
+// import { Model } from 'sequelize';
+
+// export default (sequelize, DataTypes) => {
+//   class User extends Model {
+//     static associate(models) {
+//       // define association here
+//     }
+
+//     
+
+//   User.init({
+//     name: DataTypes.STRING,
+//     email: DataTypes.STRING,
+//     address: DataTypes.STRING
+//   }, {
+//     sequelize,
+//     modelName: 'User',
+//   });
+
+//   return User;
+// };
