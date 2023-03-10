@@ -1,10 +1,8 @@
 import request from "supertest";
-import app from "../src/app.js";
-
-const { User } = require("../src/database/models");
-
+import app from "../src/app";
+const { User } = require("../src/database/models/user.js");
+import "../src/services/googleAuth"
 jest.setTimeout(30000);
-
 describe("Testing registration User", () => {
   let token = "";
   test("It should return 400 for bad request", async () => {
@@ -52,3 +50,24 @@ describe("Testing registration User", () => {
     expect(res.statusCode).toBe(200);
   });
 });
+describe("this is for the user logging in ",()=>{
+  test("this is where the user try to get to the login page for the first time",async()=>{
+    await request(app).get('/api/v1/users/auth').expect('<a href="/api/v1/users/login/google">do you want to access your account</a>')
+  })
+  it('should redirect to Google login page', async () => {
+    const res = await request(app).get('/api/v1/users/login/google');
+    expect(res.status).toBe(302);
+    expect(res.header['location']).toContain('https://accounts.google.com/o/oauth2/v2/auth');
+  });
+})
+describe('GET /api/v1/users/google/callback', () => {
+  it('should redirect to /api/v1/users/protected on success', async () => {
+    const res = await request(app).get('/api/v1/users/google/callback');
+    expect(res.status).toBe(302);
+    expect(res.header['location']).toBe('https://accounts.google.com/o/oauth2/v2/auth?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fv1%2Fusers%2Fgoogle%2Fcallback&client_id=314235844636-883r065qgdf7aglpqgndd8sg6fu6t9hj.apps.googleusercontent.com');
+  });
+});
+
+
+
+
