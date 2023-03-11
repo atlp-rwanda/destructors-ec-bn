@@ -17,7 +17,7 @@ router.get('/google/callback',passport.authenticate('google',{
     failureRedirect:'/auth/failure'
 }))
 router.get("/protected",isLoggedIn,(req,res)=>{
-    res.send(`<h2>welcome to my data</h2><br>${req.user.displayName}`)
+    res.send(`<h2>welcome to my data</h2><br>${req.user.name}`)
     console.log(req.user)
 })
 router.get('/auth/failure',(req,res)=>{

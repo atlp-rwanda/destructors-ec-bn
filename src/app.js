@@ -5,7 +5,6 @@ import "./config/passport.config";
 import allRouter from "./routes/index";
 import { sequelize } from "./database/models";
 const app = express();
-
 export const connectDB = async () => {
   try {
     await sequelize.authenticate();
