@@ -1,0 +1,18 @@
+{
+    "files": [
+      "*.js"
+    ],
+    "linters": {
+      "javascript": [
+        "eslint"
+      ]
+    },
+    "eslint": {
+      "config_file": ".eslintrc.json",
+      "extensions": [
+        ".js",
+        ".jsx"
+      ]
+    }
+  }
+  

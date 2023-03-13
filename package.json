@@ -8,9 +8,11 @@
     "dev": "nodemon --exec npx babel-node src/index",
     "migrate": "sequelize db:migrate",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
+    "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
     "migrate:down": "sequelize db:migrate:undo:all",
     "test": "cross-env NODE_ENV=test jest --coverage --testTimeout=10000",
-    "pretest": "cross-env NODE_ENV=test npm run migrate:reset"
+    "pretest": "cross-env NODE_ENV=test npm run migrate:reset",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -46,8 +48,8 @@
     "supertest": "^6.3.3"
   },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.20.11",
+    "nodemon": "^2.0.21",
     "coveralls": "^3.1.1",
-    "nodemon": "^2.0.21"
+    "@babel/plugin-transform-modules-commonjs": "^7.20.11"
   }
 }
