@@ -1,4 +1,4 @@
-import { getPets } from "./docs-data.js"
+import { signUp } from "./docs-data"
 export const swaggerDocument = {
     openapi: '3.0.1',
     info: {
@@ -18,22 +18,24 @@ export const swaggerDocument = {
     },
     servers: [
         {
-          url: "http://localhost:3000/", // url
-          description: "Local server", // name
+          url: "http://localhost:3000", // url
+          description: "Local server", // 
         },
         {
-            url: "http://localhost:3000/", // url
+            url: "http://localhost:3000", // url
             description: "Hosted version", // name
           },
       ],
       tags: [
         {
-            name: 'Pets'
+            name: 'user'
         }
     ],
     paths: {
-        "/welcome": {
-            "get": getPets
+        "/api/v1/users/signup":{
+            "post": signUp
         }
+
+
     }
 }
