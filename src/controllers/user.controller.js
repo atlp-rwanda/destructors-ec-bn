@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { register, findUserByEmail,logout } from "../services/user.service";
 import { generateToken } from "../utils/generateToken";
 import passport from "passport";
@@ -10,15 +9,6 @@ import { verifyToken } from "../utils/verifyToken";
 import sendEmail from "../services/sendEmail.service";
 import { request } from "express";
 
-=======
-import { register , updateUser} from "../services/user.service";
-import { generateToken } from "../utils/generateToken";
-import User from "../database/models/index";
-// import jwt from "jsonwebtoken"
-import passport from 'passport';
-// import { User } from '../database/models';
-import { BcryptUtil } from '../utils/bcrypt';
->>>>>>> Admin change user status and assign roles to users
 
 const registerUser = async (req, res) => {
   try {

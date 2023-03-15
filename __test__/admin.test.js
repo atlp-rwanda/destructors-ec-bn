@@ -51,6 +51,7 @@ const createUser = User.User.create({
 
 
 
+
   it('should update user status and return updated user', async () => {
 
     const user = await User.User.findOne({where:{email:'test@gmail.com'}})

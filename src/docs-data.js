@@ -438,4 +438,18 @@ export const assignUserRole = {
       description: "Server error",
     },
   },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
+  },
 };
