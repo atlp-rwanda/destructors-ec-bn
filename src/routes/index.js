@@ -1,5 +1,5 @@
 import express from 'express';
-import user from './api/user.routes.js';
+import user from './api/user.routes';
 
 const routes = express.Router();
 

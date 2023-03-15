@@ -1,13 +1,13 @@
-import passport from 'passport';
-import PassportLocal from 'passport-local';
-import models from '../database/models/user.js';
+import passport from "passport";
+import PassportLocal from "passport-local";
+import models from "../database/models";
 
-import { BcryptUtil } from '../utils/bcrypt.js';
+const { BcryptUtil } = require("../utils/bcrypt");
 
 passport.use(
   new PassportLocal.Strategy(
     {
-      usernameField: 'email',
+      usernameField: "email",
     },
     async (email, password, done) => {
       const userFound = await models.User.findOne({

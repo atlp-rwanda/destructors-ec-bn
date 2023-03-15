@@ -6,8 +6,6 @@ import swaggerUi from 'swagger-ui-express';
 import allRouter from './routes/index.js';
 import { sequelize } from './database/models/user.js';
 import { swaggerDocument } from './swagger.js';
-import welcomeRoute from './routes/welcomeRoute.js';
-import welcomeController from './controllers/user.controller.js';
 
 const app = express();
 
@@ -39,7 +37,4 @@ try {
 } catch (error) {
   console.log(error);
 }
-app.use('/', welcomeRoute);
-app.get('/welcome', welcomeController);
-
 export default app;

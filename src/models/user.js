@@ -1,30 +1,9 @@
-/**
- * Represents a user in the system.
- * @typedef {Object} User
- * @property {string} id - The unique identifier of the user.
- * @property {string} firstname - The first name of the user.
- * @property {string} lastname - The last name of the user.
- * @property {string} email - The email address of the user.
- * @property {string} password - The password of the user.
- * @property {string} role - The role of the user (buyer or seller).
- * @property {boolean} isActive - Whether the user is active or not.
- * @property {boolean} mustUpdatePassword - Whether the user must update their password or not.
- * @property {Date} lastTimePasswordUpdated - The last time user updated their password.
- */
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
+const { Sequelize } = require(".");
 
 module.exports = (sequelize, DataTypes) => {
-  /**
-   * Represents the User model in the database.
-   * @class User
-   * @extends Model
-   */
   class User extends Model {
-    /**
-     * Defines the associations for the User model.
-     * @static
-     * @param {Object} models - The models object.
-     */
+    static associate(models) {}
   }
   User.init(
     {
@@ -40,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       role: {
         type: DataTypes.STRING,
-        defaultValue: 'buyer',
+        defaultValue: "buyer",
       },
       isActive: {
         type: DataTypes.BOOLEAN,
@@ -54,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'User',
+      modelName: "User",
     }
   );
   return User;
