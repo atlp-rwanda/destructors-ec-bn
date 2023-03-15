@@ -13,6 +13,7 @@ const register = async (data) => {
     role,
     isActive,
   });
+  return user;
 };
 
 const findUserByEmail = async (email) => {
