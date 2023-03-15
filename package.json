@@ -8,7 +8,6 @@
     "dev": "nodemon --exec npx babel-node src/index",
     "migrate": "sequelize db:migrate",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
-    "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
     "migrate:down": "sequelize db:migrate:undo:all",
     "test": "cross-env NODE_ENV=test jest --coverage --testTimeout=10000",
     "pretest": "cross-env NODE_ENV=test npm run migrate:reset",
@@ -47,14 +46,16 @@
     "sequelize-cli": "^6.6.0",
     "supertest": "^6.3.3",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^4.6.2"
+    "swagger-ui-express": "^4.6.2",
+    "chai": "^4.3.7"
   },
   "devDependencies": {
-    "nodemon": "^2.0.21",
+    "chai": "^4.3.7",
     "eslint": "^8.35.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-react": "^7.32.2"
+    "eslint-plugin-react": "^7.32.2",
+    "nodemon": "^2.0.21"
   }
 }
