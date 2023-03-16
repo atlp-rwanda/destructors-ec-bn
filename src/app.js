@@ -4,6 +4,7 @@ import session from "express-session";
 import "./config/passport.config";
 import allRouter from "./routes/index";
 import { sequelize } from "./database/models";
+import './services/googleAuth.js'
 const app = express();
 export const connectDB = async () => {
   try {

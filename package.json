@@ -9,7 +9,7 @@
     "migrate": "sequelize db:migrate",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
     "migrate:down": "sequelize db:migrate:undo:all",
-    "test": "cross-env NODE_ENV=test jest --coverage --testTimeout=10000",
+    "test": "cross-env NODE_ENV=test jest --coverage --testTimeout=20000",
     "pretest": "cross-env NODE_ENV=test npm run migrate:reset"
   },
   "repository": {

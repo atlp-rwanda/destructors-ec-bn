@@ -6,4 +6,5 @@ const route = Router();
 
 route.post("/signup", signupValidation, verifyUser, registerUser);
 
+
 export default route;
