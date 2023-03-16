@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { BcryptUtil } from "../utils/bcrypt";
+import { BcryptUtil } from '../utils/bcrypt';
 
-const { User } = require("../database/models");
+const { User } = require('../database/models');
 
 const register = async (data) => {
   const { firstname, lastname, email, password, role, isActive } = data;
