@@ -30,6 +30,7 @@
     "@babel/node": "^7.20.7",
     "@babel/preset-env": "^7.20.2",
     "bcryptjs": "^2.4.3",
+    "chai": "^4.3.7",
     "cross-env": "^7.0.3",
     "cryptr": "^6.1.0",
     "dotenv": "^16.0.3",
@@ -40,6 +41,7 @@
     "joi-password-complexity": "^5.1.0",
     "jsonwebtoken": "^9.0.0",
     "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "pg": "^8.10.0",
@@ -48,8 +50,7 @@
     "sequelize-cli": "^6.6.0",
     "supertest": "^6.3.3",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^4.6.2",
-    "chai": "^4.3.7"
+    "swagger-ui-express": "^4.6.2"
   },
   "devDependencies": {
     "chai": "^4.3.7",
