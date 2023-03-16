@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
       lastname: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
+      location: DataTypes.STRING,
+      currency: DataTypes.STRING,
+      language: DataTypes.STRING,
+      gender: DataTypes.STRING,
+      billingAddres:DataTypes.JSONB,
       role: {
         type: DataTypes.STRING,
         defaultValue: "buyer",

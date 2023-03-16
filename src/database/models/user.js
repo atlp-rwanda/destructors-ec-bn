@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
       },
       lastTimePasswordUpdated: DataTypes.DATE,
+      location:DataTypes.STRING,
+      gender:DataTypes.STRING,
+      DOB:DataTypes.DATE,
+      currency:DataTypes.STRING,
+      billingAddress:DataTypes.JSONB
     },
     {
       sequelize,
