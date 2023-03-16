@@ -8,6 +8,7 @@
     "dev": "nodemon --exec npx babel-node src/index",
     "migrate": "sequelize db:migrate",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
+    "seed": "npx sequelize-cli db:seed:all",
     "migrate:down": "sequelize db:migrate:undo:all",
     "test": "cross-env NODE_ENV=test jest --coverage --testTimeout=10000",
     "pretest": "cross-env NODE_ENV=test npm run migrate:reset",
@@ -28,6 +29,8 @@
     "@babel/node": "^7.20.7",
     "@babel/preset-env": "^7.20.2",
     "bcryptjs": "^2.4.3",
+    "chai": "^4.3.7",
+    "cloudinary": "^1.35.0",
     "cross-env": "^7.0.3",
     "cryptr": "^6.1.0",
     "dotenv": "^16.0.3",
@@ -47,7 +50,7 @@
     "supertest": "^6.3.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2",
-    "chai": "^4.3.7"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "chai": "^4.3.7",
