@@ -1,10 +1,18 @@
-const { Model } = require("sequelize");
-const { Sequelize } = require(".");
+const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {}
+
+    async updatePassword(newPassword) {
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      this.password = hashedPassword;
+      this.mustUpdatePassword = false;
+      this.lastTimePasswordUpdated = new Date();
+      await this.save();
+    }
   }
+
   User.init(
     {
       id: {
@@ -19,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       role: {
         type: DataTypes.STRING,
-        defaultValue: "buyer",
+        defaultValue: 'buyer',
       },
       isActive: {
         type: DataTypes.BOOLEAN,
@@ -33,8 +41,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "User",
+      modelName: 'User',
     }
   );
+
   return User;
 };
