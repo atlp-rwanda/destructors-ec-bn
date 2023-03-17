@@ -1,5 +1,5 @@
 export const signUp={
-    tags: ["Todo CRUD operations"],
+    tags: ["User Authentication"],
     description: "Signup a user",
     operationId: "signUpUser",
     parameters: [],
@@ -47,3 +47,114 @@ export const signUp={
       },
     },
 }
+
+export const loginUser = {
+  tags: ["User Authentication"],
+  description: "Logs in a user",
+  operationId: "loginUser",
+  parameters: [],
+  requestBody: {
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            email: {
+              type: "string",
+              description: "User email",
+              example: "user@test.com",
+            },
+            password: {
+              type: "string",
+              description: "User password",
+              example: "password123",
+            },
+          },
+          required: ["email", "password"],
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Successful login",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "Successful login",
+              },
+              user: {
+                type: "object",
+                properties: {
+                  id: {
+                    type: "integer",
+                    example: 1,
+                  },
+                  firstname: {
+                    type: "string",
+                    example: "John",
+                  },
+                  lastname: {
+                    type: "string",
+                    example: "Doe",
+                  },
+                  email: {
+                    type: "string",
+                    example: "user@test.com",
+                  },
+                  role: {
+                    type: "string",
+                    example: "admin",
+                  },
+                },
+              },
+              token: {
+                type: "string",
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+              },
+            },
+          },
+        },
+      },
+    },
+    401: {
+      description: "Invalid email or password",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "Invalid email or password",
+              },
+            },
+          },
+        },
+      },
+    },
+    404: {
+      description: "User not found",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "User not found",
+              },
+            },
+          },
+        },
+      },
+    },
+    500: {
+      description: "Server error",
+    },
+  },
+};
