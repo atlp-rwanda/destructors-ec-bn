@@ -1,7 +1,8 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import User from '../models/user.js';
-import BcryptUtil from '../utils'
+import BcryptUtil from '../utils/bcrypt.js';
+
 const localOptions = { usernameField: 'email' };
 const loginCheck = new LocalStrategy(localOptions, async (email, password, done) => {
   try {

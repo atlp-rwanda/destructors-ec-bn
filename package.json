@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon --exec npx babel-node src/index",
+    "dev": "nodemon --exec npx babel-node --trace-warnings src/index",
     "migrate": "sequelize db:migrate",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
     "migrate:down": "sequelize db:migrate:undo:all",
