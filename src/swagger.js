@@ -1,5 +1,7 @@
-import { signUp, loginUser } from './docs-data';
 import { createProduct } from './documents/product.docs';
+import { resetEmail, ResetPassword, signUp, loginUser } from "./docs-data"
+import "dotenv/config";
+
 export const swaggerDocument = {
   openapi: '3.0.1',
   info: {
@@ -16,7 +18,7 @@ export const swaggerDocument = {
   },
   servers: [
     {
-      url: 'http://localhost:5000', // url
+      url: `http://localhost:${process.env.PORT}`, // url
       description: 'Local server', //
     },
     {
@@ -41,8 +43,15 @@ export const swaggerDocument = {
     '/api/v1/users/login': {
       post: loginUser,
     },
+    "/api/v1/users/reset-password":{
+      "post": resetEmail
+    },
+    "/api/v1/users/reset-password/{token}":{
+      "patch": ResetPassword
+    },    
     '/api/v1/products': {
       post: createProduct,
     },
   },
 };
+
