@@ -243,3 +243,80 @@ export const ResetPassword = {
 };
 
 
+
+export const userProfile={
+  tags: ["User Authentication"],
+  description: "user profile editing",
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  requestBody: {
+    content: {
+      // content-type
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            gender: {
+              type: "string", 
+              description: "gender",
+              example: "male",
+             },
+             DOB: {
+              type: "datw",
+              description: "DOB",
+              example: "10.10.2020",
+             },
+             prefferedCurrency: {
+              type: "string",
+              description: "prefferedCurrency",
+              example: "RWF",
+             },
+             prefferedLanguage: {
+              type: "string",
+              description: "prefferedLanguage", // desc
+              example: "@Qwert123",
+             },
+                  street: {
+                    type: "string",
+                    description: "prefferedCurrency",
+                    example: "KG08ave",
+                   },
+                  province: {
+                    type: "string",
+                    example: "Kigali City",
+                   },
+                  District: {
+                    type: "string",
+                    description: "prefferedCurrency",
+                    example: "Nyarugenge",
+                   },
+                   PhoneNo: {
+                    type: "number",
+                    description: "prefferedCurrency",
+                    example: "07851234567",
+                   },
+                   email: {
+                    type: "string",
+                    description: "prefferedCurrency",
+                    example: "user@email.com",
+                   },
+          },
+        },
+      },
+    },
+  },
+  // expected responses
+  responses: {
+    // response code
+    201: {
+      description: "user profile updated successfully", // response desc
+    },
+    // response code
+    401: {
+      description: "Server error", // response desc
+    },
+  },
+}
