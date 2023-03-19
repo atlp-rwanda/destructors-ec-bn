@@ -205,4 +205,16 @@ describe("Testing the reset password via email", () => {
     })
     expect(res.statusCode).toBe(401)
   })
+
+  test("It should put token in blacklist", async () => {
+    const res = await request(app).post("/api/v1/users/logout")
+    .set("Authorization", `Bearer ${token}`)
+    .send({
+      token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoia2F0cm9zMjUwQGdtYWlsLmNvbSIsImlhdCI6MTY3OTM5MDQwOCwiZXhwIjoxNjc5MzkwNDY4fQ.80S2mmY768UpVKBjgjFiMl0wmsunsMujlypCV50guSY"
+    });
+    expect(res.statusCode).toBe(200);
+  });
+
+
 });
+

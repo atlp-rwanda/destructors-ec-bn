@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { BcryptUtil } from '../utils/bcrypt';
-
+import { Blacklist }from '../database/models';
 const { User } = require('../database/models');
 
 const register = async (data) => {
@@ -28,4 +28,11 @@ const findUserByEmail = async (email) => {
   
 }
 
-export { register,findUserByEmail };
+
+const logout = async (userData)=>{
+
+  const token = userData.split(' ')[1]
+  await Blacklist.create({token})
+}
+export { register,findUserByEmail,logout};
+ 
