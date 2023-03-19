@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1678963804755" clover="3.2.0">
-  <project timestamp="1678963804755" name="All files">
-    <metrics statements="135" coveredstatements="98" conditionals="23" coveredconditionals="10" methods="30" coveredmethods="17" elements="188" coveredelements="125" complexity="0" loc="135" ncloc="135" packages="11" files="18" classes="18"/>
+<coverage generated="1679061185818" clover="3.2.0">
+  <project timestamp="1679061185818" name="All files">
+    <metrics statements="142" coveredstatements="103" conditionals="23" coveredconditionals="10" methods="32" coveredmethods="17" elements="197" coveredelements="130" complexity="0" loc="142" ncloc="142" packages="11" files="18" classes="18"/>
     <package name="src">
       <metrics statements="14" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
       <file name="app.js" path="/Users/andelarwanda/Desktop/Team_project-e-commerce/destructors2/destructors-ec-bn/src/app.js">
@@ -56,9 +56,9 @@
       </file>
     </package>
     <package name="src.controllers">
-      <metrics statements="9" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <metrics statements="16" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="1"/>
       <file name="user.controller.js" path="/Users/andelarwanda/Desktop/Team_project-e-commerce/destructors2/destructors-ec-bn/src/controllers/user.controller.js">
-        <metrics statements="9" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <metrics statements="16" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="1"/>
         <line num="4" count="1" type="stmt"/>
         <line num="5" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
@@ -66,8 +66,15 @@
         <line num="16" count="1" type="stmt"/>
         <line num="17" count="1" type="stmt"/>
         <line num="18" count="1" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
-        <line num="23" count="0" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="34" count="1" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
       </file>
     </package>
     <package name="src.database.config">
@@ -160,17 +167,17 @@
       </file>
       <file name="userLogin.routes.js" path="/Users/andelarwanda/Desktop/Team_project-e-commerce/destructors2/destructors-ec-bn/src/routes/api/userLogin.routes.js">
         <metrics statements="11" coveredstatements="8" conditionals="2" coveredconditionals="0" methods="3" coveredmethods="1"/>
-        <line num="6" count="1" type="stmt"/>
-        <line num="8" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
-        <line num="12" count="1" type="stmt"/>
-        <line num="17" count="1" type="stmt"/>
-        <line num="22" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
         <line num="23" count="1" type="stmt"/>
         <line num="24" count="1" type="stmt"/>
-        <line num="25" count="0" type="stmt"/>
-        <line num="26" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="27" count="0" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="27" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="28" count="0" type="stmt"/>
       </file>
     </package>
     <package name="src.services">

@@ -3,6 +3,7 @@ import passport from "passport";
 import isLoggedIn from "../../middlewares/isLoggedIn";
 import isProtected from "../../middlewares/isProtected";
 import notValid from "../../middlewares/userNotValid";
+import "../../services/googleAuth.js"
 const router=Router()
 
 router.get('/',(req,res)=>{
@@ -15,7 +16,7 @@ passport.authenticate('google',
 
 //this is the google application that redirect the user where to dgo after succeeding or failing
 router.get('/google/callback',passport.authenticate('google',{
-  successRedirect:'/api/v1/users/protected',
+  successRedirect:'/api/v1/users/protected/:token',
   failureRedirect:'/api/v1/users/failure'}))
 
 //this is after success
