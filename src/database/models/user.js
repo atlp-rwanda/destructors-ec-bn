@@ -1,5 +1,5 @@
-const { Model } = require("sequelize");
-const { Sequelize } = require(".");
+const { Model } = require('sequelize');
+const { Sequelize } = require('.');
 
 
 module.exports = (sequelize, DataTypes) => {
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       role: {
         type: DataTypes.STRING,
-        defaultValue: "buyer",
+        defaultValue: 'buyer',
       },
       isActive: {
         type: DataTypes.BOOLEAN,
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "User",
+      modelName: 'User',
     }
   );
   return User;

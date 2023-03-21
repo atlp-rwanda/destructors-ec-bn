@@ -18,7 +18,6 @@ export const connectDB = async () => {
 };
 
 app.use(express.json());
-
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -30,8 +29,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 try {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.use('/api/v1', allRouter);
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 } catch (error) {
   console.log(error);
 }

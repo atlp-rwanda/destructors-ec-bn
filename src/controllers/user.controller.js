@@ -1,8 +1,8 @@
 import { register } from "../services/user.service";
 import { generateToken } from "../utils/generateToken";
-import passport from 'passport';
-import { User } from '../database/models';
-import { BcryptUtil } from '../utils/bcrypt';
+import passport from "passport";
+import { User } from "../database/models";
+import { BcryptUtil } from "../utils/bcrypt";
 
 const registerUser = async (req, res) => {
   try {
@@ -27,25 +27,28 @@ const registerUser = async (req, res) => {
   }
 };
 const loginUser = async (req, res, next) => {
-  passport.authenticate('local', async (err, user) => {
+  passport.authenticate("local", async (err, user) => {
     if (err) {
       return next(err);
     }
 
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     try {
       const foundUser = await User.findOne({ where: { email: user.email } });
       if (!foundUser) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
 
-      const passwordMatches = await BcryptUtil.compare(req.body.password, user.password);
+      const passwordMatches = await BcryptUtil.compare(
+        req.body.password,
+        user.password
+      );
 
       if (!passwordMatches) {
-        return res.status(401).json({ message: 'Invalid email or password' });
+        return res.status(401).json({ message: "Invalid email or password" });
       }
       const UserToken = {
         id: user.id,
@@ -55,12 +58,12 @@ const loginUser = async (req, res, next) => {
         role: user.role,
         isActive: user.isActive,
         mustUpdatePassword: user.mustUpdatePassword,
-        lastTimePasswordUpdated: user.lastTimePasswordUpdated
+        lastTimePasswordUpdated: user.lastTimePasswordUpdated,
       };
       const token = generateToken(UserToken);
 
       return res.status(200).json({
-        message: 'Successful login',
+        message: "Successful login",
         user: {
           id: foundUser.id,
           firstname: foundUser.firstname,
