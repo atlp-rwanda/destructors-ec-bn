@@ -9,8 +9,10 @@
     "migrate": "sequelize db:migrate",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate",
     "migrate:down": "sequelize db:migrate:undo:all",
-    "test": "cross-env NODE_ENV=test jest --coverage --testTimeout=10000",
+    "run-tests": "cross-env NODE_ENV=test jest --coverage --testTimeout=10000",
     "pretest": "cross-env NODE_ENV=test npm run migrate:reset",
+    "run-after-tests": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
+    "test": "npm-run-all run-tests run-after-tests --continue-on-error",
     "lint": "eslint ."
   },
   "repository": {
@@ -57,6 +59,7 @@
     "eslint-config-prettier": "^8.7.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-react": "^7.32.2",
-    "nodemon": "^2.0.21"
+    "nodemon": "^2.0.21",
+    "npm-run-all": "^4.1.5"
   }
 }
