@@ -30,28 +30,25 @@ const registerUser = async (req, res) => {
   }
 };
 const loginUser = async (req, res, next) => {
-  passport.authenticate("local", async (err, user) => {
+  passport.authenticate('local', async (err, user) => {
     if (err) {
       return next(err);
     }
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     try {
       const foundUser = await User.findOne({ where: { email: user.email } });
       if (!foundUser) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: 'User not found' });
       }
 
-      const passwordMatches = await BcryptUtil.compare(
-        req.body.password,
-        user.password
-      );
+      const passwordMatches = await BcryptUtil.compare(req.body.password, user.password);
 
       if (!passwordMatches) {
-        return res.status(401).json({ message: "Invalid email or password" });
+        return res.status(401).json({ message: 'Invalid email or password' });
       }
       const UserToken = {
         id: user.id,
@@ -66,7 +63,7 @@ const loginUser = async (req, res, next) => {
       const token = generateToken(UserToken);
 
       return res.status(200).json({
-        message: "Successful login",
+        message: 'Successful login',
         user: {
           id: foundUser.id,
           firstname: foundUser.firstname,
@@ -138,4 +135,40 @@ const loginUser = async (req, res, next) => {
 };
 
 
-export { registerUser, resetEmail, resetPassword, loginUser };
+const userProfile = async(req,res)=>{
+  
+  const user = req.user
+  const decodeUser = await User.findOne({where:{email:user.email}})
+  .then(async(result)=>{
+    let billingAddress
+    if(result){
+       billingAddress = JSON.stringify({
+          province:req.body.province,
+          district:req.body.district,
+          street:req.body.street,
+          phoneNo:req.body.phoneNo,
+          email:req.body.email
+      })
+      let profilePic
+      if(req.body.gender === 'male'){
+        profilePic ='https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487826/icons8-administrator-male-90_dlmsde.png'
+      }
+      if(req.body.gender === 'female'){
+        profilePic ='https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487628/icons8-female-user-150_lwhby0.png'
+      }
+      const user = await User.update({
+        DOB:req.body.DOB,
+        gender:req.body.gender,
+        prefferedLanguage:req.body.prefferedLanguage,
+        prefferedCurrency:req.body.prefferedCurrency,
+        billingAddress:JSON.parse(billingAddress),
+        profilePic
+      },{where:{id:result.id}})
+      res.status(201).json({message:"User profile updated successfully"})
+    }else{
+      res.status(400).json("user not found")
+    }
+  })
+}
+
+export { registerUser, resetEmail, resetPassword, loginUser ,userProfile };

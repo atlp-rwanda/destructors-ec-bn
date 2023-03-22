@@ -170,4 +170,22 @@ describe("Testing the reset message via email", () => {
     
     expect(response.statusCode).toBe(400);
   });
+
+  test('should update user profile',async () => {
+    const res = await request(app)
+    .put('/api/v1/users/profile')
+    .set("Authorization", `Bearer ${token}`)
+    .send({
+      gender:"male",
+      DOB:"3.02.2000",
+      prefferedCurrency:"RWF",
+      prefferedLanguage:"Kinyarwanda",
+      street:"street",
+      province:"kigali city",
+      district:"gasabo",
+      phoneNo:"0787643782",
+      email:"usermailg@mail.com"
+    })
+    expect(res.statusCode).toBe(201)
+})
 });

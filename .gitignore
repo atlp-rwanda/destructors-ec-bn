@@ -1,4 +1,7 @@
 node_modules/
 .env
 coverage/
+<<<<<<< HEAD
 .prettierrc
+=======
+>>>>>>> 7ec1706 (feat:user-profile-page-settings-edit)
