@@ -1,4 +1,4 @@
-import { register, findUser } from "../services/user.service";
+import { register, findUserByEmail } from "../services/user.service";
 import { generateToken } from "../utils/generateToken";
 import passport from "passport";
 import { User } from "../database/models";
@@ -83,7 +83,7 @@ const loginUser = async (req, res, next) => {
   try {
   
    const userEml = req.body.email;
-   const user = await findUser(userEml);
+   const user = await findUserByEmail(userEml);
     if (user == false) {
       res.status(404).json("User not found");
     } else {
@@ -135,40 +135,39 @@ const loginUser = async (req, res, next) => {
 };
 
 
-const userProfile = async(req,res)=>{
-  
-  const user = req.user
-  const decodeUser = await User.findOne({where:{email:user.email}})
-  .then(async(result)=>{
-    let billingAddress
-    if(result){
-       billingAddress = JSON.stringify({
-          province:req.body.province,
-          district:req.body.district,
-          street:req.body.street,
-          phoneNo:req.body.phoneNo,
-          email:req.body.email
-      })
-      let profilePic
-      if(req.body.gender === 'male'){
-        profilePic ='https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487826/icons8-administrator-male-90_dlmsde.png'
-      }
-      if(req.body.gender === 'female'){
-        profilePic ='https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487628/icons8-female-user-150_lwhby0.png'
-      }
-      const user = await User.update({
-        DOB:req.body.DOB,
-        gender:req.body.gender,
-        prefferedLanguage:req.body.prefferedLanguage,
-        prefferedCurrency:req.body.prefferedCurrency,
-        billingAddress:JSON.parse(billingAddress),
-        profilePic
-      },{where:{id:result.id}})
-      res.status(201).json({message:"User profile updated successfully"})
-    }else{
-      res.status(400).json("user not found")
-    }
-  })
+const editUserProfile = async(req,res)=>{
+  try{
+    const userEmail = req.user.email
+    const decodeUser =await findUserByEmail(userEmail);
+
+    if(!decodeUser) return res.status(401).json("user not found");
+        let billingAddress
+           billingAddress = JSON.stringify({
+              province:req.body.province,
+              district:req.body.district,
+              street:req.body.street,
+              phoneNo:req.body.phoneNo,
+              email:req.body.email
+          })
+          let profilePic
+          if(req.body.gender === 'male'){
+            profilePic ='https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487826/icons8-administrator-male-90_dlmsde.png'
+          }
+          if(req.body.gender === 'female'){
+            profilePic ='https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487628/icons8-female-user-150_lwhby0.png'
+          }
+          const user = await User.update({
+            DOB:req.body.DOB,
+            gender:req.body.gender,
+            prefferedLanguage:req.body.prefferedLanguage,
+            prefferedCurrency:req.body.prefferedCurrency,
+            billingAddress:JSON.parse(billingAddress),
+            profilePic
+          },{where:{id:decodeUser.id}})
+          res.status(200).json({message:"User profile updated successfully"})
+  }catch(error){
+    res.status(500).json({message:error})
+  }
 }
 
-export { registerUser, resetEmail, resetPassword, loginUser ,userProfile };
+export { registerUser, resetEmail, resetPassword, loginUser ,editUserProfile };

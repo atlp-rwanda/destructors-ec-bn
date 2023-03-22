@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser, loginUser,resetEmail, resetPassword,userProfile} from "../../controllers/user.controller";
+import { registerUser, loginUser,resetEmail, resetPassword,editUserProfile} from "../../controllers/user.controller";
 import verifyUser from "../../middlewares/verifyUser";
 import signupValidation from "../../ validations/signup.validation";
 import userValdation from '../../ validations/login.validation';
@@ -8,6 +8,7 @@ import {googleAuthentication,googleCallBack} from "../../controllers/googleCallB
 import "../../services/googleAuth"
 import {resetPasswordValidation, EmailValidation} from "../../ validations/resetPassword.validation.js";
 import extractToken from '../../middlewares/checkUserWithToken';
+import { editUserProfil } from "../../ validations/user.validations";
 
 const route = Router();
 route.post("/signup", signupValidation, verifyUser, registerUser);
@@ -20,6 +21,6 @@ route.get('/auth',(req,res)=>{
 })
 route.get('/login/google',googleAuthentication);
 route.get('/google/callback', passport.authenticate('google'),googleCallBack)
-route.put('/profile',extractToken,userProfile);
+route.put('/profile',extractToken,editUserProfil,editUserProfile);
 
 export default route;

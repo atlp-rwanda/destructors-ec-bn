@@ -74,7 +74,7 @@ describe("GET /api/v1/users/google/callback", () => {
 });
 
 
-describe("Testing the reset message via email", () => {
+describe("Testing the reset password via email", () => {
   let token = "";
   test("It should return 404 for bad request if the user is not registered", async () => {
     const response = await request(app).post("/api/v1/users/reset-password").send({
@@ -186,6 +186,23 @@ describe("Testing the reset message via email", () => {
       phoneNo:"0787643782",
       email:"usermailg@mail.com"
     })
-    expect(res.statusCode).toBe(201)
-})
+    expect(res.statusCode).toBe(200)
+  })
+  test('should test invalid user if he/she try to update profile without valid token',async () => {
+    const res = await request(app)
+    .put('/api/v1/users/profile')
+    .set("Authorization", `Bearer ${'qwertyiuodisoaip[donk123jkhcsbkj(iweu__'}`)
+    .send({
+      gender:"male",
+      DOB:"3.02.2000",
+      prefferedCurrency:"RWF",
+      prefferedLanguage:"Kinyarwanda",
+      street:"street",
+      province:"kigali city",
+      district:"gasabo",
+      phoneNo:"0787643782",
+      email:"usermailg@mail.com"
+    })
+    expect(res.statusCode).toBe(401)
+  })
 });
