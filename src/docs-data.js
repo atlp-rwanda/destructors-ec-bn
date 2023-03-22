@@ -1,120 +1,121 @@
-export const signUp={
-    tags: ["User Authentication"],
-    description: "Signup a user",
-    operationId: "signUpUser",
-    parameters: [],
-    requestBody: {
-      content: {
-        // content-type
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              firstname: {
-                type: "string", 
-                description: "user first name",
-                example: "Iribagiza",
-               },
-               lastname: {
-                type: "string",
-                description: "User lastname",
-                example: "Jeannette",
-               },
-               email: {
-                type: "string",
-                description: "User email",
-                example: "iribagizajenny@test.com",
-               },
-               password: {
-                type: "string",
-                description: "password must include one number small letters and characters + capital letters", // desc
-                example: "@Qwert123",
-               },
+export const signUp = {
+  tags: ['User Authentication'],
+  description: 'Signup a user',
+  operationId: 'signUpUser',
+  parameters: [],
+  requestBody: {
+    content: {
+      // content-type
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            firstname: {
+              type: 'string',
+              description: 'user first name',
+              example: 'Iribagiza',
+            },
+            lastname: {
+              type: 'string',
+              description: 'User lastname',
+              example: 'Jeannette',
+            },
+            email: {
+              type: 'string',
+              description: 'User email',
+              example: 'iribagizajenny@test.com',
+            },
+            password: {
+              type: 'string',
+              description:
+                'password must include one number small letters and characters + capital letters', // desc
+              example: '@Qwert123',
             },
           },
         },
       },
     },
-    // expected responses
-    responses: {
-      // response code
-      201: {
-        description: "Todo created successfully", // response desc
-      },
-      // response code
-      500: {
-        description: "Server error", // response desc
-      },
+  },
+  responses: {
+    // response code
+    201: {
+      description: 'Todo created successfully', // response desc
     },
-}
+    // response code
+    500: {
+      description: 'Server error', // response desc
+    },
+  },
+};
+// expected responses
 
 export const loginUser = {
-  tags: ["User Authentication"],
-  description: "Logs in a user",
-  operationId: "loginUser",
+  tags: ['User Authentication'],
+  description: 'Logs in a user',
+  operationId: 'loginUser',
   parameters: [],
   requestBody: {
     content: {
-      "application/json": {
+      'application/json': {
         schema: {
-          type: "object",
+          type: 'object',
           properties: {
             email: {
-              type: "string",
-              description: "User email",
-              example: "user@test.com",
+              type: 'string',
+              description: 'User email',
+              example: 'user@test.com',
             },
             password: {
-              type: "string",
-              description: "User password",
-              example: "password123",
+              type: 'string',
+              description: 'User password',
+              example: 'password123',
             },
           },
-          required: ["email", "password"],
+          required: ['email', 'password'],
         },
       },
     },
   },
   responses: {
     200: {
-      description: "Successful login",
+      description: 'Successful login',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "Successful login",
+                type: 'string',
+                example: 'Successful login',
               },
               user: {
-                type: "object",
+                type: 'object',
                 properties: {
                   id: {
-                    type: "integer",
+                    type: 'integer',
                     example: 1,
                   },
                   firstname: {
-                    type: "string",
-                    example: "John",
+                    type: 'string',
+                    example: 'John',
                   },
                   lastname: {
-                    type: "string",
-                    example: "Doe",
+                    type: 'string',
+                    example: 'Doe',
                   },
                   email: {
-                    type: "string",
-                    example: "user@test.com",
+                    type: 'string',
+                    example: 'user@test.com',
                   },
                   role: {
-                    type: "string",
-                    example: "admin",
+                    type: 'string',
+                    example: 'admin',
                   },
                 },
               },
               token: {
-                type: "string",
-                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                type: 'string',
+                example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
               },
             },
           },
@@ -122,15 +123,15 @@ export const loginUser = {
       },
     },
     401: {
-      description: "Invalid email or password",
+      description: 'Invalid email or password',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "Invalid email or password",
+                type: 'string',
+                example: 'Invalid email or password',
               },
             },
           },
@@ -138,15 +139,15 @@ export const loginUser = {
       },
     },
     404: {
-      description: "User not found",
+      description: 'User not found',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "User not found",
+                type: 'string',
+                example: 'User not found',
               },
             },
           },
@@ -154,7 +155,165 @@ export const loginUser = {
       },
     },
     500: {
-      description: "Server error",
+      description: 'Server error',
+    },
+  },
+};
+export const resetEmail = {
+  tags: ['Reset Password'],
+  description: 'Reset user password',
+  operationId: 'Reset password',
+  parameters: [],
+  requestBody: {
+    content: {
+      // content-type
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'string',
+              description: 'User email',
+              example: 'name@example.com',
+            },
+          },
+        },
+      },
+    },
+  },
+  // expected responses
+  responses: {
+    // response code
+    200: {
+      description: 'Email set successfully', // response desc
+    },
+    // response code
+    400: {
+      description: 'User not registered', // response desc
+    },
+  },
+};
+
+export const ResetPassword = {
+  tags: ['Reset Password'],
+  description: 'Reset user password',
+  operationId: 'Reset password',
+  parameters: [
+    {
+      name: 'token',
+      in: 'path',
+      description: 'the sent token',
+      required: true,
+    },
+  ],
+  requestBody: {
+    content: {
+      // content-type
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            password: {
+              type: 'string',
+              description:
+                'Enter New password, password must include one number small letters and characters + capital letters',
+              example: 'maxmax250',
+            },
+            confirmPassword: {
+              type: 'string',
+              description: 're-enter your new password',
+              example: 'maxmax250',
+            },
+          },
+        },
+      },
+    },
+  },
+  // expected responses
+  responses: {
+    // response code
+    200: {
+      description: 'Password reset successfully', // response desc
+    },
+    // response code
+    400: {
+      description: 'Bad request', // response desc
+    },
+  },
+};
+
+export const userUpdatePassword = {
+  tags: ['User Authentication'],
+  description: "Updates a user's password",
+  operationId: 'updatePassword',
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  requestBody: {
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            currentPassword: {
+              type: 'string',
+              description: "User's current password",
+              example: 'oldpassword123',
+            },
+            newPassword: {
+              type: 'string',
+              description:
+                "User's new password, password must include one number, small letters, characters, and capital letters",
+              example: 'newPassword123',
+            },
+            confirmPassword: {
+              type: 'string',
+              description: "Re-enter user's new password",
+              example: 'newPassword123',
+            },
+          },
+          required: ['currentPassword', 'newPassword', 'confirmPassword'],
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Password updated successfully',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              message: {
+                type: 'string',
+                example: 'Password updated successfully',
+              },
+            },
+          },
+        },
+      },
+    },
+    401: {
+      description: 'Current password is incorrect',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              message: {
+                type: 'string',
+                example: 'Current password is incorrect',
+              },
+            },
+          },
+        },
+      },
+    },
+    500: {
+      description: 'Server error',
     },
   },
 };

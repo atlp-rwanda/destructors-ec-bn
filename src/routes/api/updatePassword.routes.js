@@ -1,13 +1,13 @@
 import express from 'express';
-import { updatePassword } from '../../controllers/updatePassword.controller';
+import { updatePassword } from '../../controllers/user.controller';
 import updatePasswordValidation from '../../ validations/updatePassword.validation';
-import { protect } from '../../middlewares/authMiddleware';
+import extractToken from '../../middlewares/checkUserWithToken';
 
 const router = express.Router();
 
 router.patch(
   '/update-password',
-  protect,
+  extractToken,
   updatePasswordValidation,
   updatePassword
 );

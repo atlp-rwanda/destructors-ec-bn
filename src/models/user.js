@@ -1,8 +1,13 @@
 const { Model } = require('sequelize');
+const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {}
+
+    async matchPassword(password) {
+      return await bcrypt.compare(password, this.password);
+    }
 
     async updatePassword(newPassword) {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
