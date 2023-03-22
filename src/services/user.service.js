@@ -15,4 +15,17 @@ const register = async (data) => {
   });
 };
 
-export { register };
+const findUser = async (email) => {
+
+  const UserInfo = await User.findOne({where: {email: email}});
+
+  if(UserInfo == null){
+    return false;
+  }else {
+    return UserInfo;
+  }
+
+  
+}
+
+export { register,findUser };

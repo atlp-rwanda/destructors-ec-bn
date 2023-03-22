@@ -159,3 +159,87 @@ export const loginUser = {
     },
   },
 };
+export const resetEmail = {
+  tags: ['Reset Password'],
+  description: 'Reset user password',
+  operationId: 'Reset password',
+  parameters: [],
+  requestBody: {
+    content: {
+      // content-type
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'string',
+              description: 'User email',
+              example: 'name@example.com',
+            },
+          },
+        },
+      },
+    },
+  },
+  // expected responses
+  responses: {
+    // response code
+    200: {
+      description: 'Email set successfully', // response desc
+    },
+    // response code
+    400: {
+      description: 'User not registered', // response desc
+    },
+  },
+};  
+
+  
+export const ResetPassword = {
+  tags: ['Reset Password'],
+  description: 'Reset user password',
+  operationId: 'Reset password',
+  parameters: [
+    {
+    name: 'token',
+    in: 'path',
+    description: 'the sent token',
+    required: true
+    }
+  ],
+  requestBody: {
+    content: {
+      // content-type
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            password: {
+              type: 'string',
+              description: 'Enter New password, password must include one number small letters and characters + capital letters',
+              example: 'maxmax250',
+            },
+            confirmPassword: {
+              type: 'string',
+              description: 're-enter your new password',
+              example: 'maxmax250',
+            },
+          },
+        },
+      },
+    },
+  },
+  // expected responses
+  responses: {
+    // response code
+    200: {
+      description: 'Password reset successfully', // response desc
+    },
+    // response code
+    400: {
+      description: 'Bad request', // response desc
+    },
+  },
+};
+
+
