@@ -9,6 +9,7 @@ import {
   updateUserStatus,
   assignUserRole,
   userUpdatePassword,
+  verifyOTP
 } from './docs-data';
 import "dotenv/config";
 
@@ -76,6 +77,12 @@ export const swaggerDocument = {
     },
     '/api/v1/users/update-password': {
       patch: userUpdatePassword,
+    },
+    "/api/v1/users/{id}/roles":{
+     patch: assignUserRole
+    },
+    '/api/v1/users/login/validate/{token}': {
+      post: verifyOTP,
     },
   },
 };

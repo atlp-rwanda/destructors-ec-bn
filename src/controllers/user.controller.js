@@ -5,11 +5,15 @@ import { User } from "../database/models";
 import { BcryptUtil } from '../utils/bcrypt';
 import model from "../database/models/index.js";
 import "dotenv/config";
-import { verifyToken } from "../utils/verifyToken";
+// import { verifyToken } from "../utils/generateToken";
 import sendEmail from "../services/sendEmail.service";
+import verfyToken from "../utils/verifytoken";
 import { request } from "express";
 import { findUserById } from '../services/user.service';
 
+import generateOTP from "../utils/generateOTP";
+import {OTP} from "../database/models/index"
+import validOTPmail from "../services/emailValidation.service";
 
 const registerUser = async (req, res) => {
   try {
@@ -60,7 +64,24 @@ const loginUser = async (req, res, next) => {
         isActive: user.isActive,
         
       };
+      //<---------this is for generating the one time password------->
       const token = generateToken(UserToken);
+      const otp=generateOTP()
+       if(foundUser.role=="seller"){
+        OTP.otp=otp;
+   await OTP.create({
+         otp:otp,
+         email:foundUser.email
+       })
+       console.log("connected successfully!")
+       try{
+               await validOTPmail(foundUser,otp,token)
+       }
+       catch(error){
+           console.log(error)
+           res.status(500).json({ message: 'Error sending OTP code' });
+       }
+           }
 
       return res.status(200).json({
         message: 'Successful login',
@@ -110,7 +131,7 @@ const loginUser = async (req, res, next) => {
  const resetPassword = async (req, res) => {
   try {
     const token = req.params.token;
-      const payload = verifyToken(token, process.env.JWT_SECRET)
+      const payload = verfyToken(token, process.env.JWT_SECRET)
 
       console.log("payload", payload)
 
