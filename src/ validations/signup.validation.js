@@ -28,12 +28,4 @@ const signupValidation = (req, res, next) => {
     next();
   }
 };
-// const userProfileSchema = Joi.object({
-//   gender:Joi.string().max(4).trim(),
-//   DOB:Joi.date().less('1-1-1960'),
-//   prefferedCurrency:Joi.string().uppercase(),
-//   phoneNo:Joi.string().length(10).pattern(/^[0-9]+$/),
-//   email:Joi.string().email().trim()
-// })
-
 export default signupValidation;

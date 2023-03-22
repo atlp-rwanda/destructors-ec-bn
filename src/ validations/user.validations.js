@@ -1,17 +1,23 @@
 import Joi from "joi";
-import errorMessage from "../utils/validationErrors";
 const userProfileSchema = Joi.object({
-    gender:Joi.string().max(4).trim().messages(errorMessage('email')),
-    DOB:Joi.date().less('1-1-2100').messages(errorMessage('email')),
-    prefferedCurrency:Joi.string().uppercase().messages(errorMessage('email')),
-    prefferedLanguage:Joi.string().messages(errorMessage('email')),
-    billingAddress:{
-        street:Joi.string().max(20).messages(errorMessage('street')),
-        province:Joi.string().max(20).messages(errorMessage('province')),
-        district:Joi.string().max(20).messages(errorMessage('district')),
-        phoneNo:Joi.string().length(10).pattern(/^[0-9]+$/).messages(errorMessage('phone')),
-        email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
-     .messages(errorMessage('email'))
-    }
+    gender:Joi.string().valid('male','female'),
+    DOB:Joi.date().less('1-1-2100'),
+    prefferedCurrency:Joi.string().uppercase(),
+    prefferedLanguage:Joi.string(),
+    street:Joi.string().max(20),
+    province:Joi.string().max(20),
+    district:Joi.string().max(20),
+    phoneNo:Joi.string().length(10).pattern(/^[0-9]+$/),
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net' , 'org','co'] } })
   })
-export {userProfileSchema}
+  export const editUserProfil = async (req, res, next) => {
+    const { error } = userProfileSchema.validate(req.body, {
+      abortEarly: false,
+    });
+    if (error) {
+      return res.status(400).json({
+        error: error.details[0].message.replace(/[^a-zA-Z0-9 ]/g, ''),
+      });
+    }
+    next();
+  };

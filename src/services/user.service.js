@@ -15,7 +15,7 @@ const register = async (data) => {
   });
 };
 
-const findUser = async (email) => {
+const findUserByEmail = async (email) => {
 
   const UserInfo = await User.findOne({where: {email: email}});
 
@@ -28,4 +28,4 @@ const findUser = async (email) => {
   
 }
 
-export { register,findUser };
+export { register,findUserByEmail };

@@ -279,31 +279,31 @@ export const userProfile={
               description: "prefferedLanguage", // desc
               example: "@Qwert123",
              },
-                  street: {
-                    type: "string",
-                    description: "prefferedCurrency",
-                    example: "KG08ave",
-                   },
-                  province: {
-                    type: "string",
-                    example: "Kigali City",
-                   },
-                  District: {
-                    type: "string",
-                    description: "prefferedCurrency",
-                    example: "Nyarugenge",
-                   },
-                   PhoneNo: {
-                    type: "number",
-                    description: "prefferedCurrency",
-                    example: "07851234567",
-                   },
-                   email: {
-                    type: "string",
-                    description: "prefferedCurrency",
-                    example: "user@email.com",
-                   },
-          },
+              street: {
+                type: "string",
+                description: "prefferedCurrency",
+                example: "KG08ave",
+                },
+              province: {
+                type: "string",
+                example: "Kigali City",
+                },
+              District: {
+                type: "string",
+                description: "prefferedCurrency",
+                example: "Nyarugenge",
+                },
+                PhoneNo: {
+                type: "number",
+                description: "prefferedCurrency",
+                example: "07851234567",
+                },
+                email: {
+                type: "string",
+                description: "prefferedCurrency",
+                example: "user@email.com",
+                },
+            },
         },
       },
     },
