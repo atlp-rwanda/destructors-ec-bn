@@ -4,6 +4,18 @@ const { Sequelize } = require(".");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {}
+
+    async matchPassword(password) {
+      return await bcrypt.compare(password, this.password);
+    }
+
+    async updatePassword(newPassword) {
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      this.password = hashedPassword;
+      this.mustUpdatePassword = false;
+      this.lastTimePasswordUpdated = new Date();
+      await this.save();
+    }
   }
   User.init(
     {
@@ -24,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       prefferedLanguage: DataTypes.STRING,
       role: {
         type: DataTypes.STRING,
-        defaultValue: "buyer",
+        defaultValue: 'buyer',
       },
       isActive: {
         type: DataTypes.BOOLEAN,
@@ -38,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "User",
+      modelName: 'User',
     }
   );
   return User;

@@ -453,3 +453,79 @@ export const assignUserRole = {
     },
   },
 };
+
+export const userUpdatePassword = {
+  tags: ['User Authentication'],
+  description: "Updates a user's password",
+  operationId: 'updatePassword',
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  requestBody: {
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            currentPassword: {
+              type: 'string',
+              description: "User's current password",
+              example: 'oldpassword123',
+            },
+            newPassword: {
+              type: 'string',
+              description:
+                "User's new password, password must include one number, small letters, characters, and capital letters",
+              example: 'newPassword123',
+            },
+            confirmPassword: {
+              type: 'string',
+              description: "Re-enter user's new password",
+              example: 'newPassword123',
+            },
+          },
+          required: ['currentPassword', 'newPassword', 'confirmPassword'],
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Password updated successfully',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              message: {
+                type: 'string',
+                example: 'Password updated successfully',
+              },
+            },
+          },
+        },
+      },
+    },
+    401: {
+      description: 'Current password is incorrect',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              message: {
+                type: 'string',
+                example: 'Current password is incorrect',
+              },
+            },
+          },
+        },
+      },
+    },
+    500: {
+      description: 'Server error',
+    },
+  },
+};
