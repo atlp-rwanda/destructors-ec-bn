@@ -9,7 +9,7 @@ import "../../services/googleAuth"
 import {resetPasswordValidation, EmailValidation} from "../../ validations/resetPassword.validation.js";
 import extractToken from '../../middlewares/checkUserWithToken';
 import { editUserProfil } from "../../ validations/user.validations";
-
+import { assignUserRole, updateUserStatus } from "../../controllers/admin.controller";
 const route = Router();
 route.post("/signup", signupValidation, verifyUser, registerUser);
 route.post('/login',userValdation,loginUser);
@@ -24,5 +24,7 @@ route.get('/google/callback', passport.authenticate('google'),googleCallBack)
 route.put('/profile',extractToken,editUserProfil,editUserProfile);
 route.put('/profile',extractToken,editUserProfile);
 route.post('/logout',extractToken,logoutUser)
+route.patch("/:id/status", updateUserStatus);
+route.patch("/:id/roles", assignUserRole);
 
 export default route;

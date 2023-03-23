@@ -1,5 +1,5 @@
 import { createProduct } from './documents/product.docs';
-import { resetEmail, ResetPassword, signUp, loginUser, userProfile ,logoutUser} from "./docs-data"
+import { resetEmail, ResetPassword, signUp, loginUser, userProfile ,logoutUser,updateUserStatus,assignUserRole} from "./docs-data"
 import "dotenv/config";
 
 export const swaggerDocument = {
@@ -58,6 +58,11 @@ export const swaggerDocument = {
     '/api/v1/users/logout': {
       post: logoutUser,
     },
+    "/api/v1/users/{id}/status":{
+      patch: updateUserStatus
+    },
+    "/api/v1/users/{id}/roles":{
+     patch: assignUserRole
+  }
   },
 };
-
