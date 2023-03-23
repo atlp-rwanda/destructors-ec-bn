@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser, loginUser,resetEmail, resetPassword,editUserProfile} from "../../controllers/user.controller";
+import { registerUser, loginUser,resetEmail, resetPassword,editUserProfile,logoutUser} from "../../controllers/user.controller";
 import verifyUser from "../../middlewares/verifyUser";
 import signupValidation from "../../ validations/signup.validation";
 import userValdation from '../../ validations/login.validation';
@@ -22,5 +22,7 @@ route.get('/auth',(req,res)=>{
 route.get('/login/google',googleAuthentication);
 route.get('/google/callback', passport.authenticate('google'),googleCallBack)
 route.put('/profile',extractToken,editUserProfil,editUserProfile);
+route.put('/profile',extractToken,editUserProfile);
+route.post('/logout',extractToken,logoutUser)
 
 export default route;

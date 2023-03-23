@@ -1,3 +1,5 @@
+import { json } from "express";
+
 export const signUp = {
   tags: ["User Authentication"],
   description: "Signup a user",
@@ -288,12 +290,12 @@ export const userProfile={
                 type: "string",
                 example: "Kigali City",
                 },
-              District: {
+              district: {
                 type: "string",
                 description: "prefferedCurrency",
                 example: "Nyarugenge",
                 },
-                PhoneNo: {
+                phoneNo: {
                 type: "number",
                 description: "prefferedCurrency",
                 example: "07851234567",
@@ -320,3 +322,29 @@ export const userProfile={
     },
   },
 }
+  
+
+export const logoutUser = {
+  tags: [" User Logout"],
+  description: "user logout",
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  
+ 
+  responses: {
+    
+    200: {
+      description: "You have logged out successfully",
+    },
+    
+    500: {
+      description: "Server error", 
+    },
+  },
+}
+  
+
+

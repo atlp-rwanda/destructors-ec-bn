@@ -1,4 +1,4 @@
-import { register, findUserByEmail } from "../services/user.service";
+import { register, findUserByEmail,logout } from "../services/user.service";
 import { generateToken } from "../utils/generateToken";
 import passport from "passport";
 import { User } from "../database/models";
@@ -7,6 +7,8 @@ import model from "../database/models/index.js";
 import "dotenv/config";
 import { verifyToken } from "../utils/verifyToken";
 import sendEmail from "../services/sendEmail.service";
+import { request } from "express";
+
 
 const registerUser = async (req, res) => {
   try {
@@ -52,13 +54,10 @@ const loginUser = async (req, res, next) => {
       }
       const UserToken = {
         id: user.id,
-        firstname: user.firstname,
-        lastname: user.lastname,
         email: user.email,
         role: user.role,
         isActive: user.isActive,
-        mustUpdatePassword: user.mustUpdatePassword,
-        lastTimePasswordUpdated: user.lastTimePasswordUpdated,
+        
       };
       const token = generateToken(UserToken);
 
@@ -170,4 +169,17 @@ const editUserProfile = async(req,res)=>{
   }
 }
 
-export { registerUser, resetEmail, resetPassword, loginUser ,editUserProfile };
+
+const logoutUser = async(req,res) => {
+try {
+
+  await logout(req.headers.authorization)
+  return res.status(200).json({ 
+    message: 'Successfully logged out.', 
+  });
+} catch (error) {
+  res.status(500).json({ message: error });
+}
+}
+export { registerUser, resetEmail, resetPassword, loginUser ,editUserProfile,logoutUser };
+

@@ -1,5 +1,5 @@
 import { createProduct } from './documents/product.docs';
-import { resetEmail, ResetPassword, signUp, loginUser, userProfile } from "./docs-data"
+import { resetEmail, ResetPassword, signUp, loginUser, userProfile ,logoutUser} from "./docs-data"
 import "dotenv/config";
 
 export const swaggerDocument = {
@@ -22,7 +22,7 @@ export const swaggerDocument = {
       description: 'Local server', //
     },
     {
-      url: 'http://localhost:5000', // url
+      url: 'https://destructors-ec-bn.onrender.com/', // url
       description: 'Hosted version', // name
     },
   ],
@@ -54,7 +54,10 @@ export const swaggerDocument = {
     },
     "/api/v1/users/profile":{
       "put": userProfile
-    }
+    },
+    '/api/v1/users/logout': {
+      post: logoutUser,
+    },
   },
 };
 
