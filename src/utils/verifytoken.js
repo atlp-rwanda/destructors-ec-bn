@@ -1,6 +1,6 @@
 import Jwt from "jsonwebtoken";
 
-const verifyToken = (token, env) => {
+const verfyToken = (token, env) => {
     const payload = Jwt.verify(token, env, (error, decodedToken) => {
         if (error) {
           return false;
@@ -13,4 +13,4 @@ const verifyToken = (token, env) => {
 
 }
 
-export { verifyToken };
+export default verfyToken

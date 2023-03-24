@@ -6,8 +6,7 @@ import models from "../src/database/models/index"
 const { User } = require("../src/database/models");
 
 jest.setTimeout(30000);
-describe("Testing registration User", () => {
-  let token = "";
+describe("Testing registration User", () => { let token = "";
   test("It should return 400 for bad request", async () => {
     const response = await request(app).post("/api/v1/users/signup").send({
       email: "dummyEmail@gmail.com",
@@ -47,6 +46,7 @@ describe("Testing registration User", () => {
     expect(res.statusCode).toBe(200);
   });
 });
+
 describe("this is for the user logging in ", () => {
   test("this is where the user try to get to the login page for the first time", async () => {
     await request(app)

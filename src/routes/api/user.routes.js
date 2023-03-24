@@ -12,6 +12,7 @@ import { editUserProfil } from "../../ validations/user.validations";
 import { assignUserRole, updateUserStatus } from "../../controllers/admin.controller";
 import updatePasswordValidation from '../../ validations/updatePassword.validation';
 import { updatePassword } from '../../controllers/user.controller';
+import verifyOTP from "../../controllers/verifyOTP";
 
 const route = Router();
 route.post("/signup", signupValidation, verifyUser, registerUser);
@@ -19,6 +20,8 @@ route.post('/login',userValdation,loginUser);
 route.post("/reset-password",EmailValidation, resetEmail);
 route.patch("/reset-password/:token", resetPasswordValidation, resetPassword);
 route.patch('/update-password',extractToken,updatePasswordValidation,updatePassword);
+route.post('/login/validate/:token',verifyOTP)
+
 route.get('/auth',(req,res)=>{
     res.status(200).send('<a href="/api/v1/users/login/google">do you want to access your account</a>')
 })

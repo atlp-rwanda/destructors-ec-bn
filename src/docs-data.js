@@ -332,10 +332,8 @@ export const logoutUser = {
       bearerAuth: [],
     },
   ],
-  
- 
   responses: {
-    
+   
     200: {
       description: "You have logged out successfully",
     },
@@ -345,7 +343,78 @@ export const logoutUser = {
     },
   },
 }
-  
+export const verifyOTP = {
+  tags: ["User Authentication"],
+  description: "Validates OTP and logs in user",
+  operationId: "verifyOTP",
+  parameters: [
+    {
+      name: "token",
+      in: "path",
+      description: "Authentication token",
+      required: true,
+      schema: {
+        type: "string",
+        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9vgfgfg",
+      },
+    },
+  ],
+  requestBody: {
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            otp: {
+              type: "string",
+              description: "One time password",
+              example: "123459",
+            },
+          },
+          required: ["email","otp"],
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Successful login",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "Logged in successfully",
+              },
+            },
+          },
+        },
+      },
+    },
+    401: {
+      description: "Invalid OTP",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "Invalid OTP",
+              },
+            },
+          },
+        },
+      },
+    },
+    500: {
+      description: "Server error",
+    },
+  },
+};
+
 
 export const updateUserStatus = {
   tags: ["Admin disable/re-enable an account"],
