@@ -1,5 +1,15 @@
 import { createProduct } from './documents/product.docs';
-import { resetEmail, ResetPassword, signUp, loginUser, userProfile ,logoutUser,updateUserStatus,assignUserRole} from "./docs-data"
+import {
+  resetEmail,
+  ResetPassword,
+  signUp,
+  loginUser,
+  userProfile,
+  logoutUser,
+  updateUserStatus,
+  assignUserRole,
+  userUpdatePassword,
+} from './docs-data';
 import "dotenv/config";
 
 export const swaggerDocument = {
@@ -43,26 +53,29 @@ export const swaggerDocument = {
     '/api/v1/users/login': {
       post: loginUser,
     },
-    "/api/v1/users/reset-password":{
-      "post": resetEmail
+    '/api/v1/users/reset-password': {
+      post: resetEmail,
     },
-    "/api/v1/users/reset-password/{token}":{
-      "patch": ResetPassword
-    },    
+    '/api/v1/users/reset-password/{token}': {
+      patch: ResetPassword,
+    },
     '/api/v1/products': {
       post: createProduct,
     },
-    "/api/v1/users/profile":{
-      "put": userProfile
+    '/api/v1/users/profile': {
+      put: userProfile,
     },
     '/api/v1/users/logout': {
       post: logoutUser,
     },
-    "/api/v1/users/{id}/status":{
-      patch: updateUserStatus
+    '/api/v1/users/{id}/status': {
+      patch: updateUserStatus,
     },
-    "/api/v1/users/{id}/roles":{
-     patch: assignUserRole
-  }
+    '/api/v1/users/{id}/roles': {
+      patch: assignUserRole,
+    },
+    '/api/v1/users/update-password': {
+      patch: userUpdatePassword,
+    },
   },
 };

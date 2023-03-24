@@ -8,6 +8,7 @@ import "dotenv/config";
 import { verifyToken } from "../utils/verifyToken";
 import sendEmail from "../services/sendEmail.service";
 import { request } from "express";
+import { findUserById } from '../services/user.service';
 
 
 const registerUser = async (req, res) => {
@@ -181,5 +182,43 @@ try {
   res.status(500).json({ message: error });
 }
 }
-export { registerUser, resetEmail, resetPassword, loginUser ,editUserProfile,logoutUser };
+
+const updatePassword = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const user = await findUserById(userId);
+
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    // Check current password
+    const comparePassword = await BcryptUtil.compare(
+      currentPassword,
+      user.password
+    );
+    if (!comparePassword) {
+      return res
+        .status(401)
+        .json({ success: false, error: 'Current password is incorrect' });
+    }
+
+    // Check new password
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ success: false, error: 'Passwords do not match' });
+    }
+    const hashedPassword = await BcryptUtil.hash(newPassword);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      data: 'Password updated successfully',
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { registerUser, resetEmail, resetPassword, loginUser ,editUserProfile,logoutUser, updatePassword};
 

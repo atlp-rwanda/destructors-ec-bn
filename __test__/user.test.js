@@ -218,3 +218,81 @@ describe("Testing the reset password via email", () => {
 
 });
 
+describe('Testing update user password after login', () => {
+  let token = '',
+    userId = '';
+  beforeAll(async () => {
+    // Register user
+    const response = await request(app).post('/api/v1/users/signup').send({
+      firstname: 'myfirstname',
+      lastname: 'mysecondname',
+      email: `testemail1234@gmail.com`,
+      password: 'testpass2345',
+    });
+    token = await response.body.token;
+  });
+
+  beforeEach(async () => {
+    // Login user
+    const response = await request(app).post('/api/v1/users/login').send({
+      email: `testemail1234@gmail.com`,
+      password: 'testpass2345',
+    });
+    token = await response.body.token;
+    userId = await response.body.user.id; // Save user ID to a variable
+  });
+
+  test('It should return 401 if user is not logged in', async () => {
+    // Logout user
+    token = '';
+    const response = await request(app)
+      .patch(`/api/v1/users/update-password`)
+      .send({
+        currentPassword: 'testpass2345',
+        newPassword: 'newtestpass2345',
+        confirmPassword: 'newtestpass2345',
+      });
+    expect(response.statusCode).toBe(401);
+  });
+
+  test('It should return 400 for Passwords do not match', async () => {
+    const response = await request(app)
+      .patch(`/api/v1/users/update-password`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        currentPassword: 'testpass2345',
+        newPassword: 'newpassword',
+        confirmPassword: 'confirmpassword',
+      });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test('It should return 401 for invalid password', async () => {
+    const response = await request(app)
+      .patch(`/api/v1/users/update-password`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        currentPassword: 'invalidpassword',
+        newPassword: 'newtestpass2345',
+        confirmPassword: 'newtestpass2345',
+      });
+    expect(response.statusCode).toBe(401);
+  });
+
+  test('It should update user password', async () => {
+    const response = await request(app)
+      .patch(`/api/v1/users/update-password`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        currentPassword: 'testpass2345',
+        newPassword: 'newtestpass2345',
+        confirmPassword: 'newtestpass2345',
+      });
+    expect(response.statusCode).toBe(200);
+  });
+
+  afterAll(async () => {
+    // Delete the registered user
+    await User.destroy({ where: { id: userId } });
+  });
+});

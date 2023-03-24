@@ -10,19 +10,21 @@ import {resetPasswordValidation, EmailValidation} from "../../ validations/reset
 import extractToken from '../../middlewares/checkUserWithToken';
 import { editUserProfil } from "../../ validations/user.validations";
 import { assignUserRole, updateUserStatus } from "../../controllers/admin.controller";
+import updatePasswordValidation from '../../ validations/updatePassword.validation';
+import { updatePassword } from '../../controllers/user.controller';
+
 const route = Router();
 route.post("/signup", signupValidation, verifyUser, registerUser);
 route.post('/login',userValdation,loginUser);
 route.post("/reset-password",EmailValidation, resetEmail);
 route.patch("/reset-password/:token", resetPasswordValidation, resetPassword);
-
+route.patch('/update-password',extractToken,updatePasswordValidation,updatePassword);
 route.get('/auth',(req,res)=>{
     res.status(200).send('<a href="/api/v1/users/login/google">do you want to access your account</a>')
 })
 route.get('/login/google',googleAuthentication);
 route.get('/google/callback', passport.authenticate('google'),googleCallBack)
 route.put('/profile',extractToken,editUserProfil,editUserProfile);
-route.put('/profile',extractToken,editUserProfile);
 route.post('/logout',extractToken,logoutUser)
 route.patch("/:id/status", updateUserStatus);
 route.patch("/:id/roles", assignUserRole);
