@@ -2,6 +2,8 @@
 import { createProduct, findProduct, findProducts } from '../services/product.service.js';
 import verfyToken from '../utils/verifytoken.js';
 import 'dotenv/config';
+import { Op } from 'sequelize';
+import {Products } from '../database/models';
 
 const createProducts = async (req, res) => {
   try {
@@ -117,4 +119,23 @@ const retrieveItems = async (req, res) => {
 
 };
 
-export { createProducts, retrieveItem, retrieveItems };
+
+const searchProducts = async (req, res) => {
+  try {
+    const { name, minPrice, maxPrice, categoryId, bestBefore } = req.query;
+
+    const where = {};
+    if (name) where.name = { [Op.iLike]: `%${name}%` };
+    if (minPrice) where.price = { [Op.gte]: minPrice };
+    if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
+    if (categoryId) where.categoryId = categoryId;
+    if (bestBefore) where.expiryDate = { [Op.lt]: new Date(bestBefore) };
+
+    const products = await Products.findAll({ where });
+    return res.status(200).json({ products });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+export { createProducts, retrieveItem, retrieveItems, searchProducts};
+

@@ -9,13 +9,13 @@ module.exports = {
       'Categories',
       [
         {
-          id: '1a2ef741-1488-4435-b2e2-4075a6a169eb',
+          id: '1a2ef741-1488-4435-b2e2-4075a6a169ec',
           name: 'furniture',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          id: 'e0bebe02-acb2-440d-b445-267c3c586a9f',
+          id: 'e0bebe02-acb2-440d-b445-267c3c586a9e',
           name: 'electronics',
           createdAt: new Date(),
           updatedAt: new Date(),
