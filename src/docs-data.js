@@ -1,5 +1,3 @@
-import { json } from "express";
-
 export const signUp = {
   tags: ["User Authentication"],
   description: "Signup a user",

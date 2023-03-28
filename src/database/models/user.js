@@ -41,7 +41,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      lastTimePasswordUpdated: DataTypes.DATE,
+      lastTimePasswordUpdated:{
+        type: DataTypes.DATE,
+        defaultValue:new Date()
+      },
+      expired:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:false
+      }
     },
     {
       sequelize,
