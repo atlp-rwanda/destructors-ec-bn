@@ -18,6 +18,7 @@ import {
 import checkRole from '../../middlewares/checkRole.js';
 import extractToken from '../../middlewares/checkUserWithToken.js';
 
+import { checkIfPasswordIsExpired } from '../../middlewares/checkPassword.js';
 const route = Router();
 route.post(
   '/',
