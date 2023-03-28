@@ -64,3 +64,72 @@ export const createProduct = {
     },
   },
 };
+
+export const retrieveProduct = {
+  tags: ['Products'],
+  parameters: [
+    {
+    name: 'id',
+    in: 'path',
+    description: 'the product id',
+    required: true
+    }
+  ],
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  summary: 'Retrieve product',
+  responses: {
+    // response code
+    200: {
+      description: 'Ok', // response desc
+    },
+    404: {
+      description: 'Not Found', // response desc
+    },
+    500: {
+      description: 'Server error', // response desc
+    },
+  },
+};
+
+export const retrieveAllProducts = {
+  tags: ['Products'],
+  operationId: 'Retrieve products',
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  parameters: [
+    {
+    name: 'page',
+    in: 'path',
+    description: 'page of the page',
+    },
+    {
+      name: 'size',
+      in: 'path',
+      description: 'the limit of items to display',
+      }
+  ],
+  summary: 'Retrieve list of products',
+  responses: {
+    // response code
+    200: {
+      description: 'Ok', // response desc
+    },
+    404: {
+      description: 'Not Found', // response desc
+    },
+    500: {
+      description: 'Server error', // response desc
+    },
+  },
+};
+
+export const path = {
+  
+}

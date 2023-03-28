@@ -6,35 +6,44 @@ const createProduct = async (product) => {
 
 const findProduct = async (id, role, sellerId) => {
 
-  if(role == 'seller'){
+
+
+    if(role == 'seller'){
     
-   const product = await Products.findOne({where: { id, sellerId}});
-   if (product == null){
-    return false
-  }
-  return product;
-
-  }
-
-  const product = await Products.findOne({where: { id}});
-  if (product == null){
-    return false
-  }
-  return product;
+      const product = await Products.findOne({where: { id, sellerId}});
+      console.log(product);
+      if (product == null){
+       return false
+     }
+     return product;
+   
+     }
+   
+     const product = await Products.findOne({
+       where: { id},
+       include:[
+         {
+           model: User,
+           as: 'Seller',
+           attributes: ['firstname', 'lastname', 'email']  
+         }
+       ]
+     });
+     if (product == null){
+       return false
+     }
+     return product;
+  
 };
 
-const findProducts = async (role, sellerId) => {
+const findProducts = async (role, sellerId, size, page) => {
 
   if(role == 'seller'){
     
-    const products = await Products.findAll({
+    const products = await Products.findAndCountAll({
       where: {sellerId},
-      include:[
-        {
-          model: User,
-          as: 'Seller'
-        }
-      ]
+    limit: size,
+    offset: page * size
     });
     if (products == null){
      return false
@@ -43,7 +52,18 @@ const findProducts = async (role, sellerId) => {
  
    }
 
-  const products = await Products.findAll();
+  const products = await Products.findAndCountAll({
+    include:[
+      {
+        model: User,
+        as: 'Seller',
+        attributes: ['firstname', 'lastname', 'email']  
+      }
+    ],
+    limit: size,
+    offset: page * size
+  }
+  );
   if (products == null){
     return false
   }

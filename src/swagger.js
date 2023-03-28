@@ -1,4 +1,4 @@
-import { createProduct } from './documents/product.docs';
+import { createProduct, retrieveAllProducts, retrieveProduct } from './documents/product.docs';
 import {
   resetEmail,
   ResetPassword,
@@ -63,6 +63,12 @@ export const swaggerDocument = {
     '/api/v1/products': {
       post: createProduct,
     },
+    '/api/v1/products?page={page}&size={size}': {
+      get: retrieveAllProducts,
+    },
+    '/api/v1/products/{id}': {
+      get: retrieveProduct,
+    },        
     '/api/v1/users/profile': {
       put: userProfile,
     },
