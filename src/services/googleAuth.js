@@ -18,7 +18,10 @@ passport.use(
         const existingUser = await User.User.findOne({
           where: { email: profile.emails[0].value },
         });
+        console.log(existingUser)
         if (existingUser) {
+          existingUser.isEmailVerified = true;
+          await existingUser.save();
           const { firstname, email, role } = existingUser;
           const person = { firstname, email, role };
           const token = generateToken(person);

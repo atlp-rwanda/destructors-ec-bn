@@ -2,16 +2,16 @@ import request from 'supertest';
 import app from '../src/app';
 import '../src/services/googleAuth';
 import models from '../src/database/models/index';
-
+import jwt from 'jsonwebtoken'
 const { User } = require('../src/database/models');
 
 jest.setTimeout(30000);
-describe('Testing registration User', () => {
-  let token = '';
-  test('It should return 400 for bad request', async () => {
-    const response = await request(app).post('/api/v1/users/signup').send({
-      email: 'dummyEmail@gmail.com',
-      password: 'dummpassword435',
+describe("Testing registration User", () => { 
+  let token, userId;
+  test("It should return 400 for bad request", async () => {
+    const response = await request(app).post("/api/v1/users/signup").send({
+      email: "dummyEmail@gmail.com",
+      password: "dummpassword435",
     });
     expect(response.statusCode).toBe(400);
   });
@@ -25,10 +25,17 @@ describe('Testing registration User', () => {
     token = await response.body.token;
     expect(response.statusCode).toBe(201);
   });
-  test('It should not login with invalid email', async () => {
-    const res = await request(app).post('/api/v1/users/login').send({
-      email: 'test@user.com',
-      password: '@Password12',
+  test('should verify user email', async () => {
+    const response = await request(app)
+      .get(`/api/v1/users/verify-email?t=${token}`)
+      .expect(200);
+      expect(response.body).toHaveProperty('message', 'email verified');
+  });
+ 
+  test("It should not login with invalid email", async () => {
+    const res = await request(app).post("/api/v1/users/login").send({
+      email: "test@user.com",
+      password: "@Password12",
     });
     expect(res.statusCode).toBe(401);
   });
@@ -42,9 +49,13 @@ describe('Testing registration User', () => {
   test('It should login with valid email and password', async () => {
     const res = await request(app).post('/api/v1/users/login').send({
       email: `testemail1234@gmail.com`,
-      password: 'testpass2345',
-    });
-    expect(res.statusCode).toBe(200);
+      password: "testpass2345",
+    })
+    .expect(200);
+    expect(res.body).toHaveProperty('message', 'Successful login');
+    expect(res.body).toHaveProperty('user');
+    expect(res.body).toHaveProperty('token');
+    userId = res.body.user.id;
   });
 });
 

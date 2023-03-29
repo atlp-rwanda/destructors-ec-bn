@@ -1,18 +1,18 @@
-import { register, findUserByEmail,logout } from "../services/user.service";
-import { generateToken } from "../utils/generateToken";
-import passport from "passport";
-import { User } from "../database/models";
+import { register, findUserByEmail,logout } from '../services/user.service';
+import { generateToken } from '../utils/generateToken';
+import passport from 'passport';
+import { User } from '../database/models';
 import { BcryptUtil } from '../utils/bcrypt';
-import model from "../database/models/index.js";
-import "dotenv/config";
-// import { verifyToken } from "../utils/generateToken";
-import sendEmail from "../services/sendEmail.service";
-import verfyToken from "../utils/verifytoken";
+import model from '../database/models/index.js';
+import 'dotenv/config';
+import verfyToken from '../utils/verifytoken';
+import { request } from 'express';
 import { findUserById } from '../services/user.service';
-
-import generateOTP from "../utils/generateOTP";
-import {OTP} from "../database/models/index"
-import validOTPmail from "../services/emailValidation.service";
+import { sendVerificationEmail, sendEmail } from '../services/sendEmail.service';
+import generateOTP from '../utils/generateOTP';
+import {OTP} from '../database/models/index'
+import validOTPmail from '../services/emailValidation.service';
+import { now } from 'lodash';
 
 const registerUser = async (req, res) => {
   try {
@@ -26,15 +26,40 @@ const registerUser = async (req, res) => {
       role,
       isActive,
     };
-    const token = generateToken(userData);
+    const token = generateToken(userData, { expiresIn: '10m' });
+    await sendVerificationEmail(email, token);
     const response = await register(userData);
     return res
       .status(201)
-      .json({ message: "Successful registered", user: response, token: token });
+      .json({ message: 'Successful registered.Please check your email for verification', user: response, token: token });
   } catch (error) {
-    return res.status(500).json({ status: 500, error: "Server error" });
+    return res.status(500).json({ status: 500, error: 'Server error' });
   }
 };
+
+const verifyEmail = async (req, res) => {
+  const { t: token } = req.query;
+  try {
+    const decodedToken = verfyToken(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ where: { email: decodedToken.data.email } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const currentTime = Math.floor(Date.now() / 1000); 
+    if (decodedToken.exp < currentTime) {
+    return res.status(419).json({ message: 'Token expired' });
+    }
+    if(user.isEmailVerified == true){
+      return res.status(200).send({message: "Email already verified"})
+    }
+    user.isEmailVerified = true;
+    await user.save();
+    return res.status(200).send({message: "email verified"})
+  } catch (err) {
+    return res.status(500).send({err: 'something went wrong'});
+  }
+};
+
 const loginUser = async (req, res, next) => {
   passport.authenticate('local', async (err, user) => {
     if (err) {
@@ -50,7 +75,10 @@ const loginUser = async (req, res, next) => {
       if (!foundUser) {
         return res.status(404).json({ message: 'User not found' });
       }
-
+      if(foundUser.isEmailVerified == false){
+        console.log({message: foundUser.esEmailVerified})
+       return res.status(403).json({message: 'Please verify your email'}) 
+      }
       const passwordMatches = await BcryptUtil.compare(req.body.password, user.password);
 
       if (!passwordMatches) {
@@ -61,19 +89,18 @@ const loginUser = async (req, res, next) => {
         email: user.email,
         role: user.role,
         isActive: user.isActive,
-        expired:user.expired
       };
       
       //<---------this is for generating the one time password------->
       const token = generateToken(UserToken);
       const otp=generateOTP()
-       if(foundUser.role=="seller"){
+       if(foundUser.role=='seller'){
         OTP.otp=otp;
    await OTP.create({
          otp:otp,
          email:foundUser.email
        })
-       console.log("connected successfully!")
+       console.log('connected successfully!')
        try{
                await validOTPmail(foundUser,otp,token)
        }
@@ -82,6 +109,8 @@ const loginUser = async (req, res, next) => {
            res.status(500).json({ message: 'Error sending OTP code' });
        }
            }
+
+        
 
       return res.status(200).json({
         message: 'Successful login',
@@ -106,7 +135,7 @@ const loginUser = async (req, res, next) => {
    const userEml = req.body.email;
    const user = await findUserByEmail(userEml);
     if (user == false) {
-      res.status(404).json("User not found");
+      res.status(404).json('User not found');
     } else {
       const userDetails = {
         email: user.email,
@@ -115,16 +144,16 @@ const loginUser = async (req, res, next) => {
       }
       const userToken = generateToken(userDetails, { expiresIn: '10m' });
       const sendToEmail = req.body.email;
-      const HTMLText = `<p stlye="font-size: 30px"><strong> Hi <br> <br>
+      const HTMLText = `<p stlye='font-size: 30px'><strong> Hi <br> <br>
            Please click on this link below to reset your password:<br> ${userToken}<br>Remember, beware of scams and keep this one-time verification link confidential.<br>
             Thanks, </strong><br> DESTRUCTORS </p>`;
 
      await sendEmail(sendToEmail, 'Reset password', HTMLText);
 
-      res.status(200).json({ message: "Reset password email has been sent, check your inbox"});
+      res.status(200).json({ message: 'Reset password email has been sent, check your inbox'});
     }
   } catch (error) {
-    res.status(500).json({error: "Server error"});
+    res.status(500).json({error: 'server error'});
   }
 };
 
@@ -133,7 +162,7 @@ const loginUser = async (req, res, next) => {
     const token = req.params.token;
       const payload = verfyToken(token, process.env.JWT_SECRET)
 
-      console.log("payload", payload)
+      console.log('payload', payload)
 
       if (payload) {
 
@@ -153,7 +182,7 @@ const loginUser = async (req, res, next) => {
    
   } catch (error) {
     
-    res.status(500).json({error: "Server error"});
+    res.status(500).json({error: 'Server error'});
   }
 };
 
@@ -163,7 +192,7 @@ const editUserProfile = async(req,res)=>{
     const userEmail = req.user.email
     const decodeUser =await findUserByEmail(userEmail);
 
-    if(!decodeUser) return res.status(401).json("user not found");
+    if(!decodeUser) return res.status(401).json('user not found');
         let billingAddress
            billingAddress = JSON.stringify({
               province:req.body.province,
@@ -187,7 +216,7 @@ const editUserProfile = async(req,res)=>{
             billingAddress:JSON.parse(billingAddress),
             profilePic
           },{where:{id:decodeUser.id}})
-          res.status(200).json({message:"User profile updated successfully"})
+          res.status(200).json({message:'User profile updated successfully'})
   }catch(error){
     res.status(500).json({message:error})
   }
@@ -245,5 +274,5 @@ const updatePassword = async (req, res, next) => {
   }
 };
 
-export { registerUser, resetEmail, resetPassword, loginUser ,editUserProfile,logoutUser, updatePassword};
+export { registerUser, resetEmail, resetPassword, loginUser ,editUserProfile,logoutUser, updatePassword, verifyEmail};
 

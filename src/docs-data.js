@@ -734,3 +734,74 @@ export const searchProducts = {
     },
   },
 };
+
+
+export const verifyEmail = {
+  tags: ["User Authentication"],
+  description: "Verify the user's email",
+  operationId: "verifyEmail",
+  parameters: [
+    {
+      name: "t",
+      in: "query",
+      description: "Token sent to the user's email",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
+  ],
+  responses: {
+    200: {
+      description: "Email verified successfully",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "Email verified",
+              },
+            },
+          },
+        },
+      },
+    },
+    404: {
+      description: "User not found",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "User not found",
+              },
+            },
+          },
+        },
+      },
+    },
+    419: {
+      description: "Token has expired",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "Token has expired",
+              },
+            },
+          },
+        },
+      },
+    },
+    500: {
+      description: "Server error",
+    },
+  },
+};

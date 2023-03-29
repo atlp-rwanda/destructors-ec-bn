@@ -9,7 +9,6 @@ import User from "../database/models/index";
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import 'dotenv/config'
 import passport from "passport";
-import { generateToken } from "../utils/generateToken";
 const createProducts = async (req, res) => {
   try {
     const { name, price, quantity, bonus, expiryDate, categoryId } = req.body;
@@ -182,104 +181,5 @@ const searchProducts = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+export { createProducts, retrieveItem, retrieveItems, searchProducts};
 
-
-const updateProductAvailability = async (req, res) => {
-  try {
-    passport.authenticate('jwt', { session: false }, async (err, sellerData) => {
-      if (err) {
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
-
-      if (!sellerData) {
-        return res.status(400).json({ error: 'Enter your credentials as seller' });
-      }
-
-      if (sellerData.role !== 'seller') {
-        return res.status(400).json({ error: 'Only seller users can update product availability' });
-      }
-
-      const productId = req.params.id
-      // Regular expression to check if string is a valid UUID
-
-      const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
-      const verifyId =regexExp.test(productId); 
-      if (!verifyId) {
-        return res.status(400).json({ error: 'Insert a valid uuid' });
-      }
-      const product = await Products.findOne({ where: { id: productId } });
-
-      if (!product) {
-        return res.status(404).json({ error: 'Product not found' });
-      }
-
-      if (product.sellerId !== sellerData.id) {
-        return res.status(401).json({ error: 'You are not authorized to update this product' });
-      }
-
-      const updatedIsAvailable = !product.isAvailable;
-      const updateProduct = await Products.update(
-        { isAvailable: updatedIsAvailable },
-        { where: { id: productId } }
-      );
-      const updatedProduct = await Products.findOne({ where: { id: productId } });
-
-      return res.status(200).json({ product: updatedProduct });
-    })(req, res);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: 'Server error' });
-  }
-};
-const updateProduct = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const seller = req.user;
-  
-
-      const product = await Products.findOne({ where: { id, sellerId: seller.id } });
-
-      if (!product) {
-        return res.status(404).json({ error: 'Product not found ' });
-      }
-      const { name, price, quantity,bonus,expiryDate,categoryId} = req.body;
-      await Products.update(
-        { name, price, quantity, categoryId,bonus,expiryDate},
-        { where: { id, sellerId: seller.id } }
-      );
-  
- 
-      const updatedProduct = await Products.findOne({ where: { id } });
-
-      return res.status(200).json({ product: updatedProduct });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: 'Server error' });
-  }
-};
-
-
-
-const deleteProduct = async (req, res) => {
-  const { id } = req.params;
-  const sellerId = req.user.id; 
-
-  try {
-    const product = await Products.findOne({
-      where: { id, sellerId },
-    });
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-
-    await product.destroy();
-
-    return res.status(200).json({ message: 'Product deleted successfully' });
-  } catch (error) {
-    return res.status(500).json({ message: 'Server Error' });
-  }
-};
-
-
-
-export { createProducts ,updateProductAvailability,updateProduct,deleteProduct, retrieveItem, retrieveItems,searchProducts};

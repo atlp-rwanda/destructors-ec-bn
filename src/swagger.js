@@ -1,3 +1,4 @@
+
 import {
   createProduct,
   retrieveAllProducts,
@@ -18,7 +19,8 @@ import {
   assignUserRole,
   userUpdatePassword,
   verifyOTP,
-  searchProducts
+  searchProducts,
+  verifyEmail
 } from './docs-data';
 import 'dotenv/config';
 
@@ -118,6 +120,9 @@ export const swaggerDocument = {
     },
     '/api/v1/products/{id}/availability': {
       patch: updateProductAvailability,
+    },
+    '/api/v1/users/verify-email?t={token}': {
+      get: verifyEmail
     },
   },
 };
