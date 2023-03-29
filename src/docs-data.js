@@ -598,3 +598,141 @@ export const userUpdatePassword = {
     },
   },
 };
+
+
+export const searchProducts = {
+  tags: ["search product"],
+  description: "Search for products by name, price range, category, or best before date",
+  operationId: "searchProducts",
+  parameters: [
+    {
+      name: 'name',
+      in: 'query',
+      description: 'Search products by name',
+      schema: {
+        type: 'string',
+      },
+    },
+    {
+      name: 'minPrice',
+      in: 'query',
+      description: 'Search products with a price greater than or equal to this value',
+      schema: {
+        type: 'number',
+      },
+    },
+    {
+      name: 'maxPrice',
+      in: 'query',
+      description: 'Search products with a price less than or equal to this value',
+      schema: {
+        type: 'number',
+      },
+    },
+    {
+      name: 'categoryId',
+      in: 'query',
+      description: 'Search products by category ID',
+      schema: {
+        type: 'string',
+      },
+    },
+    {
+      name: 'bestBefore',
+      in: 'query',
+      description: 'Search products with an expiry date before this date',
+      schema: {
+        type: 'string',
+        format: 'date',
+      },
+    },
+  ],
+  responses: {
+    200: {
+      description: "Success",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              products: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/Product",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    400: {
+      description: "Invalid request data",
+    },
+    404: {
+      description: "Product not found",
+    },
+    500: {
+      description: "Server error",
+    },
+  },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
+    schemas: {
+      Product: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+            format: "uuid",
+          },
+          name: {
+            type: "string",
+          },
+          price: {
+            type: "number",
+          },
+          quantity: {
+            type: "integer",
+          },
+          isAvailable: {
+            type: "boolean",
+          },
+          categoryId: {
+            type: "integer",
+          },
+          sellerId: {
+            type: "integer",
+          },
+          bonus: {
+            type: "number",
+          },
+          images: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          expiryDate: {
+            type: "string",
+            format: "date",
+          },
+          isExpired: {
+            type: "boolean",
+          },
+        },
+      },
+    },
+  },
+};

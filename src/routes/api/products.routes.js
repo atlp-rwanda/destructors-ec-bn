@@ -21,7 +21,7 @@ route.post(
   isProductExist,
   createProducts
 );
-route.get('/search',searchProducts)
+route.get('/search',extractToken,searchProducts)
 route.get('/:id', extractToken, retrieveItem);
 route.get('/', extractToken, retrieveItems);
 

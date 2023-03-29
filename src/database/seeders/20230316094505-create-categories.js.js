@@ -9,14 +9,32 @@ module.exports = {
       'Categories',
       [
         {
-          id: '1a2ef741-1488-4435-b2e2-4075a6a169ec',
+          id: 'a1a96a86-d898-45d2-896f-51898966b896',
           name: 'furniture',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          id: 'e0bebe02-acb2-440d-b445-267c3c586a9e',
+          id: 'a1a96a86-d898-45d2-896f-51898966b892',
           name: 'electronics',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 'a1a96a86-d898-45d2-896f-51898966b893',
+          name: 'shoes',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 'a1a96a86-d898-45d2-896f-51898966b894',
+          name: 'fruits',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 'a1a96a86-d898-45d2-896f-51898966b895',
+          name: 'bags',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
