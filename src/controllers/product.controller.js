@@ -2,6 +2,14 @@
 import { createProduct, findProduct, findProducts } from '../services/product.service.js';
 import verfyToken from '../utils/verifytoken.js';
 import 'dotenv/config';
+import { Op } from 'sequelize';
+import {Products } from '../database/models';
+import jwt from "jsonwebtoken"
+
+import User from "../database/models/index";
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import 'dotenv/config'
+import passport from "passport";
 
 const createProducts = async (req, res) => {
   try {
@@ -117,4 +125,53 @@ const retrieveItems = async (req, res) => {
 
 };
 
-export { createProducts, retrieveItem, retrieveItems };
+const opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET
+};
+
+passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
+  try {
+    const UserData = await User.User.findOne({where: {email: jwt_payload.data.email}})
+    if (!UserData) {
+      return done(null, false);
+    }
+    return done(null, UserData);
+  } catch (error) {
+    done(error, false);
+  }
+}));
+
+const searchProducts = async (req, res) => {
+  
+  try {
+    passport.authenticate('jwt', { session: false }, async (err, UserData) => {
+      if (err) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+
+    const { name, minPrice, maxPrice, categoryId, bestBefore } = req.query;
+
+    const where = {};
+    if (name) where.name = { [Op.iLike]: `%${name}%` };
+    if (minPrice) where.price = { [Op.gte]: minPrice };
+    if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
+    if (categoryId) where.categoryId = categoryId;
+    if (bestBefore) where.expiryDate = { [Op.lt]: new Date(bestBefore) };
+
+    if (UserData.role == 'seller') {
+      where.sellerId = UserData.id;
+
+
+    }
+
+    const products = await Products.findAll({ where });
+    return res.status(200).json({ products });
+  })(req, res);
+}catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+export { createProducts, retrieveItem, retrieveItems, searchProducts};
+

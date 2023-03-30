@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createProducts, retrieveItem, retrieveItems } from '../../controllers/product.controller.js';
+import { createProducts, retrieveItem, retrieveItems, searchProducts } from '../../controllers/product.controller.js';
 import { productValidation } from '../../ validations/product.validation.js';
 import {
   isCategoryExist,
@@ -21,7 +21,7 @@ route.post(
   isProductExist,
   createProducts
 );
-
+route.get('/search',extractToken,searchProducts)
 route.get('/:id', extractToken, retrieveItem);
 route.get('/', extractToken, retrieveItems);
 

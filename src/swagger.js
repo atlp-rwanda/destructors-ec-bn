@@ -15,6 +15,7 @@ import {
   assignUserRole,
   userUpdatePassword,
   verifyOTP,
+  searchProducts
 } from './docs-data';
 import 'dotenv/config';
 
@@ -99,6 +100,9 @@ export const swaggerDocument = {
       post: addCart,
       get: getCart,
       put: clearCart,
+    },
+    '/api/v1/products/search': {
+      get: searchProducts,
     },
   },
 };

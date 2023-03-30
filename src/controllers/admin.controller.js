@@ -38,8 +38,7 @@ const updateUserStatus = async (req, res) => {
       if (adminData.role !== 'admin') {
         return res.status(400).json({ error: 'Only admin users can update user status' });
       }
-const useree = req.params.id
-console.log(useree);
+
       const user = await User.User.findOne({ where: { id: req.params.id } });
 
       if (!user) {
