@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "dev": "nodemon --exec npx babel-node src/index",
     "migrate": "sequelize db:migrate",
-    "seed": "npx sequelize-cli db:seed:all",
+    "seed": "npx sequelize-cli db:seed --seed 20230322194110-User.js",
     "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate && npx sequelize-cli db:seed --seed 20230322194110-User.js",
     "migrate:down": "sequelize db:migrate:undo:all",
     "run-tests": "cross-env NODE_ENV=test jest --coverage --verbose --testTimeout=10000",

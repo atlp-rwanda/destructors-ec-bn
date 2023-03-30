@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createProducts } from '../../controllers/product.controller.js';
+import { createProducts, retrieveItem, retrieveItems } from '../../controllers/product.controller.js';
 import { productValidation } from '../../ validations/product.validation.js';
 import {
   isCategoryExist,
@@ -21,5 +21,8 @@ route.post(
   isProductExist,
   createProducts
 );
+
+route.get('/:id', extractToken, retrieveItem);
+route.get('/', extractToken, retrieveItems);
 
 export default route;
