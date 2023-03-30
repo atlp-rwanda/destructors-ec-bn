@@ -4,6 +4,7 @@ import {
   retrieveProduct,
 } from './documents/product.docs';
 import { getCart, addCart, clearCart } from './documents/cart.docs';
+import {createProdWish,getProductWishes,getWishesPerProduct } from './documents/wishlist.docs';
 import {
   resetEmail,
   ResetPassword,
@@ -103,6 +104,13 @@ export const swaggerDocument = {
     },
     '/api/v1/products/search': {
       get: searchProducts,
+    },
+    '/api/v1/product-wishes': {
+      post: createProdWish,
+      get:  getProductWishes,
+    },
+    '/api/v1/product-wishes/{id}': {
+      get: getWishesPerProduct,
     },
   },
 };

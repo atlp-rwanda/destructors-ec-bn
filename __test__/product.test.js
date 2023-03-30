@@ -1,13 +1,14 @@
 import request from 'supertest';
 import app from '../src/app';
 import path from 'path';
-
-const { User,Products } = require('../src/database/models');
+import { Sequelize } from '../src/database/models';
+const { User } = require('../src/database/models');
+import {Products} from '../src/database/models'
 import { Categories } from '../src/database/models';
 import { generateToken } from '../src/utils/generateToken';
-// import {Products } from '../src/database/models';
-// import User from "../src/database/models"
+import verfyToken from '../src/utils/verifytoken';
 jest.setTimeout(50000);
+
 describe('Testing Products service', () => {
   let categories;
   beforeAll(async () => {
@@ -15,9 +16,9 @@ describe('Testing Products service', () => {
       name: 'clothers',
     });
   });
-  let token = '';
   let sellerToken = '';
   let email = 'testemail123456@gmail.com';
+  let token = '';
 
   test('should return 401 when user is not logged in', async () => {
     const response = await request(app).post('/api/v1/products').send({
@@ -181,17 +182,117 @@ describe('Testing Products service', () => {
        .set('Authorization', `Bearer ${newSellerToken}`)
      expect(response.statusCode).toBe(500);
    });
-   test('it should return 200 if there are no products in store', async () => {
-   const user = await User.findOne({ where:{email: 'example@gmail.com'}})
-    token = generateToken(user)
-    await Products.destroy({
-      where: {},
-      truncate: true
+  describe('POST /api/v1/product-wishes', () => {
+    it('should add a product to the wishlist', async () => {
+      const product=await Products.findOne({where:{name:'two people sofa'}})
+      const user=await User.findOne({where:{email}})
+      const userId=user.id
+      const productId=product.id
+      token=generateToken(user)
+      const response = await request(app)
+        .post('/api/v1/product-wishes')
+        .set('Authorization',`Bearer ${token}`)
+        .send({ userId: userId, productId: productId });
+        expect(response.status).toBe(201);
     });
-    const response = await request(app)
-      .get('/api/v1/products')
-      .set('Authorization', `Bearer ${token}`)
-    expect(response.statusCode).toBe(200);
+    
+    it('should remove a product from the wishlist if it already exists', async () => {
+      const product=await Products.findOne({where:{name:'two people sofa'}})
+      const user=await User.findOne({where:{email}})
+      const userId=user.id
+      const productId=product.id
+      token=generateToken(user)
+      const response = await request(app)
+        .post('/api/v1/product-wishes')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ userId: userId, productId: productId });
+  
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('product unwished  succesfully!');
+    });
+    it('should return a 401 error if user is not authorized', async () => {
+      const response = await request(app).post('/api/v1/product-wishes').send({ userId: 1, productId: 1 });
+      expect(response.status).toBe(401);
+    });
+    it('should return a 400 error if something goes wrong', async () => {
+  
+      const user = {
+        id: 1,
+        email: 'testuser@example.com',
+        role: 'customer',
+      };
+      const product = {
+        id: 1,
+        name: 'Test Product',
+        price: 9.99,
+      };
+      const response = await request(app)
+        .post('/api/v1/product-wishes')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ userId: user.id, productId: product.id });
+        expect(response.status).toBe(400);
+    });
+    it('should  return all product wishes of a buyer from the database', async () => {
+      const user = await User.findOne({ where: {email:email} });
+      token=generateToken(user)
+      const response = await request(app)
+        .get('/api/v1/product-wishes')
+        .set('Authorization', `Bearer ${token}`);
+      expect(response.status).toBe(200);
+    });
+    it('should return 200 if user is  authorized', async () => {
+      const user=  await User.findOne({ where: { email:email } });
+      token=generateToken(user)
+      const response = await request(app)
+        .get('/api/v1/product-wishes')
+        .set('Authorization', `Bearer ${token}`);
+  
+      expect(response.status).toBe(200);
+    });
+    it('should return all product wishes grouped by product for a seller', async () => {
+      const user = await User.findOne({ where: { email: email } });
+      await user.update({ role: 'seller' });
+      sellerToken=generateToken(user)
+      const response = await request(app)
+        .get('/api/v1/product-wishes')
+        .set('Authorization', `Bearer ${sellerToken}`);
+  
+      expect(response.status).toBe(200);
+
+    });
+    it('should return 500 if user is not a buyer or seller', async () => {
+      const user = await User.findOne({ where: { email: 'admin@test.com' } });
+      token = generateToken(user);
+  
+      const response = await request(app)
+        .get('/api/v1/product-wishes')
+        .set('Authorization', `Bearer ${token}`);
+  
+      expect(response.status).toBe(500);
+    });
+    it('Get:/api/v1/productwishes/:id  should return the number of wishes for a given product', async () => {
+      const sellerUser = await User.findOne({ where: { email:email,role: 'seller' } });
+      const product = await Products.findOne({where:{name:'two people sofa'}});
+  
+      sellerToken = generateToken(sellerUser);
+      const response = await request(app)
+        .get(`/api/v1/product-wishes/${product.id}`)
+        .set('Authorization', `Bearer ${sellerToken}`);
+  
+      expect(response.status).toBe(200);
+    });
+    it('should return 401 for unauthorized users', async () => {
+      const buyerUser = await User.findOne({ where: { role: 'buyer' } });
+      const product = await Products.findOne({where:{name:'two people sofa'}});
+  
+      const authToken = generateToken(buyerUser);
+      const response = await request(app)
+        .get(`/api/v1/product-wishes/${product.id}`)
+        .set('Authorization', `Bearer ${authToken}`);
+  
+      expect(response.status).toBe(401);
+      expect(response.text).toBe("\"unAuthorized user !\"");
+    });
   });
 });
 
