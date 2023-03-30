@@ -1,4 +1,9 @@
-import { createProduct, retrieveAllProducts, retrieveProduct } from './documents/product.docs';
+import {
+  createProduct,
+  retrieveAllProducts,
+  retrieveProduct,
+} from './documents/product.docs';
+import { getCart, addCart, clearCart } from './documents/cart.docs';
 import {
   resetEmail,
   ResetPassword,
@@ -9,9 +14,9 @@ import {
   updateUserStatus,
   assignUserRole,
   userUpdatePassword,
-  verifyOTP
+  verifyOTP,
 } from './docs-data';
-import "dotenv/config";
+import 'dotenv/config';
 
 export const swaggerDocument = {
   openapi: '3.0.1',
@@ -68,7 +73,7 @@ export const swaggerDocument = {
     },
     '/api/v1/products/{id}': {
       get: retrieveProduct,
-    },        
+    },
     '/api/v1/users/profile': {
       put: userProfile,
     },
@@ -84,11 +89,16 @@ export const swaggerDocument = {
     '/api/v1/users/update-password': {
       patch: userUpdatePassword,
     },
-    "/api/v1/users/{id}/roles":{
-     patch: assignUserRole
+    '/api/v1/users/{id}/roles': {
+      patch: assignUserRole,
     },
     '/api/v1/users/login/validate/{token}': {
       post: verifyOTP,
+    },
+    '/api/v1/carts': {
+      post: addCart,
+      get: getCart,
+      put: clearCart,
     },
   },
 };
