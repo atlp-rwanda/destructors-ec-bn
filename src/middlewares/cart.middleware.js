@@ -32,7 +32,10 @@ const addProductToCart = async (req, res, next) => {
         .json({ message: 'No enough product in the stock' });
     }
   } else {
-    const newProduct = { quantity: productQuantity, productId: productId };
+    const newProduct = {
+      quantity: productQuantity,
+      productId: productId,
+    };
     cart.products.push(newProduct);
     await updateCart({ products: cart.products }, cart.id);
   }

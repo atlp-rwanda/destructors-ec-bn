@@ -37,6 +37,6 @@ try {
 } catch (error) {
   console.log(error);
 }
-app.use('/api/v1/', route);
-jobScheduling()
+
+jobScheduling();
 export default app;

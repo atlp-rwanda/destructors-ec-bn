@@ -15,8 +15,9 @@ const isCategoryExist = async (req, res, next) => {
 };
 
 const isProductExist = async (req, res, next) => {
+  const sellerId = req.user.id;
   const { name } = req.body;
-  const product = await Products.findOne({ where: { name } });
+  const product = await Products.findOne({ where: { name, sellerId } });
 
   if (product) {
     return res.status(404).json({

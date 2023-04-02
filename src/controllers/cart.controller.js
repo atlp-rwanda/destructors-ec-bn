@@ -15,7 +15,6 @@ const addToCart = async (req, res) => {
 
     if (!product)
       return res.status(400).json({ message: "Product does'nt exist" });
-
     if (product.quantity < productQuantity) {
       return res
         .status(400)
@@ -23,7 +22,13 @@ const addToCart = async (req, res) => {
     }
 
     if (!cart) {
-      const products = [{ quantity: productQuantity, productId: productId }];
+      const products = [
+        {
+          quantity: productQuantity,
+          productId: productId,
+          sellerId: product.sellerId,
+        },
+      ];
 
       const newCarts = {
         userId,
@@ -34,6 +39,7 @@ const addToCart = async (req, res) => {
     }
     return res.status(201).json({
       id: productId,
+      sellerId: product.sellerId,
       quantity: productQuantity,
       message: 'Product added to cart successfully ',
     });
@@ -48,6 +54,10 @@ const addToCart = async (req, res) => {
 const viewCart = async (req, res) => {
   try {
     const cart = req.cart;
+    if (!cart)
+      return res
+        .status(404)
+        .json({ message: 'Your cart is empty, Create a new cart' });
     const { products } = cart;
     const pId = products.map((product) => product.productId);
     const productInfo = await getCartProducts(pId);
@@ -57,6 +67,7 @@ const viewCart = async (req, res) => {
       price: product.price,
       quantity: products[index].quantity,
       images: product.images,
+      sellerId: product.sellerId,
     }));
     const cartTotal = culculateProductTotal(productAllInfo);
     return res.status(200).json({
