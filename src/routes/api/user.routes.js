@@ -7,6 +7,7 @@ import {
   editUserProfile,
   logoutUser,
   verifyEmail,
+  getUserProfile
 } from '../../controllers/user.controller';
 import verifyUser from '../../middlewares/verifyUser';
 import signupValidation from '../../ validations/signup.validation';
@@ -61,6 +62,13 @@ route.put(
   checkIfPasswordIsExpired,
   editUserProfil,
   editUserProfile
+);
+route.get(
+  '/profile',
+  extractToken,
+  checkIfPasswordIsExpired,
+  editUserProfil,
+  getUserProfile
 );
 route.post('/logout', extractToken, logoutUser);
 route.patch('/:id/status', checkIfPasswordIsExpired, updateUserStatus);

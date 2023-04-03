@@ -6,8 +6,8 @@ export const checkIfPasswordIsExpired = (req,res,next)=>{
     const decodedToken = verfyToken(getToken,process.env.JWT_SECRET)
     const expired = decodedToken.data.expired
     if(expired){
-        return  res.status(201).json('your password has expires please update it!!')
+        return  res.status(417).json('your password has expired please update it!!')
     }
     next()
-    eventEmitter.emit('response','Your Password has expired!! please update it')
+    return eventEmitter.emit('response','Your Password has expired!! please update it')
 }

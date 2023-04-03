@@ -89,6 +89,7 @@ const loginUser = async (req, res, next) => {
         email: user.email,
         role: user.role,
         isActive: user.isActive,
+        expired:user.expired
       };
       
       //<---------this is for generating the one time password------->
@@ -187,7 +188,18 @@ const loginUser = async (req, res, next) => {
   }
 };
 
+const getUserProfile = async(req,res)=>{
+  try{
+    const userId = req.user.id
+    const user = await User.findOne({where:{id:userId}})
+    if(user){
+      res.status(200).json({user_details:user})
+    }
+  }catch(err){
+    res.status(401).json(err)
+  }
 
+}
 const editUserProfile = async(req,res)=>{
   try{
     const userEmail = req.user.email
@@ -275,5 +287,4 @@ const updatePassword = async (req, res, next) => {
   }
 };
 
-export { registerUser, resetEmail, resetPassword, loginUser ,editUserProfile,logoutUser, updatePassword, verifyEmail};
-
+export { registerUser, resetEmail, resetPassword, loginUser ,editUserProfile,logoutUser, updatePassword, verifyEmail ,getUserProfile};

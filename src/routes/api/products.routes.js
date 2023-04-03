@@ -17,8 +17,8 @@ import {
 } from '../../middlewares/product.middleware.js';
 import checkRole from '../../middlewares/checkRole.js';
 import extractToken from '../../middlewares/checkUserWithToken.js';
-
 import { checkIfPasswordIsExpired } from '../../middlewares/checkPassword.js';
+
 const route = Router();
 route.post(
   '/',
@@ -39,8 +39,8 @@ route.patch(
   checkRole(['seller']),
   updateProductAvailability
 );
-route.patch('/:id', extractToken, checkRole(['seller']), updateProduct);
-route.delete('/:id', extractToken, checkRole(['seller']), deleteProduct);
+route.patch('/:id', extractToken, checkRole(['seller']),checkIfPasswordIsExpired, updateProduct);
+route.delete('/:id', extractToken, checkRole(['seller']),checkIfPasswordIsExpired, deleteProduct);
 route.get('/:id/product-wishes',extractToken,getWishesPerProduct)
 
 export default route;
