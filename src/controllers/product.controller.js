@@ -4,8 +4,7 @@ import verfyToken from '../utils/verifytoken.js';
 import 'dotenv/config';
 import { Op } from 'sequelize';
 import {Products } from '../database/models';
-import jwt from "jsonwebtoken"
-
+import uuidValidate from 'uuid-validate'
 import User from "../database/models/index";
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import 'dotenv/config'
@@ -153,11 +152,21 @@ const searchProducts = async (req, res) => {
 
     const { name, minPrice, maxPrice, categoryId, bestBefore } = req.query;
 
+    if (minPrice && maxPrice && Number(minPrice) > Number(maxPrice)) {
+      return res.status(400).json({ error: 'Minimum price cannot be greater than maximum price.' });
+    }
+
     const where = {};
     if (name) where.name = { [Op.iLike]: `%${name}%` };
     if (minPrice) where.price = { [Op.gte]: minPrice };
     if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
-    if (categoryId) where.categoryId = categoryId;
+    if (categoryId) {
+      if (uuidValidate(categoryId)) {
+        where.categoryId = categoryId;
+      } else {
+        return res.status(400).json({ error: 'Invalid categoryId.' });
+      }
+    }
     if (bestBefore) where.expiryDate = { [Op.lt]: new Date(bestBefore) };
 
     if (UserData.role == 'seller') {
