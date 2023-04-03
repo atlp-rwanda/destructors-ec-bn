@@ -10,7 +10,6 @@ const isAdmin = async (req, res, next) => {
     }
 
     const token = req.headers.authorization;
-    console.log(token);
     const decodedToken = verifytoken(token)
     const userId = decodedToken.userId;
     const user = await getUserByEmail(userId);

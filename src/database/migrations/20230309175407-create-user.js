@@ -45,6 +45,9 @@ module.exports = {
       lastTimePasswordUpdated: {
         type: Sequelize.DATE,
       },
+      expired:{
+        type: Sequelize.BOOLEAN,
+      }
     });
   },
   async down(queryInterface, Sequelize) {

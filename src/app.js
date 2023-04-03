@@ -7,6 +7,8 @@ import allRouter from './routes/index.js';
 import { sequelize } from './database/models/user.js';
 import { swaggerDocument } from './swagger.js';
 import route from './routes/api/user.routes.js';
+import { jobScheduling } from './jobs/isPasswordUptodate.js';
+
 const app = express();
 export const connectDB = async () => {
   try {
@@ -36,4 +38,5 @@ try {
   console.log(error);
 }
 app.use('/api/v1/', route);
+jobScheduling()
 export default app;

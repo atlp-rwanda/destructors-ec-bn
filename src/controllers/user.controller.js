@@ -8,7 +8,6 @@ import "dotenv/config";
 // import { verifyToken } from "../utils/generateToken";
 import sendEmail from "../services/sendEmail.service";
 import verfyToken from "../utils/verifytoken";
-import { request } from "express";
 import { findUserById } from '../services/user.service';
 
 import generateOTP from "../utils/generateOTP";
@@ -62,8 +61,9 @@ const loginUser = async (req, res, next) => {
         email: user.email,
         role: user.role,
         isActive: user.isActive,
-        
+        expired:user.expired
       };
+      
       //<---------this is for generating the one time password------->
       const token = generateToken(UserToken);
       const otp=generateOTP()
@@ -139,7 +139,9 @@ const loginUser = async (req, res, next) => {
 
         const hashPassword = BcryptUtil.hash(req.body.password);
        await model.User.update({
-          password: hashPassword
+          password: hashPassword,
+          lastTimePasswordUpdated : new Date(),
+          expired : false
         }, {
           where: { email: payload.data.email }
         });
@@ -230,6 +232,8 @@ const updatePassword = async (req, res, next) => {
     const hashedPassword = await BcryptUtil.hash(newPassword);
 
     user.password = hashedPassword;
+    user.lastTimePasswordUpdated = new Date();
+    user.expired = false
     await user.save();
 
     res.status(200).json({
