@@ -454,6 +454,13 @@ let UserToken
 
   });
 
+  test('should give an error if the min price is greater than max price', async () => {
+    const response = await request(app).get('/api/v1/products/search?minPrice=50&maxPrice=20')
+    .set('Authorization', `Bearer ${UserToken}` )
+    expect(response.status).toBe(400);
+
+  });
+
   test('should filter products by price categoryId', async () => {
     const response = await request(app).get('/api/v1/products/search?catego')
     .set('Authorization', `Bearer ${UserToken}` )
@@ -461,4 +468,10 @@ let UserToken
 
   });
 
+  test('should given an error if the catedoryId is not valid', async () => {
+    const response = await request(app).get('/api/v1/products/search?categoryId=99000888-888888')
+    .set('Authorization', `Bearer ${UserToken}` )
+    expect(response.status).toBe(400);
+
+  });
 });

@@ -7,8 +7,8 @@
     "start": "node src/index.js",
     "dev": "nodemon --exec npx babel-node src/index",
     "migrate": "sequelize db:migrate",
-    "seed": "npx sequelize-cli db:seed --seed 20230322194110-User.js",
-    "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate && npx sequelize-cli db:seed --seed 20230322194110-User.js",
+    "seed": "sequelize db:seed:all",
+    "migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate && npm run seed",
     "migrate:down": "sequelize db:migrate:undo:all",
     "run-tests": "cross-env NODE_ENV=test jest --coverage --verbose --testTimeout=10000",
     "pretest": "cross-env NODE_ENV=test npm run migrate:reset",
@@ -60,7 +60,8 @@
     "supertest": "^6.3.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.2",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "uuid-validate": "^0.0.3"
   },
   "devDependencies": {
     "chai": "^4.3.7",
