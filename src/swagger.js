@@ -1,13 +1,17 @@
-
 import {
   createProduct,
   retrieveAllProducts,
   retrieveProduct,
   updateProductAvailability,
-   updateProduct, deleteProduct
+  updateProduct,
+  deleteProduct,
 } from './documents/product.docs';
 import { getCart, addCart, clearCart } from './documents/cart.docs';
-import {createProdWish,getProductWishes,getWishesPerProduct, } from './documents/wishlist.docs';
+import {
+  createProdWish,
+  getProductWishes,
+  getWishesPerProduct,
+} from './documents/wishlist.docs';
 import {
   resetEmail,
   ResetPassword,
@@ -20,7 +24,7 @@ import {
   userUpdatePassword,
   verifyOTP,
   searchProducts,
-  verifyEmail
+  verifyEmail,
 } from './docs-data';
 import 'dotenv/config';
 
@@ -79,8 +83,8 @@ export const swaggerDocument = {
     },
     '/api/v1/products/{id}': {
       get: retrieveProduct,
-      patch:updateProduct,
-      delete:deleteProduct,
+      patch: updateProduct,
+      delete: deleteProduct,
     },
     '/api/v1/users/profile': {
       put: userProfile,
@@ -113,7 +117,7 @@ export const swaggerDocument = {
     },
     '/api/v1/product-wishes': {
       post: createProdWish,
-      get:  getProductWishes,
+      get: getProductWishes,
     },
     '/api/v1/product-wishes/{id}': {
       get: getWishesPerProduct,
@@ -122,7 +126,7 @@ export const swaggerDocument = {
       patch: updateProductAvailability,
     },
     '/api/v1/users/verify-email?t={token}': {
-      get: verifyEmail
+      get: verifyEmail,
     },
   },
 };
