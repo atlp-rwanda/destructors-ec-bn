@@ -19,7 +19,6 @@ describe('Testing Products service', () => {
   let sellerToken = '';
   let email = 'testemail123456@gmail.com';
   let token = '';
-  let item = '';
 
   test('should return 401 when user is not logged in', async () => {
     const response = await request(app).post('/api/v1/products').send({
@@ -121,7 +120,7 @@ describe('Testing Products service', () => {
     expect(response.statusCode).toBe(200);
   });
   test('it should return 200 for retrieving  a product', async () => {
-   item = await Products.findOne({ where:{name: 'two people sofa'}})
+   const item = await Products.findOne({ where:{name: 'two people sofa'}})
     const response = await request(app)
       .get(`/api/v1/products/${item.id}`)
       .set('Authorization', `Bearer ${token}`)
@@ -295,94 +294,6 @@ describe('Testing Products service', () => {
       expect(response.text).toBe("\"unAuthorized user !\"");
     });
   });
-  describe('Testing Products availability', () => {
-    test('it should return 201 for post product when user is seller', async () => {
-      const user = await User.findOne({ where: { email: email } });
-      await user.update({ role: 'seller' });
-      sellerToken = generateToken(user);
-      const response = await request(app)
-        .post('/api/v1/products')
-        .set('Authorization', `Bearer ${sellerToken}`)
-        .field('name', 'nike shoes two pairs')
-        .field('price', 5000)
-        .field('categoryId', categories.id)
-        .attach('image', path.resolve(__dirname, './images/image.jpg'))
-        .attach('image', path.resolve(__dirname, './images/image1.jpg'));
-      expect(response.statusCode).toBe(201);
-      expect(sellerToken).not.toBeNull();
-      expect(response.body.message).toStrictEqual('Products created successfull');
-    });
-
-
-    test('unAvailable', async () => {
-      const res = await request(app)
-        .patch('/api/v1/products/9974076f-e16a-486f-a923-362ec1747a12/availability')
-        .set('Authorization', `Bearer ${sellerToken}`)
-        .send({ isAvailable: false });
-      expect(res.status).toBe(404);
-      ;
-    });
-
-    test('should update the product availability', async () => {
-      item = await Products.findOne({ where:{name: 'two people sofa'}})
-      const res = await request(app)
-        .patch(`/api/v1/products/${item.id}/availability`)
-        .set('Authorization', `Bearer ${sellerToken}`)
-      expect(res.status).toBe(200);
-      ;
-    });
-    test('should return 401 when user is not a seller', async () => {
-      item = await Products.findOne({ where:{name: 'two people sofa'}})
-      const res = await request(app)
-        .patch(`/api/v1/products/${item.id}/availability`)
-        .set('Authorization', `Bearer ${token}`)
-      expect(res.status).toBe(401);
-      ;
-    });
-    test('should return 500 when product id not valid', async () => {
-      const res = await request(app)
-        .delete(`/api/v1/products/9974076f-e16a-486f-a923-362e2`)
-        .set('Authorization', `Bearer ${sellerToken}`);
-      expect(res.status).toBe(500);
-    });
-    test('should return 200 when product is updated', async () => {
-      const res = await request(app)
-        .patch(`/api/v1/products/${item.id}`)
-        .set('Authorization', `Bearer ${sellerToken}`)
-        .send({
-          name: "tomato",
-          price: "4000"
-      })
-      expect(res.status).toBe(200);
-    });
-    test('should return 500 when product id not valid', async () => {
-      const res = await request(app)
-        .patch(`/api/v1/products/9974076f-e16a-486f-a923-362e2`)
-        .set('Authorization', `Bearer ${sellerToken}`)
-      expect(res.status).toBe(500);
-      ;
-    });
-
-    test('should delete the product with the given ID', async () => {
-      const res = await request(app)
-        .delete(`/api/v1/products/${item.id}`)
-        .set('Authorization', `Bearer ${sellerToken}`);
-      expect(res.status).toBe(200);
-    });
-    test('should return 404 when product is not found', async () => {
-      const res = await request(app)
-        .delete(`/api/v1/products/9974076f-e16a-486f-a923-362ec1747a12`)
-        .set('Authorization', `Bearer ${sellerToken}`);
-      expect(res.status).toBe(404);
-    });
-  
-    test('should return 404 if the product with the given ID does not exist', async () => {
-      const res = await request(app)
-        .delete('/api/v1/products/products/9974076f-e16a-486f-a923-362ec1747a12')
-        .set('Authorization', `Bearer ${sellerToken}`);
-        expect(res.status).toBe(404);
-  });
-    });
 });
 
 

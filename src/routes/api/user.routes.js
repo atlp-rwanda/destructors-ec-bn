@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser, loginUser,resetEmail, resetPassword,editUserProfile,logoutUser} from "../../controllers/user.controller";
+import { registerUser, loginUser,resetEmail, resetPassword,editUserProfile,logoutUser, verifyEmail} from "../../controllers/user.controller";
 import verifyUser from "../../middlewares/verifyUser";
 import signupValidation from "../../ validations/signup.validation";
 import userValdation from '../../ validations/login.validation';
@@ -26,6 +26,7 @@ route.post('/login/validate/:token',checkIfPasswordIsExpired,verifyOTP)
 route.get('/auth',(req,res)=>{
     res.status(200).send('<a href="/api/v1/users/login/google">do you want to access your account</a>')
 })
+route.get('/verify-email', verifyEmail)
 route.get('/login/google',googleAuthentication);
 route.get('/google/callback', passport.authenticate('google'),googleCallBack)
 route.put('/profile',extractToken,checkIfPasswordIsExpired,editUserProfil,editUserProfile);

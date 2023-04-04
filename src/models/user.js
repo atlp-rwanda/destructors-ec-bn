@@ -38,6 +38,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: 'buyer',
       },
+
+      
       isActive: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,

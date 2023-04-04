@@ -1,9 +1,6 @@
 const { Model } = require('sequelize');
 const { Sequelize } = require('.');
 
-
-
-
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {}
@@ -36,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
       isActive: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
+      },
+      isEmailVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
       mustUpdatePassword: {
         type: DataTypes.BOOLEAN,
