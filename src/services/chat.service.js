@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import { findUserById } from './user.service';
-import { Chat, User } from '../database/models';
+import { Chat, User, Products, Notifications } from '../database/models';
 
 function initializeChat(server) {
   const io = new Server(server, {
@@ -9,7 +9,7 @@ function initializeChat(server) {
     },
   });
 
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
     socket.on('newuser', async (userId) => {
       const user = await findUserById(userId);
       socket.broadcast.emit(
@@ -41,6 +41,15 @@ function initializeChat(server) {
         text,
       });
     });
+    const expiredProducts = await Products.findAll({where: { isExpired: true}});
+    const products = expiredProducts;
+
+    console.log(products);
+  products.forEach(element => {
+    Notifications.create({notification: `${element.name} has expired`, entityId: element.id})
+  });
+
+  socket.emit('expired-notifications', products)
   });
 
   return io;
