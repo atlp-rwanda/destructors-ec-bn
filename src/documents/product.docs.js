@@ -256,3 +256,5 @@ export const updateProduct = {
     },
   },
 };
+
+export const path = {};
