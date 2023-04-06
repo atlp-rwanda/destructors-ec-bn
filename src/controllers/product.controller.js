@@ -169,7 +169,7 @@ const searchProducts = async (req, res) => {
       if (err) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
-
+      try {
       const { name, minPrice, maxPrice, categoryId, bestBefore } = req.query;
 
       const where = {};
@@ -177,7 +177,14 @@ const searchProducts = async (req, res) => {
       if (minPrice) where.price = { [Op.gte]: minPrice };
       if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
       if (categoryId) where.categoryId = categoryId;
-      if (bestBefore) where.expiryDate = { [Op.lt]: new Date(bestBefore) };
+      let expiryDate;
+      if (bestBefore) {
+        expiryDate = new Date(bestBefore);
+        if (isNaN(expiryDate)) {
+          return res.status(400).json({ error: 'Invalid date format for bestBefore' });
+        }
+        where.expiryDate = { [Op.lt]: expiryDate };
+      }
 
       if (UserData.role == 'seller') {
         where.sellerId = UserData.id;
@@ -185,6 +192,9 @@ const searchProducts = async (req, res) => {
 
       const products = await Products.findAll({ where });
       return res.status(200).json({ products });
+    } catch (err) {
+      return res.status(500).json({ error:"enter valid uuid" });
+    }
     })(req, res);
   } catch (err) {
     return res.status(500).json({ error: err.message });
