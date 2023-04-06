@@ -14,7 +14,5 @@ routes.use('/products', product);
 routes.use('/users', updatePassword);
 routes.use('/carts', cart);
 routes.use('/product-wishes',wishlist)
-
 routes.use('/chats', chat);
-
 export default routes;

@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       bonus: DataTypes.NUMBER,
       images: DataTypes.ARRAY(DataTypes.STRING),
       expiryDate: DataTypes.DATE,
+      averageRating:DataTypes.DECIMAL,
       isExpired: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,

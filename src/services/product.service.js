@@ -1,4 +1,5 @@
 import { Products, User } from '../database/models';
+import { Reviews} from '../database/models';
 
 const createProduct = async (product) => {
   await Products.create(product);
@@ -62,4 +63,15 @@ const findProducts = async (role, sellerId, size, page) => {
 const findProductById = async (id) => {
   return await Products.findByPk(id);
 };
+
+export const productReview = async (productId, buyerId, rating, feedback) => {
+  const review = await Reviews.create({
+    productId,
+    buyerId,
+    rating,
+    feedback,
+  });
+  return review;
+};
+
 export { createProduct, findProduct, findProducts, findProductById };

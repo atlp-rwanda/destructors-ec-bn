@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable strict */
 
+const { sequelize } = require('../models');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {

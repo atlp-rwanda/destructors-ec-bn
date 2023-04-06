@@ -256,5 +256,56 @@ export const updateProduct = {
     },
   },
 };
+// create product  review 
+export const ratingAndFeedback = {
+  tags: ['Product Review'],
+  parameters: [
+    {
+      name: 'id',
+      in: 'path',
+      description: 'the product id',
+      required: true,
+    },
+  ],
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  summary: 'review product',
+  requestBody: {
+    required: true,
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            rating: {
+              type: 'integer',
+              description: 'rating of product',
+              example:'4'
+            },
+            feedback: {
+              type: 'string',
+              description: 'feedback of product',
+              example:'Good quality of product',
+            },
+          },
+        },
+      },
+    },
+  },
+  consumes: ['application/json'],
+  responses: {
+    // response code
+    201: {
+      description: 'product reviewed successfully', // response desc
+    },
+    // response code
+    500: {
+      description: 'Server error', // response desc
+    },
+  },
+};
 
 export const path = {};
