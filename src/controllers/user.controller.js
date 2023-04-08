@@ -100,18 +100,18 @@ const loginUser = async (req, res, next) => {
          otp:otp,
          email:foundUser.email
        })
-       console.log('connected successfully!')
        try{
                await validOTPmail(foundUser,otp,token)
+               return res.status(200).json({message:"please verify your email..."
+              })
        }
        catch(error){
-           console.log(error)
            res.status(500).json({ message: 'Error sending OTP code' });
        }
            }
 
         
-
+           if(foundUser.role=="admin"||foundUser.role=="buyer"){
       return res.status(200).json({
         message: 'Successful login',
         user: {
@@ -123,6 +123,7 @@ const loginUser = async (req, res, next) => {
         },
         token: token,
       });
+    }
     } catch (error) {
       return next(error);
     }

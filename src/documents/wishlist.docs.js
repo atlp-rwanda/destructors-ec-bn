@@ -12,11 +12,6 @@ export const createProdWish = {
             schema: {
               type: 'object',
               properties: {
-                userId: {
-                  type: 'string',
-                  description: 'here you must enter the id of the user who logged in',
-                  example: '12t1361gfg1f2613h31',
-                },
                 productId: {
                   type: 'string',
                   description: 'enter the productId for the product',
@@ -96,7 +91,7 @@ export const createProdWish = {
         bearerAuth: [],
       },
     ],
-    summary: 'Get product wishes per product',
+    summary: 'Get wishes per product',
     parameters: [
       {
         name: 'id',

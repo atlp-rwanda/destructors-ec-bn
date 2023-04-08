@@ -1,15 +1,20 @@
 import { Op } from "sequelize";
-import {User,OTP} from "../database/models";
+import {User,OTP,Blacklist} from "../database/models";
 import verfyToken from "../utils/verifytoken";
 import "dotenv/config"
+import { generateToken } from "../utils/generateToken";
 const verifyOTP=async(req,res)=>{
     try{
     const token=req.params.token
+    const blacklistToken=await Blacklist.findOne({where:{token}})
+    if(blacklistToken){
+       return res.status(401).json({message:"please generate another token!"})
+    }
     const verToken=verfyToken(token,process.env.JWT_SECRET)
     if(!verToken){
-        return res.status(401).json("unauthorized")
+        return res.status(401).json({message:"unauthorized"})
     }
-    const {email,otp}=req.body
+    const {otp}=req.body
      const user=await OTP.findOne({
         where:{
             otp:otp,
@@ -19,17 +24,29 @@ const verifyOTP=async(req,res)=>{
         },
     })
     if(!user){
-        return res.status(200).send("invalid OTP!")
+        return res.status(401).json({message:"invalid OTP!"})
     }
-    //clear the otp and log the user in
-    else{
     user.otp=null;
-    await user.save()
-    res.status(200).send("logged in successfully")
+    const payload={
+        id:verToken.data.id,
+        email:verToken.data.email,
+        role:verToken.data.role,
+        isActive:verToken.data.isActive
     }
+
+    const tokenOTP=generateToken(payload)
+    await user.destroy()
+    
+     res.status(200).json({message:"logged in successfully",
+                          token:tokenOTP
+                        })
+     await Blacklist.create({token});
+      
 }
-catch(error){
-    res.send("server error!")
+catch(err){
+    res.status(500).json({message:"server error!",
+                          error:err
+})
 }
 }
 export default verifyOTP

@@ -8,6 +8,7 @@ import {
   deleteProduct,
   searchProducts,
 } from '../../controllers/product.controller.js';
+import { getWishesPerProduct } from '../../controllers/wishlist.controller.js';
 import { productValidation } from '../../ validations/product.validation.js';
 import {
   isCategoryExist,
@@ -39,5 +40,6 @@ route.patch(
 );
 route.patch('/:id', extractToken, checkRole(['seller']), updateProduct);
 route.delete('/:id', extractToken, checkRole(['seller']), deleteProduct);
+route.get('/:id/product-wishes',extractToken,getWishesPerProduct)
 
 export default route;
