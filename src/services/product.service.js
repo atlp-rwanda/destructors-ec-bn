@@ -16,7 +16,7 @@ const findProduct = async (id, role, sellerId) => {
   }
 
   const product = await Products.findOne({
-    where: { id },
+    where: { id, isExpired:false },
     include: [
       {
         model: User,
@@ -31,7 +31,7 @@ const findProduct = async (id, role, sellerId) => {
   return product;
 };
 
-const findProducts = async (role, sellerId, size, page) => {
+const findProducts = async (role, sellerId,isExpired, size, page) => {
   if (role == 'seller') {
     const products = await Products.findAndCountAll({
       where: { sellerId },
@@ -45,6 +45,7 @@ const findProducts = async (role, sellerId, size, page) => {
   }
 
   const products = await Products.findAndCountAll({
+    where:{isExpired},
     include: [
       {
         model: User,
