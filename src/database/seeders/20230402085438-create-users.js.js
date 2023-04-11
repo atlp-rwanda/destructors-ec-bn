@@ -7,7 +7,7 @@ module.exports = {
       'Users',
       [
         {
-          id: '008a0574-4538-4de1-9ed5-62151d16eb6c',
+          id: '098a0574-4532-4de9-9ed5-12151d16eb6c',
           firstname: 'admin',
           lastname: 'meadmin',
           email: 'admin@gmail.com',
@@ -25,3 +25,8 @@ module.exports = {
   down: (queryInterface, Sequelize) =>
     queryInterface.bulkDelete('Users', null, {}),
 };
+
+
+
+
+

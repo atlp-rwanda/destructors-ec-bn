@@ -96,7 +96,7 @@ const selectedUser = await User.User.findOne({where:{ id: req.params.id}});
     );
 
 
-    return res.status(200).json({ user: updatedUser }); 
+    return res.status(200).json({ user:"new role assigned succeessfully "}); 
     })(req, res);
   } catch (error) {
     return res.status(500).json({ status: 500, error: "Server error" });
