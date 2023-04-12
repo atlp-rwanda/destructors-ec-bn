@@ -1,12 +1,20 @@
-import Sale from "../database/models/index";
 
-
+import Sale from "../database/models";
+import  { Orders } from '../database/models';
+import { Products } from '../database/models';
 
 
 const changeSaleStatus = async (req, res) => {
     try{
       const sellerId = req.user.id;
       const selectedSale = await Sale.Sale.findOne({where:{ id: req.params.id}});
+      const selectedOrder = await Orders.findOne({where:{id:selectedSale.orderId}})
+      const orderProducts = JSON.parse(selectedOrder.products)
+      let orderSellerIds= []
+     orderProducts.map((data)=>{
+    orderSellerIds.push(data.sellerId)
+      })
+
     if (selectedSale.sellerId !== sellerId) {
        return res.status(401).json({ error: "this sale is not related to you" });  
     }
@@ -24,8 +32,18 @@ const changeSaleStatus = async (req, res) => {
       { where: { id: req.params.id } }
     );
 
+    
+  if (newStatus === "approved") {
+    for (const orderSellerId of orderSellerIds) {
+      const currentProduct = await Products.findOne({ where: { sellerId: orderSellerId } });
+      const orderPquantity = orderProducts.find((data) => data.sellerId === orderSellerId).quantity;
+      const newQuantity = currentProduct.quantity - orderPquantity;
+      await Products.update({ quantity: newQuantity }, { where: { sellerId: orderSellerId } });
+    }
+    return res.status(200).json({ status:"sale approved successfully"}); 
+  }
 
-    return res.status(200).json({ user:"sale status updated successfully"}); 
+    return res.status(200).json({ status:"sale rejected"}); 
   } catch (error) {
     return res.status(500).json({ status: 500, error: error});
   }
