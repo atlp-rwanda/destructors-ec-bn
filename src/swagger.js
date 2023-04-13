@@ -28,7 +28,8 @@ import {
   searchProducts,
   verifyEmail,
   getUserProfile,
-  changeSaleStatu
+  changeSaleStatu,
+  getSellerStats
 } from './docs-data';
 import 'dotenv/config';
 
@@ -142,6 +143,9 @@ export const swaggerDocument = {
     },
     '/api/v1/sales/{id}/status': {
       patch: changeSaleStatu
+    },
+    '/api/v1/stats/': {
+      get: getSellerStats,
     },
   },
 };
