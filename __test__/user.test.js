@@ -191,7 +191,12 @@ describe('Testing the reset password via email', () => {
 
     expect(response.statusCode).toBe(400);
   });
-
+  test('should get user profile',async()=>{
+    const res = await request(app)
+    .get('/api/v1/users/profile')
+    .set('Authorization',`Bearer ${token}`)
+    expect(res.statusCode).toBe(200);
+  });
   test('should update user profile', async () => {
     const res = await request(app)
       .put('/api/v1/users/profile')
@@ -209,6 +214,7 @@ describe('Testing the reset password via email', () => {
       });
     expect(res.statusCode).toBe(200);
   });
+  
   test('should test invalid user if he/she try to update profile without valid token', async () => {
     const res = await request(app)
       .put('/api/v1/users/profile')

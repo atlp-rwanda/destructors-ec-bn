@@ -311,8 +311,29 @@ export const userProfile={
   // expected responses
   responses: {
     // response code
-    201: {
+    202: {
       description: "user profile updated successfully", // response desc
+    },
+    // response code
+    217: {
+      description: "Server error", // response desc
+    },
+  },
+}
+
+export const getUserProfile = {
+  tags: ["User Authentication"],
+  description: "Get a user profile",
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  // expected responses
+  responses: {
+    // response code
+    200: {
+      description: "user profile fetched", // response desc
     },
     // response code
     401: {
@@ -320,7 +341,6 @@ export const userProfile={
     },
   },
 }
-  
 
 export const logoutUser = {
   tags: [" User Logout"],

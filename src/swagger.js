@@ -25,6 +25,7 @@ import {
   verifyOTP,
   searchProducts,
   verifyEmail,
+  getUserProfile
 } from './docs-data';
 import 'dotenv/config';
 
@@ -88,6 +89,7 @@ export const swaggerDocument = {
     },
     '/api/v1/users/profile': {
       put: userProfile,
+      get: getUserProfile
     },
     '/api/v1/users/logout': {
       post: logoutUser,

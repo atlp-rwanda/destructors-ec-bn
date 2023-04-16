@@ -1,7 +1,7 @@
 import Joi from "joi";
 const userProfileSchema = Joi.object({
     gender:Joi.string().valid('male','female'),
-    DOB:Joi.date().less('1-1-2100'),
+    DOB:Joi.date().greater('1-1-1900').less('1-1-2100'),
     prefferedCurrency:Joi.string().uppercase(),
     prefferedLanguage:Joi.string(),
     street:Joi.string().max(20),
