@@ -119,7 +119,7 @@ export const swaggerDocument = {
       post: createProdWish,
       get: getProductWishes,
     },
-    '/api/v1/product-wishes/{id}': {
+    '/api/v1/products/{id}/product-wishes': {
       get: getWishesPerProduct,
     },
     '/api/v1/products/{id}/availability': {

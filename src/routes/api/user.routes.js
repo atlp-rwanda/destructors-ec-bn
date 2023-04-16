@@ -43,8 +43,8 @@ route.patch(
   updatePasswordValidation,
   updatePassword
 );
-route.post('/login/validate/:token', verifyOTP);
 
+route.post('/login/validate/:token', verifyOTP);
 route.get('/auth', (req, res) => {
   res
     .status(200)

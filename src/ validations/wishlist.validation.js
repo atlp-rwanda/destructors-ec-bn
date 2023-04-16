@@ -1,6 +1,5 @@
 import Joi from "joi";
 const wishProductValidation = Joi.object({
-    userId: Joi.string().required(),
     productId: Joi.string().required(),
   });
   

@@ -3,7 +3,9 @@ import app from '../src/app';
 import '../src/services/googleAuth';
 import models from '../src/database/models/index';
 import jwt from 'jsonwebtoken'
-const { User } = require('../src/database/models');
+const { User,OTP } = require('../src/database/models');
+import generateOTP from '../src/utils/generateOTP';
+
 
 jest.setTimeout(30000);
 describe("Testing registration User", () => { 
@@ -318,3 +320,65 @@ describe('Testing update user password after login', () => {
     await User.destroy({ where: { id: userId } });
   });
 });
+
+describe('this is for testing the otp',()=>{
+  let token, userId;
+  test('Get a status of 200', async () => {
+    const response = await request(app).post('/api/v1/users/signup').send({
+      firstname: 'myfirstname',
+      lastname: 'mysecondname',
+      email: `calvinbukarani@gmail.com`,
+      password: 'testpass2345',
+    });
+    token = await response.body.token;
+    expect(response.statusCode).toBe(201);
+  });
+  test('should verify user email', async () => {
+    const response = await request(app)
+      .get(`/api/v1/users/verify-email?t=${token}`)
+      .expect(200);
+      expect(response.body).toHaveProperty('message', 'email verified');
+  });
+  test('It should login with valid email and password', async () => {
+    const res = await request(app).post('/api/v1/users/login').send({
+      email: `calvinbukarani@gmail.com`,
+      password: "testpass2345",
+    })
+    .expect(200);
+    expect(res.body).toHaveProperty('message', 'Successful login');
+    expect(res.body).toHaveProperty('user');
+    expect(res.body).toHaveProperty('token');
+    userId = res.body.user.id;
+  });
+  test('should generate OTP and send email for seller', async () => {
+    const user=await User.findOne({where:{email:'calvinbukarani@gmail.com'}})
+    
+    await user.update({role:'seller'})
+    const response = await request(app)
+      .post('/api/v1/users/login')
+      .send({ email: user.email, password: 'testpass2345' });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toMatchObject({ message: "please verify your email..." });
+    const otpRecord = await OTP.findOne({ where: { email: user.email } });
+    expect(otpRecord).not.toBeNull();
+
+  });
+  test('returns a 200 response for a valid OTP and logs the user in', async () => {
+    const user=await User.findOne({where:{email:'calvinbukarani@gmail.com'}})
+    const otp=await OTP.findOne({where:{email:user.email}})
+    const response = await request(app)
+      .post(`/api/v1/users/login/validate/${token}`)
+      .send({ otp:otp.otp });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.message).toBe('logged in successfully');
+    expect(response.body.token).toBeDefined();
+  });
+  test('returns a 401 response with an error message for an invalid OTP', async () => {
+    const otp=123456
+    const response = await request(app)
+      .post(`/api/v1/users/login/validate/${token}`)
+      .send({ otp: otp });
+    expect(response.statusCode).toBe(401);
+  });
+})

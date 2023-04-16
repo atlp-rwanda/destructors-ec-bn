@@ -191,13 +191,13 @@ describe('Testing Products service', () => {
         where: { name: 'two people sofa' },
       });
       const user = await User.findOne({ where: { email } });
-      const userId = user.id;
+      await user.update({ role: 'buyer' });
       const productId = product.id;
       token = generateToken(user);
       const response = await request(app)
         .post('/api/v1/product-wishes')
         .set('Authorization', `Bearer ${token}`)
-        .send({ userId: userId, productId: productId });
+        .send({ productId: productId });
       expect(response.status).toBe(201);
     });
 
@@ -206,13 +206,12 @@ describe('Testing Products service', () => {
         where: { name: 'two people sofa' },
       });
       const user = await User.findOne({ where: { email } });
-      const userId = user.id;
       const productId = product.id;
       token = generateToken(user);
       const response = await request(app)
         .post('/api/v1/product-wishes')
         .set('Authorization', `Bearer ${token}`)
-        .send({ userId: userId, productId: productId });
+        .send({ productId: productId });
 
       expect(response.status).toBe(200);
       expect(response.body.message).toBe('product unwished  succesfully!');
@@ -267,7 +266,7 @@ describe('Testing Products service', () => {
 
       expect(response.status).toBe(200);
     });
-    it('should return 500 if user is not a buyer or seller', async () => {
+    it('should return 401 if user is not a buyer or seller', async () => {
       const user = await User.findOne({ where: { email: 'admin@test.com' } });
       token = generateToken(user);
 
@@ -275,7 +274,7 @@ describe('Testing Products service', () => {
         .get('/api/v1/product-wishes')
         .set('Authorization', `Bearer ${token}`);
 
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(401);
     });
     it('Get:/api/v1/productwishes/:id  should return the number of wishes for a given product', async () => {
       const sellerUser = await User.findOne({
@@ -287,7 +286,7 @@ describe('Testing Products service', () => {
 
       sellerToken = generateToken(sellerUser);
       const response = await request(app)
-        .get(`/api/v1/product-wishes/${product.id}`)
+        .get(`/api/v1/products/${product.id}/product-wishes`)
         .set('Authorization', `Bearer ${sellerToken}`);
 
       expect(response.status).toBe(200);
@@ -300,7 +299,7 @@ describe('Testing Products service', () => {
 
       const authToken = generateToken(buyerUser);
       const response = await request(app)
-        .get(`/api/v1/product-wishes/${product.id}`)
+        .get(`/api/v1/products/${product.id}/product-wishes`)
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.status).toBe(401);
