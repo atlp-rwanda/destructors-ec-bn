@@ -7,6 +7,7 @@ import {
   deleteProduct,
 } from './documents/product.docs';
 import { getCart, addCart, clearCart } from './documents/cart.docs';
+import { payment } from './documents/payments.docs';
 import {
   createProdWish,
   getProductWishes,
@@ -129,6 +130,9 @@ export const swaggerDocument = {
     },
     '/api/v1/users/verify-email?t={token}': {
       get: verifyEmail,
+    },
+    '/api/v1/pay': {
+      post: payment,
     },
   },
 };

@@ -265,7 +265,7 @@ export const userProfile={
               example: "male",
              },
              DOB: {
-              type: "datw",
+              type: "date",
               description: "DOB",
               example: "10.10.2020",
              },
