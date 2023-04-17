@@ -1,8 +1,6 @@
 import cron from 'node-cron';
 import "dotenv/config";
-import events from 'events';
 import {checkPasswordExpiration} from '../services/isPassword';
-
 import { ExpiredProducts } from '../services/isProductEpired.service';
 
 export const jobScheduling = ()=>{

@@ -20,6 +20,9 @@ export const ExpiredProducts=async()=>{
         }})
         Emitter.emit('expiredProduct',isProductExpired)
     }
+    else{
+        Emitter.emit('noExpiredProduct','there is no expired product!!')
+    }
 
 }
 catch(error){

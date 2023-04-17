@@ -55,7 +55,7 @@ const userPayment =async (req,res)=>{
             res.status(200).json({message:`you have paid ${cartTotal} ${process.env.CURRENCY} for:`,productInfo})
         })
 }catch(e){
-    res.status(403).json({message:'this error has happened',err:e})
+    res.status(403).json({message:'Some thing happened !!',err:e.raw.code})
 }
 }
 export {userPayment}
