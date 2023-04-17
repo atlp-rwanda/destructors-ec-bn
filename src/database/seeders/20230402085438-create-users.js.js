@@ -28,6 +28,28 @@ module.exports = {
           role: 'seller',
           createdAt: new Date(),
           updatedAt: new Date(),
+        },
+        {
+          id: 'd0db925d-03b7-4e7a-a838-7a8d0823fd00',
+          firstname: 'seedSeller',
+          lastname: 'seedSeller',
+          email: 'test@gmail.com',
+          password:
+            '$2a$10$bGTrd8acp5Ve6YZc4htd2.r24AjMVu44XUEblmqsLYp94dIGju.OC',
+          role: 'seller',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 'd0db925d-03b7-4e7a-a800-7a8d0823fd00',
+          firstname: 'seedSeller',
+          lastname: 'seedSeller',
+          email: 'buyer@gmail.com',
+          password:
+            '$2a$10$bGTrd8acp5Ve6YZc4htd2.r24AjMVu44XUEblmqsLYp94dIGju.OC',
+          role: 'buyer',
+          createdAt: new Date(),
+          updatedAt: new Date(),
         }
       ],
       {}

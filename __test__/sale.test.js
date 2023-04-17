@@ -1,24 +1,26 @@
  
  import request from 'supertest';
- import Sale from "../src/database/models"; 
+ import {Sales} from "../src/database/models"; 
 import  { Orders } from '../src/database/models';
 import { Products } from '../src/database/models';
 import app from '../src/app';
 import {User}from '../src/database/models';
 import { generateToken } from '../src/utils/generateToken';
 import { Categories } from '../src/database/models';
+import { json } from 'body-parser';
 jest.setTimeout(30000);
 
 describe('sallerUpdateSaleStatus', () => {
-    let categories;
+    let order;
     let newseller;
     let sellerToken;
     let products;
-    let createSale ;
-    beforeAll(async () => {
-        categories = await Categories.create({
-          name: 'clothers',
-        });
+    let Sale ;
+    let createdOrder
+    let user
+      it('should return 401 if the sale is  not related to the current seller', async () => {
+const createdSale = await Sales.findOne({where:{id:'128a0571-4538-4de1-9ed5-62151d16eb6c'}})
+
 
              newseller = await User.create({
               firstname: 'fstname',
@@ -26,54 +28,133 @@ describe('sallerUpdateSaleStatus', () => {
               email: 'example2@gmail.com',
               password: 'testpass2345',
             });
+            products = await Products.create({
+              name: 'shoes',
+              price: 1000,
+              quantity: 3,
+              sellerId:'d0db925d-03b7-4e7a-a838-7a8d0823fd97'
+            });
+
+            order = await Orders.create({
+              paymentId: '121a0572-4538-4de1-9ed5-62151d16eb6c',
+              userId: 'd0db925d-03b7-4e7a-a800-7a8d0823fd00',
+              email: 'buyer@gmail.com',
+              amount: 30000,
+              status: 'payed',
+              products: [
+                {
+                  name: 'jordan',
+                  price: 30000,
+                  quantity: 1,
+                  sellerId: 'd0db925d-03b7-4e7a-a838-7a8d0823fd97',
+                },
+                {
+                  name: 'mangoe',
+                  price: 500,
+                  quantity: 15,
+                  sellerId: 'd0db925d-03b7-4e7a-a838-7a8d0823fd97',
+                },
+              ],
+            });
+
+            Sale = await Sales.create({
+              orderId: order.id,
+              sellerId: 'd0db925d-03b7-4e7a-a838-7a8d0823fd97',
+            });
             await newseller.update({ role: 'seller' });
-            // const newSellerToken = generateToken(newseller);
-            const user = await User.findOne({ where: { email: 'example2@gmail.com' } });
-            // const products = await Products.findAll({});
-         products = await Products.create({
-                  name: 'Product 1',
-                  price: 10,
-                  quantity: 5,
-                  expiryDate: new Date('2022-01-01'),
-                  sellerId: user.id,
-                  categoryId: categories.id
-                });
-                // const newProduct = await Products.findOne({ where: { name: 'Product 1' } });
-                const createOrder = await Orders.create({
-                    paymentId: "121a0572-4538-4de1-9ed5-62151d16eb6c",
-                    userId: "a53998e0-6eb7-4d87-8320-66914b2929a5",
-                    email: "divine@gmail.com",
-                    amount: 30000,
-                    status: "payed",
-                    products: [products],
-                    });
 
-
-                    createSale = await Sale.Sale.create({
-                        orderId: createOrder.id,
-                        sellerId: user.id,
-                        status: 'payed',
-                    });
+            const testUser = await User.findOne({ where: { email: 'example2@gmail.com' } });
         
-            // const findOrder = await Orders.findOne({});
-                    console.log("***************************:",createSale.id);
-      });
-
-      it('should return 401 if the sale is  not related to the current seller', async () => {
-        const user = await User.findOne({ where: { email: 'example2@gmail.com' } });
-                     sellerToken = generateToken(user);
 
 
+                     sellerToken = generateToken(testUser);
               const response = await request(app)
-              .patch(`/api/v1/sales/${createSale.id}/status`)
+              .patch(`/api/v1/sales/${Sale.id}/status`)
               .set('Authorization', `Bearer ${sellerToken}`)
-              .send({newStatus:'rejected'})
-// const error = await response.body.error
-//               console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",error);
-        
-            expect(response.status).toBe(404);
+              .send({newStatus:'rejected'})    
+            expect(response.status).toBe(401);
           });
 
+
+
+          it('should return 404 once sale is not found', async ()=>{
+            const user = await User.findOne({ where: { email: 'seed@gmail.com' } });
+            sellerToken = generateToken(user);
+            const response = await request(app)
+            .patch('/api/v1/sales/128a0571-4538-4de1-9ed5-62151d16eb1c/status')
+            .set('Authorization', `Bearer ${sellerToken}`)
+            .send({newStatus:'rejected'})    
+          expect(response.status).toBe(404);
+          })
+
+
+          it('should return 400 once status specified is invalid', async ()=>{
+            const user = await User.findOne({ where: { id: 'd0db925d-03b7-4e7a-a838-7a8d0823fd97' } });
+            sellerToken = generateToken(user);
+            const response = await request(app)
+              .patch(`/api/v1/sales/${Sale.id}/status`)
+            .set('Authorization', `Bearer ${sellerToken}`)
+            .send({newStatus:'unknown'})    
+          expect(response.status).toBe(400);
+          })
+
+
+
+          it('should return 200 once status is approved and reduce the products quantity', async ()=>{
+
+
+            products = await Products.bulkCreate([
+              {
+                name: 'jordan',
+                price: 30000,
+                quantity: 10,
+                sellerId: 'd0db925d-03b7-4e7a-a838-7a8d0823fd00',
+              }])
+              products = await Products.bulkCreate([
+              {
+                name: 'mangoe',
+                price: 500,
+                quantity: 45,
+                sellerId: 'd0db925d-03b7-4e7a-a838-7a8d0823fd00',
+              }])
+              products = await Products.bulkCreate([
+              {
+                name: 'radio',
+                price: 1000,
+                quantity:65,
+                sellerId:'d0db925d-03b7-4e7a-a838-7a8d0823fd97',
+                expiryDate: new Date('2022-01-01'),
+              }
+            ]);
+  
+             user = await User.findOne({ where: { id: 'd0db925d-03b7-4e7a-a838-7a8d0823fd97' } });
+            sellerToken = generateToken(user);
+            const response = await request(app)
+            .patch(`/api/v1/sales/${Sale.id}/status`)
+            .set('Authorization', `Bearer ${sellerToken}`)
+            .send({newStatus:'approved'})    
+          expect(response.status).toBe(200);
+          })
+
+          it('should return 200 once status is rejected', async ()=>{
+            const user = await User.findOne({ where: { id: 'd0db925d-03b7-4e7a-a838-7a8d0823fd97'} });
+            sellerToken = generateToken(user);
+            const response = await request(app)
+            .patch(`/api/v1/sales/${Sale.id}/status`)
+            .set('Authorization', `Bearer ${sellerToken}`)
+            .send({newStatus:'rejected'})    
+          expect(response.status).toBe(200);
+          })
+
+          it('should return 500 once server crushes', async ()=>{
+            const user = await User.findOne({ where: { email: 'seed@gmail.com' } });
+            sellerToken = generateToken(user);
+            const response = await request(app)
+            .patch('/api/v1/sales/12/status')
+            .set('Authorization', `Bearer ${sellerToken}`)
+            .send({newStatus:'rejected'})    
+          expect(response.status).toBe(500);
+          })
 })
 
 
@@ -88,81 +169,3 @@ describe('sallerUpdateSaleStatus', () => {
 
 
 
-
-
-
-
-// let sellerToken
-//   jest.setTimeout(30000);
-
-//   const obj =          
-//   [{
-//   name:"jordan",
-//   price:30000,
-//   quantity:1,
-//   sellerId:"b6d5e15e-7b4e-4dcc-9076-0f13a36d7fe7"
-// },
-// {
-// name:"mangoe",
-// price:500,
-// quantity:15,
-// sellerId:"a53998e0-6eb7-4d87-8320-66914b2929a5"}]
-
-
-
-//   beforeAll(async () => {
-
-//     const createUser = await User.User.create({
-//         firstname: 'firstname',
-//         lastname: 'secondname',
-//         email: 'testing@gmail.com',
-//         password: 'testpass2345',
-//       });
-
-
-//   const createOrder = await Orders.create({
-//     paymentId: "121a0572-4538-4de1-9ed5-62151d16eb6c",
-//     userId: "a53998e0-6eb7-4d87-8320-66914b2929a5",
-//     email: "divine@gmail.com",
-//     amount: 30000,
-//     status: "payed",
-//     products: JSON.stringify(obj),
-//   });
-
-//   const createSale = await Sale.Sale.create({
-//     orderId: '121a0572-4538-4de1-9ed5-62151d16eb6c',
-//     sellerId: 'd0db925d-03b7-4e7a-a838-7a8d0823fd97',
-//     status: 'payed',
-//   });
-//   console.log("******************************:",createSale);
-// });
-//   it('should return 401 if the sale is  not related to the current seller', async () => {
-//     const newseller = await User.create({
-//         firstname: 'fstname',
-//         lastname: 'sdname',
-//         email: 'testing@gmail.com',
-//         password: 'testpass2345',
-//       });
-//       await newseller.update({ role: 'seller' });
-//       const newSellerToken = generateToken(newseller);
-
-// console.log("++++++++++++++++++++++++++:",newseller);
-    
-//     const sellerPyload = await User.User.findOne({
-//         where: { email: 'testing@gmail.com' },
-//       });
-// //       sellerToken = generateToken(sellerPyload);
-// // console.log(sellerPyload);
-//       const saleId = await Sale.Sale.findOne({
-//         where: { sellerId: 'd0db925d-03b7-4e7a-a838-7a8d0823fd97' },
-//       });
-
-
-//       const response = await request(app)
-//       .patch(`/api/v1/sales/${saleId.id}/xstatus`)
-//       .set('Authorization', `Bearer ${sellerToken}`);
-
-//     expect(response.status).toBe(404);
-//   });
-
-// })

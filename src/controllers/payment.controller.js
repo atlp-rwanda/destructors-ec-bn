@@ -2,7 +2,8 @@ import Stripe from "stripe";
 import 'dotenv/config';
 import culculateProductTotal from "../utils/cart";
 import { createOrder,destroyCart } from "../middlewares/payment.middleware";
-
+import { createSale} from "../middlewares/sale.middleware";
+import {Sales}from "../database/models"
 const stripe =Stripe(process.env.KEY_SECRET)
 let paymentId 
 const userPayment =async (req,res)=>{
@@ -37,7 +38,19 @@ const userPayment =async (req,res)=>{
                 payment_method_types:['card']
             })
             paymentId = pay.id
-            await createOrder(paymentId,id,email,cartTotal,productAllInfo,billingAddress)
+           const createdOrder = await createOrder(paymentId,id,email,cartTotal,productAllInfo,billingAddress);
+            const orderId = createdOrder.id
+            const orderProducts = createdOrder.products
+            let sellerIds= []
+            orderProducts.map((data)=>{
+            sellerIds.push(data.sellerId)
+            })
+            for (const sellerId of sellerIds) {
+               const p = await Sales.create({
+                orderId: orderId,
+                sellerId: sellerId
+              })
+            }
             await destroyCart(cartId)
             res.status(200).json({message:`you have paid ${cartTotal} ${process.env.CURRENCY} for:`,productInfo})
         })
