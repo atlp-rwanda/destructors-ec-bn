@@ -22,5 +22,4 @@ routes.use('/sales',sale)
 routes.use('/stats', stat)
 routes.use('/notifications', notification)
 
-
 export default routes;

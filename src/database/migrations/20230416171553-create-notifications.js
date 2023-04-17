@@ -4,19 +4,25 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Notifications', {
       id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         allowNull: false,
         primaryKey: true,
-        defaultValue: Sequelize.UUIDV4,
-        type: Sequelize.UUID
       },
-      notification: {
+      subject: {
         type: Sequelize.STRING
       },
-      userId: {
-        type: Sequelize.UUID
+      message: {
+        type: Sequelize.STRING
       },
       entityId: {
+        type: Sequelize.JSONB
+      },
+      receiverId: {
         type: Sequelize.UUID
+      },
+      is_read: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,

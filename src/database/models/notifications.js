@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class Notifications extends Model {
 
     static associate(models) {
-      this.belongsTo(models.User, { foreignKey: 'userId'});
+     
     }
   }
   Notifications.init({
@@ -16,12 +16,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true,
     },
-    notification: DataTypes.STRING,
-    userId: {
-      type: DataTypes.UUID,
-      references: { model: 'User', key: 'id' },
-    },
-    entityId: DataTypes.UUID
+    subject: DataTypes.STRING,
+    message: DataTypes.STRING,
+    entityId: DataTypes.JSONB,
+    receiverId: DataTypes.UUID,
+    is_read: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, {
     sequelize,
     modelName: 'Notifications',

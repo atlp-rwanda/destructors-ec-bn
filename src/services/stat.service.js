@@ -55,6 +55,7 @@ while (year < currentYear || (year === currentYear && month <= currentMonth)) {
           ],
           include: [{
             model: Products,
+            as: 'Product',
             where: {
               sellerId,
               createdAt: {
