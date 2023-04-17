@@ -14,6 +14,7 @@ module.exports = {
           password:
             '$2a$10$bGTrd8acp5Ve6YZc4htd2.r24AjMVu44XUEblmqsLYp94dIGju.OC',
           role: 'admin',
+          isEmailVerified:true,
           createdAt: new Date(),
           updatedAt: new Date(),
         },

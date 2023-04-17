@@ -5,6 +5,7 @@ import {
   updateProductAvailability,
   updateProduct,
   deleteProduct,
+  ratingAndFeedback,
 } from './documents/product.docs';
 import { getCart, addCart, clearCart } from './documents/cart.docs';
 import { payment } from './documents/payments.docs';
@@ -133,6 +134,9 @@ export const swaggerDocument = {
     },
     '/api/v1/pay': {
       post: payment,
+    },
+    '/api/v1/products/{id}/reviews': {
+      post: ratingAndFeedback,
     },
   },
 };

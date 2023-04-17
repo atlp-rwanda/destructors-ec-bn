@@ -6,7 +6,6 @@ const { User } = require('../src/database/models');
 import { Products } from '../src/database/models';
 import { Categories } from '../src/database/models';
 import { generateToken } from '../src/utils/generateToken';
-import verfyToken from '../src/utils/verifytoken';
 jest.setTimeout(50000);
 
 describe('Testing Products service', () => {
@@ -467,5 +466,83 @@ describe('Search products endpoint', () => {
       .get('/api/v1/products/search?catego')
       .set('Authorization', `Bearer ${UserToken}`);
     expect(response.status).toBe(200);
+  });
+});
+
+describe('Rating and feedback for a product', () => {
+  let product;
+  let buyerToken;
+  let user;
+
+  beforeAll(async () => {
+    const newUser = User.create({
+      firstname: 'mysurname',
+      lastname: 'mylastname',
+      email: 'testbuyer@gmail.com',
+      password: 'testbuyer2345',
+    });
+    product = await Products.create({
+      name: 'Product 1',
+      price: 47.0,
+      quantity: 20,
+      expiryDate: new Date('2023-02-01'),
+    });
+  });
+
+  test('should allow a user to submit a rating and feedback for a product', async () => {
+  
+    const user = await User.findOne({ where: { email: 'testbuyer@gmail.com' } });
+    buyerToken = generateToken(user);
+    const response = await request(app)
+      .post(`/api/v1/products/${product.id}/reviews`)
+      .set('Authorization', `Bearer ${buyerToken}`)
+      .send({ rating:4, feedback:'This product is great!'});
+    expect(response.status).toBe(201);
+  });
+  test('should return 400 status code when user tries to submit another rating and feedback for the same product', async () => {
+    const user = await User.findOne({ where: { email: 'testbuyer@gmail.com' } });
+    buyerToken = generateToken(user);
+    const response = await request(app)
+      .post(`/api/v1/products/${product.id}/reviews`)
+      .set('Authorization', `Bearer ${buyerToken}`)
+      .send({rating:3, feedback:'This product is great!'});
+    expect(response.status).toBe(400);
+  });
+  test('should return 401 status code if user is not a buyer', async () => {
+  
+    product = await Products.findOne({ where: { name: 'Product 1' } });
+    const sellerToken = generateToken(user);
+    const response = await request(app)
+      .post(`/api/v1/products/${product.id}/reviews`)
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .send({rating:3, feedback:'This product is great!'});
+    expect(response.status).toBe(401);
+  });
+  test('should return 404 status code if product to review is not found', async () => {
+    const user = await User.findOne({ where: { email: 'testbuyer@gmail.com' } });
+    buyerToken = generateToken(user);
+    const res = await request(app)
+      .post('/api/v1/products/9974076f-e16a-486f-a923-362ec1747a12/reviews')
+      .set('Authorization', `Bearer ${buyerToken}`)
+      .send({ rating: 4, feedback: 'This product is great!' });
+      expect(res.status).toBe(404);
+  }); 
+  test('should return 400 if feedback is not provided', async () => {
+    const response = await request(app)
+      .post(`/api/v1/products/${product.id}/reviews`)
+      .set('Authorization', `Bearer ${buyerToken}`)
+      .send({
+        rating: 4,
+      });
+    expect(response.status).toBe(400);
+  });
+  test('should return 400 if rating is not provided', async () => {
+    const response = await request(app)
+      .post(`/api/v1/products/${product.id}/reviews`)
+      .set('Authorization', `Bearer ${buyerToken}`)
+      .send({
+        feedback: 'Some feedback',
+      });
+    expect(response.status).toBe(400);
   });
 });
