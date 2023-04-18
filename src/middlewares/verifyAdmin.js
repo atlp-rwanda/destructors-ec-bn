@@ -24,26 +24,3 @@ const isAdmin = async (req, res, next) => {
   }
 };
 export default isAdmin
-
-
-
-
-
-
-
-//   const isAdmin = async (req, res, next) => {
-//   try {
-//     const userId = req.params.id; // Get the user ID from the request URL
-//     const user = await getUserById(userId); // Retrieve the user's information from the database
-//     if (user && user.role === 'admin') {
-//       req.user = user; // Set the user object on the request
-//       next(); // User is an admin, continue to the next middleware
-//     } else {
-//       res.status(403).send('Forbidden'); // User is not an admin, send a 403 Forbidden response
-//     }
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Internal Server Error');
-//   }
-// };
-// export default isAdmin

@@ -825,3 +825,64 @@ export const verifyEmail = {
     },
   },
 };
+
+export const changeSaleStatu = {
+  tags: ["seller update status"],
+  description: "update status for a sale",
+  operationId: "updatestatus",
+  parameters: [
+    {
+    name: 'id',
+    in: 'path',
+    description: 'sale id',
+    required: true
+    }
+  ],
+  requestBody: {
+    description: "sale data",
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            newStatus: {
+              type: "string",
+              description: "sale status",
+              example: "rejected",
+            },
+          },
+          required: [ "newstatus"],
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "sale status assigned successfully",
+    },
+    400: {
+      description: "Invalid request data",
+    },
+    404: {
+      description: "sale not found",
+    },
+    500: {
+      description: "Server error",
+    },
+  },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
+  },
+};

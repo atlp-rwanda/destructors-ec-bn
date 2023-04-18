@@ -27,9 +27,11 @@ import {
   verifyOTP,
   searchProducts,
   verifyEmail,
-  getUserProfile
+  getUserProfile,
+  changeSaleStatu
 } from './docs-data';
 import 'dotenv/config';
+
 
 export const swaggerDocument = {
   openapi: '3.0.1',
@@ -136,7 +138,10 @@ export const swaggerDocument = {
       post: payment,
     },
     '/api/v1/products/{id}/reviews': {
-      post: ratingAndFeedback,
+      post: ratingAndFeedback
+    },
+    '/api/v1/sales/{id}/status': {
+      patch: changeSaleStatu
     },
   },
 };

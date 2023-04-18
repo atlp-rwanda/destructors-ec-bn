@@ -6,6 +6,7 @@ import cart from './api/cart.routes.js';
 import wishlist from "./api/wishlist.routes"
 import chat from './api/chat.routes';
 import payment from './api/payment.routes.js';
+import sale from './api/sale.routes.js'
 
 const routes = express.Router();
 routes.use('/',payment);
@@ -15,4 +16,6 @@ routes.use('/users', updatePassword);
 routes.use('/carts', cart);
 routes.use('/product-wishes',wishlist)
 routes.use('/chats', chat);
+routes.use('/sales',sale)
+
 export default routes;
