@@ -1,5 +1,4 @@
 
-
 import getSellerStats from "../services/stat.service.js";
 import verfyToken from "../utils/verifytoken.js";
 
@@ -11,7 +10,6 @@ const GetSellerStats = async(req, res)=>{
     if(!seller || !seller.data || !seller.data.id || seller.data.role !== 'seller'){
       return res.status(401).send({message: 'Unauthorized User'})
     }
-    
     const startTime = new Date('2023-04-08T16:00:00Z')
     const stats = await getSellerStats(seller.data.id, startTime)
 

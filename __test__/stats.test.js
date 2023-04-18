@@ -23,8 +23,9 @@ describe('Testing GetSellerStats endpoint', () => {
   test('should return 200 with stats when user is authorized to view own stats', async () => {
     const user = await User.findOne({ where: { email: email } });
     await user.update({ role: 'seller' });
+    console.log({user: user})
     sellerToken = generateToken(user);
-
+  
     const response = await request(app)
       .get('/api/v1/stats')
       .set('Authorization', `Bearer ${sellerToken}`);

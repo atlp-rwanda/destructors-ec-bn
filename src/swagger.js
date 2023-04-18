@@ -138,14 +138,14 @@ export const swaggerDocument = {
     '/api/v1/pay': {
       post: payment,
     },
+    '/api/v1/stats': {
+      get: getSellerStats,
+    },
     '/api/v1/products/{id}/reviews': {
       post: ratingAndFeedback
     },
     '/api/v1/sales/{id}/status': {
       patch: changeSaleStatu
-    },
-    '/api/v1/stats/': {
-      get: getSellerStats,
     },
   },
 };

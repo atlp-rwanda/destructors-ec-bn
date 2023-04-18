@@ -1,12 +1,11 @@
 import {Op} from 'sequelize'
-import  { Products, ProductWish } from '../database/models';
+import  { Products, ProductWish,Sales ,Orders} from '../database/models';
+
+
 
 const getSellerStats =async (sellerId, startTime)=>{
 const currentYear = new Date().getFullYear();
 const currentMonth = new Date().getMonth() + 1;
-// const time = new Date(startTime)
-// const nexMonth = new Date(time.getFullYear(), time.getMonth() +1, 1,0,0,0)
-
 const stats = [];
 
 let year = startTime.getFullYear();
@@ -15,30 +14,30 @@ let month = startTime.getMonth() + 1;
 while (year < currentYear || (year === currentYear && month <= currentMonth)) {
   const nextMonth = month === 12 ? new Date(year + 1, 1, 1) : new Date(year, month, 1);
 
-  // const productsSold = await Sale.findAll({
-  //   where: {
-  //     sellerId,
-  //     status: 'approved',
-  //     updatedAt: {
-  //       [Op.between]: [new Date(year, month - 1, 1), nextMonth],
-  //     },
-  //   },
-  //   include: [
-  //     {
-  //       model: Orders,
-  //       attributes: ['amount']
-  //     }
-  //   ]
-  // });
+  const productsSold = await Sales.findAll({
+    where: {
+      sellerId,
+      status: 'approved',
+      updatedAt: {
+        [Op.between]: [new Date(year, month - 1, 1), nextMonth],
+      },
+    },
+    include: [
+      {
+        model: Orders,
+        as: 'order',
+        attributes: ['amount']
+      }
+    ]
+  });
 
-  // const productsSoldRevenue = productsSold.reduce((total, product) => {
-  //   return total + product.Orders.amount;
-  // }, 0);
+  const productsSoldRevenue = productsSold.reduce((total, product) => {
+    return total + product.Orders.amount;
+  }, 0);
 
   const expiredProducts = await Products.findAll({
     where: {
       sellerId,
-      isAvailable: false,
       isExpired: true,
       expiryDate: {
         [Op.between]: [new Date(year, month - 1, 1), nextMonth],
@@ -71,8 +70,8 @@ while (year < currentYear || (year === currentYear && month <= currentMonth)) {
   stats.push({
     year: year.toString(),
     month: monthName,
-    // productsSold: productsSold.length,
-    // productsSoldRevenue,
+    productsSold: productsSold.length,
+    productsSoldRevenue,
     expiredProducts: expiredProducts.length,
     lostProductsRevenue,
     getProductWishes: getProductWishes.length
