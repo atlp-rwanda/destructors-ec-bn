@@ -96,7 +96,7 @@ const retrieveItems = async (req, res) => {
     }
 
     if (user.data.role == 'seller') {
-      const items = await findProducts('seller', user.data.id, size, page);
+      const items = await findProducts('seller', user.data.id,'', size, page);
       if (items.rows.length === 0) {
         return res.status(200).json({ message: 'The collection is empty' });
       }
@@ -110,7 +110,7 @@ const retrieveItems = async (req, res) => {
     }
 
     if (user.data.role == 'buyer') {
-      const items = await findProducts('', '', size, page);
+      const items = await findProducts('', '',false, size, page);
 
       if (items.length === 0) {
         return res.status(200).json({ message: 'The store is empty' });
