@@ -15,6 +15,7 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import 'dotenv/config';
 import passport from 'passport';
 import { generateToken } from '../utils/generateToken';
+import { eventEmitter } from '../events/eventEmitter.js';
 const createProducts = async (req, res) => {
   try {
     const { name, price, quantity, bonus, expiryDate, categoryId } = req.body;
@@ -230,7 +231,17 @@ const updateProductAvailability = async (req, res) => {
         const updatedProduct = await Products.findOne({
           where: { id: productId },
         });
+        if (updatedProduct.isAvailable){
 
+         const notificationDetails = {
+          receiver:'buyer',
+          subject:'new product',
+          message: `Checkout this ${updatedProduct.name}`,
+          entityId: { productId: updatedProduct.id}
+         } 
+          eventEmitter.emit('new-notification', notificationDetails );
+        }
+        
         return res.status(200).json({ product: updatedProduct });
       }
     )(req, res);

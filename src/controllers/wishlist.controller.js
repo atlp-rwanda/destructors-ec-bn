@@ -2,6 +2,8 @@ import { createAwish } from "../services/addToWishList.service";
 import  {Products,User,ProductWish} from "../database/models"
 import verfyToken from "../utils/verifytoken";
 const { sequelize } = require('../database/models');
+import { sendEmail } from '../services/sendEmail.service';
+import { eventEmitter } from "../events/eventEmitter";
 
 const addWishlist=async(req, res)=> {
     try {
@@ -33,6 +35,23 @@ const addWishlist=async(req, res)=> {
             productId: product.id
         };
         await createAwish(wishedItem);
+
+        const wish = await ProductWish.findOne({ where: { userId: userVerify.data.id, productId: product.id } })
+        const wishProduct = await Products.findOne({ include:[{model: User, as:'Seller'}] ,where: {id: wishedItem.productId} });
+        const subject = 'Product wishes';
+        const message = `Hi ${wishProduct.Seller.lastname}, you have a new wish on ${wishProduct.name} `
+        const HTMLText = `<div> <div> <h3 style="color:#81D8F7;">Products wished</h3><br><p>${message}</p><img src="${wishProduct.images[0]}"> </div> </div>`;
+        const notificationDetails = {
+            receiver: wishProduct.Seller.id,
+            subject,
+            message,
+            entityId: { productWishId: wish.id},
+            receiverId: wishProduct.Seller.id
+        };
+        eventEmitter.emit('wish-notification', notificationDetails);
+        
+        sendEmail(wishProduct.Seller.email, subject, HTMLText );
+
         return res.status(201).json({
             message: 'product wished created successfull',
             wishedItemCreate: wishedItem,
@@ -42,7 +61,8 @@ const addWishlist=async(req, res)=> {
             return res.status(200).json({message:"only buyer are allowed!"})
         }
     }
-    catch {
+    catch (error) {
+        console.log(error);
         return res.status(500).json({
             message: "something went wrong!"
         });
@@ -72,6 +92,7 @@ const getProductWished=async(req,res)=>{
 
                 include: [{
                     model: Products,
+                    as: 'Product',
                     where: {sellerId},
                     attributes:[]
                 }],
@@ -104,6 +125,7 @@ const getWishesPerProduct=async(req,res)=>{
           ],
           include: [{
             model: Products,
+            as: 'Product',
             where: { sellerId, id: productId },
             attributes: []
           }],

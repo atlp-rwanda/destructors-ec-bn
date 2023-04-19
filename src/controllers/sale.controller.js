@@ -1,7 +1,9 @@
 
 import {Sales }from "../database/models";
-import  { Orders } from '../database/models';
+import  { Orders, User } from '../database/models';
 import { Products } from '../database/models';
+import { eventEmitter } from "../events/eventEmitter";
+import { sendEmail } from "../services/sendEmail.service";
 
 
 const changeSaleStatus = async (req, res) => {
@@ -15,7 +17,8 @@ const changeSaleStatus = async (req, res) => {
       }
 
       const selectedOrder = await Orders.findOne({where:{id:selectedSale.orderId}})
-      const orderProducts = selectedOrder.products
+      const orderProducts = selectedOrder.products;
+      const buyerDetails = await User.findOne({where:{id: selectedOrder.userId }})
       let orderSellerIds= []
      orderProducts.map((data)=>{
     orderSellerIds.push(data.sellerId)
@@ -45,9 +48,35 @@ const changeSaleStatus = async (req, res) => {
 
       await Products.update({ quantity: newQuantity }, { where: { sellerId: orderSellerId } });
     }
+    
+        const subject = 'Order Status';
+        const message = `Hi ${buyerDetails.lastname}, your order has been approved.
+        Thank you for buying with us `
+        const HTMLText = `<div> <div> <h3 style="color:#81D8F7;">Order Status</h3><br><p>${message}<br>Destructors</p> </div> </div>`;
+        const notificationDetails = {
+            receiver: selectedOrder.userId,
+            subject,
+            message,
+            entityId: { saleId: selectedSale.id},
+            receiverId: selectedOrder.userId
+        }
+        eventEmitter.emit('order-notification', notificationDetails);
+        sendEmail(selectedOrder.email, subject, HTMLText );
     return res.status(200).json({ status:"sale approved successfully"}); 
   }
-
+  const subject = 'Order Status';
+  const message = `Hi ${buyerDetails.lastname}, your order has been rejected.
+  Kindly contact the Destructors, thank you `
+  const HTMLText = `<div> <div> <h3 style="color:#81D8F7;">Order Status</h3><br><p>${message}<br>Destructors</p> </div> </div>`;
+  const notificationDetails = {
+      receiver: selectedOrder.userId,
+      subject,
+      message,
+      entityId: { saleId: selectedSale.id},
+      receiverId: selectedOrder.userId
+  }
+  eventEmitter.emit('order-notification', notificationDetails);
+  sendEmail(selectedOrder.email, subject, HTMLText );
     return res.status(200).json({ status:"sale rejected"}); 
   } catch (error) {
     console.log(error);
