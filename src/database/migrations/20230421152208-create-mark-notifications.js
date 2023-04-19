@@ -2,24 +2,22 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Notifications', {
+    await queryInterface.createTable('Mark_Notifications', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
         allowNull: false,
         primaryKey: true,
       },
-      subject: {
-        type: Sequelize.STRING
+      notificationId: {
+        type: Sequelize.UUID
       },
-      message: {
-        type: Sequelize.STRING
+      receiverId: {
+        type: Sequelize.UUID
       },
-      entityId: {
-        type: Sequelize.JSONB
-      },
-      receiver: {
-        type: Sequelize.STRING
+      is_read: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Notifications');
+    await queryInterface.dropTable('Mark_Notifications');
   }
 };
