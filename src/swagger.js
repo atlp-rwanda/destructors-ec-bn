@@ -9,6 +9,7 @@ import {
 } from './documents/product.docs';
 import { getCart, addCart, clearCart } from './documents/cart.docs';
 import { payment } from './documents/payments.docs';
+import { orderStatus } from './documents/orderStatus.docs';
 import {
   createProdWish,
   getProductWishes,
@@ -32,7 +33,6 @@ import {
   getSellerStats
 } from './docs-data';
 import 'dotenv/config';
-
 
 export const swaggerDocument = {
   openapi: '3.0.1',
@@ -94,7 +94,7 @@ export const swaggerDocument = {
     },
     '/api/v1/users/profile': {
       put: userProfile,
-      get: getUserProfile
+      get: getUserProfile,
     },
     '/api/v1/users/logout': {
       post: logoutUser,
@@ -142,10 +142,13 @@ export const swaggerDocument = {
       get: getSellerStats,
     },
     '/api/v1/products/{id}/reviews': {
-      post: ratingAndFeedback
+      post: ratingAndFeedback,
     },
     '/api/v1/sales/{id}/status': {
-      patch: changeSaleStatu
+      patch: changeSaleStatu,
+    },
+    '/api/v1/orders/{id}/status': {
+      get: orderStatus,
     },
   },
 };
