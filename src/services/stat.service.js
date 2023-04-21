@@ -30,7 +30,6 @@ while (year < currentYear || (year === currentYear && month <= currentMonth)) {
       }
     ]
   });
-  console.log(productsSold)
   const productsSoldRevenue = productsSold.reduce((total, product) => {
     return total + product.order.amount;
   }, 0)
