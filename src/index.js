@@ -9,3 +9,4 @@ const server = app.listen(port, () => {
 });
 
 const io = initializeChat(server);
+export default io;
