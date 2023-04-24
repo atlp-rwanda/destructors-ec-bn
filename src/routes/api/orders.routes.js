@@ -3,11 +3,13 @@ import extractToken from '../../middlewares/checkUserWithToken';
 import {
   trackOrderStatus,
   getOrders,
-} from '../../controllers/orderStatus.controller';
+  getSales
+} from '../../controllers/orders.controller';
 
 const route = Router();
 
-route.get('/all', extractToken, getOrders);
+route.get('/', extractToken, getOrders);
+route.get('/products', extractToken, getSales);
 
 route.get('/:id/status', extractToken, trackOrderStatus);
 

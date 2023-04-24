@@ -9,8 +9,9 @@ import payment from './api/payment.routes.js';
 import sale from './api/sale.routes.js';
 import stat from './api/stat.routes';
 import notification from './api/notification.routes.js';
-import orderStatus from './api/orderStatus.routes.js';
 import category from './api/category.routes.js';
+import orders from './api/orders.routes.js';
+import saleDetails from './api/salesDetails.routes.js'
 
 const routes = express.Router();
 routes.use('/', payment);
@@ -26,7 +27,9 @@ routes.use('/chats', chat);
 routes.use('/sales', sale);
 routes.use('/stats', stat);
 routes.use('/notifications', notification);
-routes.use('/orders', orderStatus);
+routes.use('/orders', orders);
+routes.use('/sales-details', saleDetails);
+
 
 
 

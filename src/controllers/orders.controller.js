@@ -1,6 +1,6 @@
 import { Sales, Orders } from '../database/models';
 
-export const trackOrderStatus = async (req, res) => {
+const trackOrderStatus = async (req, res) => {
   try {
     const buyerId = req.user.id;
     const selectedOrder = await Orders.findOne({
@@ -30,16 +30,34 @@ export const trackOrderStatus = async (req, res) => {
   }
 };
 
-export const getOrders = async (req, res) => {
+const getOrders = async (req, res) => {
   const buyerId = req.user.id;
   const role = req.user.role;
-  const allOrders = await Orders.findAll({ where: { userId: buyerId } });
-  const orders = await Orders.findAll({});
-  if (role == 'admin') {
-    return res.status(200).json({ Orders: orders });
-  }
+  const condition = role === 'admin' ? {} : { userId: buyerId };
+  const allOrders = await Orders.findAll({ where: condition });
   if (allOrders.length === 0) {
     return res.status(404).json({ message: 'You have no order yet' });
   }
   return res.status(200).json({ Orders: allOrders });
 };
+
+const getSales = async (req, res) => {
+  const sellerId = req.user.id;
+  const allOrders = await Orders.findAll({ attributes: ['products'] });
+  let allSales = [];
+    const mySales = allOrders.forEach((data) => {
+      data.products.map((element) => {
+        if (element.sellerId === sellerId) {
+        allSales.push(element);
+      }
+      })
+      
+    });
+      
+  if (allSales.length === 0) {
+    return res.status(404).json({ message: 'You have no order yet' });
+  }
+  return res.status(200).json({ Orders: allSales });
+};
+
+export { trackOrderStatus, getOrders, getSales };

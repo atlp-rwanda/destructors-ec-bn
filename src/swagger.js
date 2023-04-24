@@ -190,7 +190,7 @@ export const swaggerDocument = {
     '/api/v1/orders/{id}/status': {
       get: orderStatus,
     },
-    '/api/v1/orders/all': {
+    '/api/v1/orders': {
       get: getOrders,
     },
     '/api/v1/notifications/{id}': {

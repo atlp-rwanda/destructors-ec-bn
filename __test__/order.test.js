@@ -2,7 +2,10 @@ import request from 'supertest';
 import app from '../src/app';
 import { User, Orders, Sales } from '../src/database/models';
 import { generateToken } from '../src/utils/generateToken';
+// import { expect } from 'chai';
+
 jest.setTimeout(30000);
+
 describe('Tracking the Order Status', () => {
   let orderId;
   let buyerId;
@@ -21,8 +24,7 @@ describe('Tracking the Order Status', () => {
       role: 'buyer',
     });
 
-    buyerId = await buyer.id;
-
+    buyerId = buyer.id;
     // Generate an access token for the test buyer
     buyerToken = generateToken(buyer);
 
@@ -34,7 +36,7 @@ describe('Tracking the Order Status', () => {
       status: 'payed',
     });
 
-    orderId = await order.id;
+    orderId = order.id;
 
     Sale = await Sales.create({
       orderId: orderId,
@@ -63,9 +65,12 @@ describe('Tracking the Order Status', () => {
 
   test('should return all orders for user', async () => {
     const res = await request(app)
-      .get(`/api/v1/orders/all`)
+      .get('/api/v1/orders')
       .set('Authorization', `Bearer ${buyerToken}`);
 
     expect(res.statusCode).toEqual(200);
+    expect(res.body.Orders.length).toEqual(1);
+    expect(res.body.Orders[0].id).toEqual(orderId);
+    expect(res.body.Orders[0].userId).toEqual(buyerId);
   });
 });
