@@ -381,7 +381,7 @@ describe('this is for testing the otp',()=>{
     expect(response.body.token).toBeDefined();
   });
   test('returns a 401 response with an error message for an invalid OTP', async () => {
-    const otp=123456
+    const otp="123456"
     const response = await request(app)
       .post(`/api/v1/users/login/validate/${token}`)
       .send({ otp: otp });

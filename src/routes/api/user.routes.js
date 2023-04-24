@@ -32,6 +32,7 @@ import updatePasswordValidation from '../../ validations/updatePassword.validati
 import { updatePassword } from '../../controllers/user.controller';
 import verifyOTP from '../../controllers/verifyOTP';
 import { checkIfPasswordIsExpired } from '../../middlewares/checkPassword';
+import { otpValidation } from '../../ validations/OTP.validation';
 
 const route = Router();
 route.post('/signup', signupValidation, verifyUser, registerUser);
@@ -45,7 +46,7 @@ route.patch(
   updatePassword
 );
 
-route.post('/login/validate/:token', verifyOTP);
+route.post('/login/validate/:token',otpValidation, verifyOTP);
 route.get('/auth', (req, res) => {
   res
     .status(200)

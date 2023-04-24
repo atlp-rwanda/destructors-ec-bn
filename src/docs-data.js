@@ -386,6 +386,7 @@ export const verifyOTP = {
             otp: {
               type: "string",
               description: "One time password",
+              required: true,
               example: "123459",
             },
           },
