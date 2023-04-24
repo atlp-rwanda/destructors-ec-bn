@@ -41,7 +41,6 @@ describe('Tracking the Order Status', () => {
       sellerId: 'f6053eb8-247e-4964-aae4-147f90a4fd64',
       status: 'paid',
     });
-
   });
 
   test('should return the status of the order', async () => {
@@ -60,5 +59,13 @@ describe('Tracking the Order Status', () => {
 
     expect(res.statusCode).toEqual(404);
     expect(res.body.error).toEqual('Order not found');
+  });
+
+  test('should return all orders for user', async () => {
+    const res = await request(app)
+      .get(`/api/v1/orders/all`)
+      .set('Authorization', `Bearer ${buyerToken}`);
+
+    expect(res.statusCode).toEqual(200);
   });
 });

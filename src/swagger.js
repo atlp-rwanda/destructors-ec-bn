@@ -15,7 +15,7 @@ import {
   removeFromCart,
 } from './documents/cart.docs';
 import { payment } from './documents/payments.docs';
-import { orderStatus } from './documents/orderStatus.docs';
+import { orderStatus, getOrders } from './documents/orderStatus.docs';
 import {
   MarkNotificationRead,
   MarkAllNotificationRead,
@@ -189,6 +189,9 @@ export const swaggerDocument = {
     },
     '/api/v1/orders/{id}/status': {
       get: orderStatus,
+    },
+    '/api/v1/orders/all': {
+      get: getOrders,
     },
     '/api/v1/notifications/{id}': {
       patch: MarkNotificationRead,

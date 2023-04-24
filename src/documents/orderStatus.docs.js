@@ -35,7 +35,21 @@ export const orderStatus = {
       },
     },
     401: {
-      $ref: '#/components/responses/Unauthorized',
+      description: 'Unauthorized',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              error: {
+                type: 'string',
+                example: 'Unauthorized',
+              },
+            },
+            required: ['error'],
+          },
+        },
+      },
     },
     404: {
       description: 'The specified order does not exist',
@@ -55,7 +69,136 @@ export const orderStatus = {
       },
     },
     500: {
-      $ref: '#/components/responses/ServerError',
+      description: 'Server Error',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              error: {
+                type: 'string',
+                example: 'Server Error',
+              },
+            },
+            required: ['error'],
+          },
+        },
+      },
+    },
+  },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+    },
+    responses: {
+      Unauthorized: {
+        description: 'Unauthorized',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                error: {
+                  type: 'string',
+                  example: 'Unauthorized',
+                },
+              },
+              required: ['error'],
+            },
+          },
+        },
+      },
+      ServerError: {
+        description: 'Server Error',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                error: {
+                  type: 'string',
+                  example: 'Server Error',
+                },
+              },
+              required: ['error'],
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const getOrders = {
+  summary: 'Get orders for a user',
+  tags: ['buyer order status'],
+  description:
+    'Returns orders placed by a user, or all orders if user is an admin',
+  responses: {
+    200: {
+      description: 'List of orders',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              Orders: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: {
+                      type: 'integer',
+                    },
+                    // Add other properties here
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    401: {
+      description: 'Unauthorized',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              error: {
+                type: 'string',
+                example: 'Unauthorized',
+              },
+            },
+            required: ['error'],
+          },
+        },
+      },
+    },
+    404: {
+      description: 'No orders found',
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              message: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
     },
   },
   security: [

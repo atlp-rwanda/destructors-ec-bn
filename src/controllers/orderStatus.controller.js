@@ -1,7 +1,6 @@
-import { Sales } from '../database/models';
-import { Orders } from '../database/models';
+import { Sales, Orders } from '../database/models';
 
-const trackOrderStatus = async (req, res) => {
+export const trackOrderStatus = async (req, res) => {
   try {
     const buyerId = req.user.id;
     const selectedOrder = await Orders.findOne({
@@ -31,4 +30,16 @@ const trackOrderStatus = async (req, res) => {
   }
 };
 
-export default trackOrderStatus;
+export const getOrders = async (req, res) => {
+  const buyerId = req.user.id;
+  const role = req.user.role;
+  const allOrders = await Orders.findAll({ where: { userId: buyerId } });
+  const orders = await Orders.findAll({});
+  if (role == 'admin') {
+    return res.status(200).json({ Orders: orders });
+  }
+  if (allOrders.length === 0) {
+    return res.status(404).json({ message: 'You have no order yet' });
+  }
+  return res.status(200).json({ Orders: allOrders });
+};
