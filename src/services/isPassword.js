@@ -11,11 +11,11 @@ export const checkPasswordExpiration = async ()=>{
     }
   }})
   if(expiredUsers){
-    await User.update({expired:true},{where:{
+    await User.update({expired:true,mustUpdatePassword:true},{where:{
       lastTimePasswordUpdated : {
         [Sequelize.Op.lt]: moment().subtract(process.env.EXPIRESIN,process.env.TIMEUNITS)
       }
     }})
-    eventEmitter.emit('passwordExpiration','Your password has expired!!')
+    eventEmitter.emit('passwordExpiration','Your password has expired!!!')
   }
 }

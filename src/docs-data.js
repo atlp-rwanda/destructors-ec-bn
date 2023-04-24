@@ -336,7 +336,7 @@ export const getUserProfile = {
       description: "user profile fetched", // response desc
     },
     // response code
-    401: {
+    500: {
       description: "Server error", // response desc
     },
   },

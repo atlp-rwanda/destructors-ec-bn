@@ -125,6 +125,19 @@ const loginUser = async (req, res, next) => {
       }
 
       if (foundUser.role == 'admin' || foundUser.role == 'buyer') {
+        if(foundUser.expired){
+          return res.status(200).json({
+            message: 'Successful login!! your password has expired⚠️⚠️',
+            user: {
+              id: foundUser.id,
+              firstname: foundUser.firstname,
+              lastname: foundUser.lastname,
+              email: foundUser.email,
+              role: foundUser.role,
+            },
+            token: token,
+          });
+        }
         return res.status(200).json({
           message: 'Successful login',
           user: {
@@ -148,7 +161,7 @@ const resetEmail = async (req, res) => {
     const userEml = req.body.email;
     const user = await findUserByEmail(userEml);
     if (user == false) {
-      res.status(404).json('User not found');
+      res.status(404).json({message: 'User not found'});
     } else {
       const userDetails = {
         email: user.email,
@@ -178,8 +191,6 @@ const resetPassword = async (req, res) => {
     const token = req.params.token;
     const payload = verfyToken(token, process.env.JWT_SECRET);
 
-    console.log('payload', payload);
-
     if (payload) {
       const hashPassword = BcryptUtil.hash(req.body.password);
       await model.User.update(
@@ -204,12 +215,12 @@ const resetPassword = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const user = await User.findOne({ where: { id: userId } });
+    const user = await findUserById(userId)
     if (user) {
       res.status(200).json({ user_details: user });
     }
   } catch (err) {
-    res.status(401).json(err);
+    res.status(500).json(err);
   }
 };
 const editUserProfile = async (req, res) => {
