@@ -19,11 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     subject: DataTypes.STRING,
     message: DataTypes.STRING,
     entityId: DataTypes.JSONB,
-    receiverId: DataTypes.UUID,
-    is_read: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    }
+    receiver: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Notifications',

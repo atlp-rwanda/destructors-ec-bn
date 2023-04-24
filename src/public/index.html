@@ -200,7 +200,7 @@
         (function () {
             const userId = window.location.href.split("/")[6];
             const app = document.querySelector('.app');
-            const socket = io('http://localhost:3000', {
+            const socket = io('/', {
                 auth: {
                     token: 'json-web-token',
                 },

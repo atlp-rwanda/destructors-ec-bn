@@ -232,14 +232,23 @@ const updateProductAvailability = async (req, res) => {
           where: { id: productId },
         });
         if (updatedProduct.isAvailable){
-
+        let userId = []
+        const user = await User.User.findAll(  {
+          where:{role: 'buyer'},
+          attributes:['id']
+        })
+        user.map(element =>{
+          userId.push(element.id)
+        })
          const notificationDetails = {
           receiver:'buyer',
           subject:'new product',
           message: `Checkout this ${updatedProduct.name}`,
-          entityId: { productId: updatedProduct.id}
+          entityId: { productId: updatedProduct.id},
+          receiverId: userId
          } 
           eventEmitter.emit('new-notification', notificationDetails );
+          return res.status(200).json({ product: updatedProduct,user:userId});
         }
         
         return res.status(200).json({ product: updatedProduct });

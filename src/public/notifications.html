@@ -16,7 +16,7 @@
     display: flex;
     align-items: center;
     background: #00A9D4;
-    height: 60px;
+    height: 70px;
     position: relative;
   }
   .icon {
@@ -55,7 +55,7 @@
     padding-bottom: 20px;
     opacity: 0;
     position: absolute;
-    top: 63px;
+    top: 70px;
     right: 35px;
     transition: 1s opacity, 250ms height;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -67,6 +67,16 @@
     border-bottom: 1px solid #eee;
     color: #999;
   }
+  .mark-all {
+    top: 53px;
+    right: 45px;
+    border: #999;
+    color: #aaa;
+    overflow: scroll;
+    position: fixed;
+    cursor: pointer;
+
+  }
   .notifi-box h2 span {
     color: #f00;
   }
@@ -75,7 +85,7 @@
     border-bottom: 1px solid #eee;
     padding: 15px 5px;
     margin-bottom: 15px;
-    cursor: pointer;
+    
   }
   .notifi-item:hover {
     background-color: #eee;
@@ -136,12 +146,11 @@
 <body>
 	<nav>
 		<div class="logo">  DESTRUCTORS <i class="fa-solid fa-cart-shopping"></i> </div>
-        <div id="error"></div>
 		<div class="icon" onclick="toggleNotifi()">
 			<img src="https://res.cloudinary.com/dboqnapgi/image/upload/v1681484926/bell-860_i71ug4.png" alt=""> <span id="number"></span>
 		</div>
 		<div class="notifi-box" id="box">
-
+    <div class="mark-all" onclick="markAll()">Mark all</div>
 		</div>
 	</nav>
   <div class="loginUser"></div>
@@ -149,7 +158,6 @@
 	<script>
         
         var box  = document.getElementById('box');
-        const notify  = document.getElementById('error');
         const number = document.getElementById('number');
         const tokenInput = document.getElementById('token');
         const button = document.getElementById('submit');
@@ -160,7 +168,7 @@
         let nberNotification = 0;
         let loginToken = JSON.parse(localStorage.getItem('token'));
         
-        const socket = io('http://localhost:3000/notifications', {
+        const socket = io('/notifications', {
         extraHeaders: { authorization: `Bearer ${loginToken}`
         }
        });
@@ -174,7 +182,7 @@
         product.forEach(element => {
         notificationDiv = document.createElement('div');
         notificationDiv.setAttribute('class', 'notifi-item');
-        notificationDiv.innerHTML = `<div class="text">
+        notificationDiv.innerHTML = `<div class="text" onclick="notificationCounter2(); this.onclick=null;">
             <h4>${element.name}</h4>
             <p>This product is remain below 7 days to expire</p>
             </div> `;
@@ -185,11 +193,11 @@
         
       });
 
-      socket.on('general-notification', (subject, message) => {
+      socket.on('general-notification', (subject, message, id) => {
   
         notificationDiv = document.createElement('div');
         notificationDiv.setAttribute('class', 'notifi-item');
-        notificationDiv.innerHTML = `<div class="text">
+        notificationDiv.innerHTML = `<div class="text" onclick="notificationCounter('${id}'); this.onclick=null;">
             <h4>${subject}</h4>
             <p>${message}</p>
             </div> `;
@@ -197,13 +205,14 @@
         box.prepend(notificationDiv);
         nberNotification += 1;
         number.innerHTML = `${nberNotification}`
+        
       });
 
       socket.on('outOfStock-notification', (products) => {
         products.forEach(element => {
         notificationDiv = document.createElement('div');
         notificationDiv.setAttribute('class', 'notifi-item');
-        notificationDiv.innerHTML = `<div class="text">
+        notificationDiv.innerHTML = `<div class="text" onclick="notificationCounter2(); this.onclick=null;">
             <h4>${element.name}</h4>
             <p>This product is remain below 5 items to be out of stock</p>
             </div> `;
@@ -218,7 +227,7 @@
         products.forEach(element => {
         notificationDiv = document.createElement('div');
         notificationDiv.setAttribute('class', 'notifi-item');
-        notificationDiv.innerHTML = `<div class="text">
+        notificationDiv.innerHTML = `<div class="text" onclick="notificationCounter2(); this.onclick=null;">
             <h4>${element.name}</h4>
             <p>Checkout this bonus on ${element.name} </p>
             </div> `;
@@ -233,29 +242,27 @@
         notification.forEach(element => {
         notificationDiv = document.createElement('div');
         notificationDiv.setAttribute('class', 'notifi-item');
-        notificationDiv.innerHTML = `<div class="text" onclick="notificationCounter(${notification.is_read}, ${notification.id} )">
+        notificationDiv.innerHTML = `<div class="text" onclick="notificationCounter('${element.id}'); this.onclick=null;">
             <h4>${element.subject}</h4>
             <p>${element.message} </p>
             </div> `;
-         box.prepend(notificationDiv);
-          
-         if(!notification.is_read){
+        box.prepend(notificationDiv);
+        console.log(element.is_read)
+        if (element.status === false){
           nberNotification += 1;
-          
-         }
-         
-        number.innerHTML = `${nberNotification}`
+          number.innerHTML = `${nberNotification}`
+        }
+
+      
         });
 
       });
 
  
     socket.on("connect_error", (err) => {
-
-    console.log(err.message); 
-    notify.textContent = err;
-    notify.style.backgroundColor = 'blue';
-    notify.style.height = '10vh';
+ 
+    user.textContent = err.message;
+    user.style.color = 'red';
 
 });
 
@@ -271,21 +278,45 @@ function toggleNotifi(){
 	}
 }
 
-function notificationCounter(is_read, id){
-	if (!is_read) {
+function notificationCounter(id){
+
+  if(number.innerHTML > 0 ){
+    nberNotification -= 1;
+    number.innerHTML = `${nberNotification}`
+    fetch(`http://localhost:3000/api/v1/notifications/${id}`,{
+        method:'PATCH',
+        headers:{
+            Authorization: `Bearer ${loginToken}`
+        }
+        })
+  }
+		
+
+	}
+  function markAll(){
+		nberNotification = 0;
+    number.innerHTML = `${nberNotification}`
+    fetch(`http://localhost:3000/api/v1/notifications`,{
+        method:'PATCH',
+        headers:{
+            Authorization: `Bearer ${loginToken}`
+        }
+        })
+
+	}
+  function notificationCounter2(){
+    if(number.innerHTML > 0 ){
 		nberNotification -= 1;
     number.innerHTML = `${nberNotification}`
-    socket.emit('notification-view', true, id );
+    }
 	}
-}
+
 function loginUser(){
   const token= tokenInput.value;
   localStorage.setItem('token', JSON.stringify(token));
   tokenInput.value = '';
   window.location.reload();
 }
-
-
 
 
     </script>
