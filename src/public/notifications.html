@@ -168,7 +168,7 @@
         let nberNotification = 0;
         let loginToken = JSON.parse(localStorage.getItem('token'));
         
-        const socket = io('http://localhost:3000/notifications', {
+        const socket = io('/notifications', {
         extraHeaders: { authorization: `Bearer ${loginToken}`
         }
        });
