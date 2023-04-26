@@ -21,7 +21,7 @@ import extractToken from '../../middlewares/checkUserWithToken.js';
 import { checkIfPasswordIsExpired } from '../../middlewares/checkPassword.js';
 import { createProductReview } from '../../controllers/productReview.controller.js';
 import { validateReviewProduct } from '../../ validations/productReview.validation.js';
-
+import checkIfOrderIsApproved from '../../middlewares/purchasedProduct.middleware.js';
 
 const route = Router();
 route.post(
@@ -44,11 +44,9 @@ route.patch(
   checkRole(['seller']),
   updateProductAvailability
 );
-route.patch('/:id', extractToken, checkRole(['seller']),checkIfPasswordIsExpired, updateProduct);
-route.delete('/:id', extractToken, checkRole(['seller']),checkIfPasswordIsExpired, deleteProduct);
-route.get('/:id/product-wishes',extractToken,getWishesPerProduct)
-route.patch('/:id', extractToken, checkRole(['seller']), updateProduct);
-route.delete('/:id', extractToken, checkRole(['seller']), deleteProduct);
-route.post('/:id/reviews',extractToken,checkRole(['buyer']),validateReviewProduct,createProductReview)
+route.patch('/:id', extractToken, checkRole(['seller']), uploadArray('image'), checkIfPasswordIsExpired, updateProduct);
+route.delete('/:id', extractToken, checkRole(['seller']), checkIfPasswordIsExpired, deleteProduct,);
+route.get('/:id/product-wishes', extractToken, getWishesPerProduct);
+route.post('/:id/reviews', extractToken, checkRole(['buyer']), validateReviewProduct, checkIfOrderIsApproved, createProductReview);
 
 export default route;

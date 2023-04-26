@@ -3,7 +3,7 @@ import {
   createProduct,
   findAllProducts,
   findProduct,
-  findProducts,
+  findProducts
 } from '../services/product.service.js';
 import verfyToken from '../utils/verifytoken.js';
 import 'dotenv/config';
@@ -268,34 +268,45 @@ const updateProductAvailability = async (req, res) => {
       }
     )(req, res);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: 'Server error' });
   }
 };
+
 const updateProduct = async (req, res) => {
+  const id = req.params.id;
+  const { name, price, quantity, categoryId, bonus, expiryDate } = req.body;
   try {
-    const { id } = req.params;
-    const seller = req.user;
-
     const product = await Products.findOne({
-      where: { id, sellerId: seller.id },
+      where: { id, sellerId: req.user.id },
     });
-
     if (!product) {
-      return res.status(404).json({ error: 'Product not found ' });
+      return res.status(404).json({ error: 'Product not found' });
     }
-    const { name, price, quantity, bonus, expiryDate, categoryId } = req.body;
-    await Products.update(
-      { name, price, quantity, categoryId, bonus, expiryDate },
-      { where: { id, sellerId: seller.id } }
-    );
-
-    const updatedProduct = await Products.findOne({ where: { id } });
-
-    return res.status(200).json({ product: updatedProduct });
+    const currentImages = product.images;
+    let newImages = [];
+    const updatedProduct = {
+      name: name || product.name,
+      price: price || product.price,
+      quantity: quantity || product.quantity,
+      categoryId: categoryId || product.categoryId,
+      bonus: bonus || product.bonus,
+      expiryDate: expiryDate || product.expiryDate,
+      images: currentImages, 
+    };
+    if (req.files && req.files.length > 0) {
+      newImages = req.files.map((file) => file.path);
+      updatedProduct.images = newImages;
+    }
+    await product.update(updatedProduct);
+    const finalProduct = await Products.findOne({ where: { id } });
+    if (newImages.length > 0) {
+      finalProduct.images = updatedProduct.images;
+    }
+    return res
+      .status(200)
+      .json({ message: 'Product updated successfully', product: finalProduct });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
