@@ -191,24 +191,25 @@ export const deleteProduct = {
 // update product from thier collection
 export const updateProduct = {
   tags: ['Products'],
-  parameters: [
-    {
-      name: 'id',
-      in: 'path',
-      description: 'the product id',
-      required: true,
-    },
-  ],
   security: [
     {
       bearerAuth: [],
     },
   ],
-  summary: 'updating product',
+  parameters: [
+    {
+      name: 'id',
+      in: 'path',
+      description: 'product Id',
+      required: true,
+    },
+
+  ],
+  summary: 'Update product',
   requestBody: {
     required: true,
     content: {
-      'application/json': {
+      'multipart/form-data': {
         schema: {
           type: 'object',
           properties: {
@@ -239,6 +240,13 @@ export const updateProduct = {
               type: 'number',
               description: 'Bonus for a product',
             },
+            image: {
+              type: 'array',
+              items: {
+                minItems: 2,
+                type: 'file',
+              },
+            },
           },
         },
       },
@@ -248,7 +256,7 @@ export const updateProduct = {
   responses: {
     // response code
     201: {
-      description: 'product updated successfully', // response desc
+      description: 'product updateed successfully', // response desc
     },
     // response code
     500: {

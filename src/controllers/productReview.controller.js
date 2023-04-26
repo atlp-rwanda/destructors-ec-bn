@@ -1,6 +1,7 @@
 import { findProductById, productReview } from '../services/product.service';
 import { calculateAverageRating } from '../utils/averageRating';
 import { Reviews } from '../database/models';
+
 const createProductReview = async (req, res) => {
   const { id: productId } = req.params;
   const buyerId = req.user.id;
