@@ -1,12 +1,13 @@
 'use strict';
- const {
-   Model
- } = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class ProductWish extends Model {
     static associate(models) {
       this.belongsTo(models.User, { foreignKey: 'userId' });
-      this.belongsTo(models.Products, { foreignKey: 'productId', as: 'Product' });
+      this.belongsTo(models.Products, {
+        foreignKey: 'productId',
+        as: 'Product',
+      });
     }
   }
   ProductWish.init(
@@ -24,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       productId: {
         type: DataTypes.UUID,
         references: { model: 'Products', key: 'id' },
-      }
+      },
     },
     {
       sequelize,

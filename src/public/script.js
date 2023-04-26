@@ -23,7 +23,6 @@
 // var box  = document.getElementById('box');
 // var down = false;
 
-
 // function toggleNotifi(){
 // 	if (down) {
 // 		box.style.height  = '0px';

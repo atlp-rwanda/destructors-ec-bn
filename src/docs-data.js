@@ -1,35 +1,35 @@
 export const signUp = {
-  tags: ["User Authentication"],
-  description: "Signup a user",
-  operationId: "signUpUser",
+  tags: ['User Authentication'],
+  description: 'Signup a user',
+  operationId: 'signUpUser',
   parameters: [],
   requestBody: {
     content: {
       // content-type
-      "application/json": {
+      'application/json': {
         schema: {
-          type: "object",
+          type: 'object',
           properties: {
             firstname: {
-              type: "string",
-              description: "user first name",
-              example: "Iribagiza",
+              type: 'string',
+              description: 'user first name',
+              example: 'Iribagiza',
             },
             lastname: {
-              type: "string",
-              description: "User lastname",
-              example: "Jeannette",
+              type: 'string',
+              description: 'User lastname',
+              example: 'Jeannette',
             },
             email: {
-              type: "string",
-              description: "User email",
-              example: "iribagizajenny@test.com",
+              type: 'string',
+              description: 'User email',
+              example: 'iribagizajenny@test.com',
             },
             password: {
-              type: "string",
+              type: 'string',
               description:
-                "password must include one number small letters and characters + capital letters", // desc
-              example: "@Qwert123",
+                'password must include one number small letters and characters + capital letters', // desc
+              example: '@Qwert123',
             },
           },
         },
@@ -39,83 +39,83 @@ export const signUp = {
   responses: {
     // response code
     201: {
-      description: "Todo created successfully", // response desc
+      description: 'Todo created successfully', // response desc
     },
     // response code
     500: {
-      description: "Server error", // response desc
+      description: 'Server error', // response desc
     },
   },
 };
 // expected responses
 
 export const loginUser = {
-  tags: ["User Authentication"],
-  description: "Logs in a user",
-  operationId: "loginUser",
+  tags: ['User Authentication'],
+  description: 'Logs in a user',
+  operationId: 'loginUser',
   parameters: [],
   requestBody: {
     content: {
-      "application/json": {
+      'application/json': {
         schema: {
-          type: "object",
+          type: 'object',
           properties: {
             email: {
-              type: "string",
-              description: "User email",
-              example: "user@test.com",
+              type: 'string',
+              description: 'User email',
+              example: 'user@test.com',
             },
             password: {
-              type: "string",
-              description: "User password",
-              example: "password123",
+              type: 'string',
+              description: 'User password',
+              example: 'password123',
             },
           },
-          required: ["email", "password"],
+          required: ['email', 'password'],
         },
       },
     },
   },
   responses: {
     200: {
-      description: "Successful login",
+      description: 'Successful login',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "Successful login",
+                type: 'string',
+                example: 'Successful login',
               },
               user: {
-                type: "object",
+                type: 'object',
                 properties: {
                   id: {
-                    type: "integer",
+                    type: 'integer',
                     example: 1,
                   },
                   firstname: {
-                    type: "string",
-                    example: "John",
+                    type: 'string',
+                    example: 'John',
                   },
                   lastname: {
-                    type: "string",
-                    example: "Doe",
+                    type: 'string',
+                    example: 'Doe',
                   },
                   email: {
-                    type: "string",
-                    example: "user@test.com",
+                    type: 'string',
+                    example: 'user@test.com',
                   },
                   role: {
-                    type: "string",
-                    example: "admin",
+                    type: 'string',
+                    example: 'admin',
                   },
                 },
               },
               token: {
-                type: "string",
-                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                type: 'string',
+                example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
               },
             },
           },
@@ -123,15 +123,15 @@ export const loginUser = {
       },
     },
     401: {
-      description: "Invalid email or password",
+      description: 'Invalid email or password',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "Invalid email or password",
+                type: 'string',
+                example: 'Invalid email or password',
               },
             },
           },
@@ -139,15 +139,15 @@ export const loginUser = {
       },
     },
     404: {
-      description: "User not found",
+      description: 'User not found',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "User not found",
+                type: 'string',
+                example: 'User not found',
               },
             },
           },
@@ -155,7 +155,7 @@ export const loginUser = {
       },
     },
     500: {
-      description: "Server error",
+      description: 'Server error',
     },
   },
 };
@@ -192,20 +192,19 @@ export const resetEmail = {
       description: 'User not registered', // response desc
     },
   },
-};  
+};
 
-  
 export const ResetPassword = {
   tags: ['Reset Password'],
   description: 'Reset user password',
   operationId: 'Reset password',
   parameters: [
     {
-    name: 'token',
-    in: 'path',
-    description: 'the sent token',
-    required: true
-    }
+      name: 'token',
+      in: 'path',
+      description: 'the sent token',
+      required: true,
+    },
   ],
   requestBody: {
     content: {
@@ -216,7 +215,8 @@ export const ResetPassword = {
           properties: {
             password: {
               type: 'string',
-              description: 'Enter New password, password must include one number small letters and characters + capital letters',
+              description:
+                'Enter New password, password must include one number small letters and characters + capital letters',
               example: 'maxmax250',
             },
             confirmPassword: {
@@ -242,11 +242,9 @@ export const ResetPassword = {
   },
 };
 
-
-
-export const userProfile={
-  tags: ["User Authentication"],
-  description: "user profile editing",
+export const userProfile = {
+  tags: ['User Authentication'],
+  description: 'user profile editing',
   security: [
     {
       bearerAuth: [],
@@ -255,55 +253,55 @@ export const userProfile={
   requestBody: {
     content: {
       // content-type
-      "application/json": {
+      'application/json': {
         schema: {
-          type: "object",
+          type: 'object',
           properties: {
             gender: {
-              type: "string", 
-              description: "gender",
-              example: "male",
-             },
-             DOB: {
-              type: "date",
-              description: "DOB",
-              example: "10.10.2020",
-             },
-             prefferedCurrency: {
-              type: "string",
-              description: "prefferedCurrency",
-              example: "RWF",
-             },
-             prefferedLanguage: {
-              type: "string",
-              description: "prefferedLanguage", // desc
-              example: "@Qwert123",
-             },
-              street: {
-                type: "string",
-                description: "prefferedCurrency",
-                example: "KG08ave",
-                },
-              province: {
-                type: "string",
-                example: "Kigali City",
-                },
-              district: {
-                type: "string",
-                description: "prefferedCurrency",
-                example: "Nyarugenge",
-                },
-                phoneNo: {
-                type: "number",
-                description: "prefferedCurrency",
-                example: "07851234567",
-                },
-                email: {
-                type: "string",
-                description: "prefferedCurrency",
-                example: "user@email.com",
-                },
+              type: 'string',
+              description: 'gender',
+              example: 'male',
             },
+            DOB: {
+              type: 'date',
+              description: 'DOB',
+              example: '10.10.2020',
+            },
+            prefferedCurrency: {
+              type: 'string',
+              description: 'prefferedCurrency',
+              example: 'RWF',
+            },
+            prefferedLanguage: {
+              type: 'string',
+              description: 'prefferedLanguage', // desc
+              example: '@Qwert123',
+            },
+            street: {
+              type: 'string',
+              description: 'prefferedCurrency',
+              example: 'KG08ave',
+            },
+            province: {
+              type: 'string',
+              example: 'Kigali City',
+            },
+            district: {
+              type: 'string',
+              description: 'prefferedCurrency',
+              example: 'Nyarugenge',
+            },
+            phoneNo: {
+              type: 'number',
+              description: 'prefferedCurrency',
+              example: '07851234567',
+            },
+            email: {
+              type: 'string',
+              description: 'prefferedCurrency',
+              example: 'user@email.com',
+            },
+          },
         },
       },
     },
@@ -312,18 +310,18 @@ export const userProfile={
   responses: {
     // response code
     202: {
-      description: "user profile updated successfully", // response desc
+      description: 'user profile updated successfully', // response desc
     },
     // response code
     217: {
-      description: "Server error", // response desc
+      description: 'Server error', // response desc
     },
   },
-}
+};
 
 export const getUserProfile = {
-  tags: ["User Authentication"],
-  description: "Get a user profile",
+  tags: ['User Authentication'],
+  description: 'Get a user profile',
   security: [
     {
       bearerAuth: [],
@@ -333,78 +331,77 @@ export const getUserProfile = {
   responses: {
     // response code
     200: {
-      description: "user profile fetched", // response desc
+      description: 'user profile fetched', // response desc
     },
     // response code
     401: {
-      description: "Server error", // response desc
+      description: 'Server error', // response desc
     },
   },
-}
+};
 
 export const logoutUser = {
-  tags: [" User Logout"],
-  description: "user logout",
+  tags: [' User Logout'],
+  description: 'user logout',
   security: [
     {
       bearerAuth: [],
     },
   ],
   responses: {
-   
     200: {
-      description: "You have logged out successfully",
+      description: 'You have logged out successfully',
     },
-    
+
     500: {
-      description: "Server error", 
+      description: 'Server error',
     },
   },
-}
+};
 export const verifyOTP = {
-  tags: ["User Authentication"],
-  description: "Validates OTP and logs in user",
-  operationId: "verifyOTP",
+  tags: ['User Authentication'],
+  description: 'Validates OTP and logs in user',
+  operationId: 'verifyOTP',
   parameters: [
     {
-      name: "token",
-      in: "path",
-      description: "Authentication token",
+      name: 'token',
+      in: 'path',
+      description: 'Authentication token',
       required: true,
       schema: {
-        type: "string",
-        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9vgfgfg",
+        type: 'string',
+        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9vgfgfg',
       },
     },
   ],
   requestBody: {
     content: {
-      "application/json": {
+      'application/json': {
         schema: {
-          type: "object",
+          type: 'object',
           properties: {
             otp: {
-              type: "string",
-              description: "One time password",
-              example: "123459",
+              type: 'string',
+              description: 'One time password',
+              example: '123459',
             },
           },
-          required: ["email","otp"],
+          required: ['email', 'otp'],
         },
       },
     },
   },
   responses: {
     200: {
-      description: "Successful login",
+      description: 'Successful login',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "Logged in successfully",
+                type: 'string',
+                example: 'Logged in successfully',
               },
             },
           },
@@ -412,15 +409,15 @@ export const verifyOTP = {
       },
     },
     401: {
-      description: "Invalid OTP",
+      description: 'Invalid OTP',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "Invalid OTP",
+                type: 'string',
+                example: 'Invalid OTP',
               },
             },
           },
@@ -428,36 +425,35 @@ export const verifyOTP = {
       },
     },
     500: {
-      description: "Server error",
+      description: 'Server error',
     },
   },
 };
 
-
 export const updateUserStatus = {
-  tags: ["Admin disable/re-enable an account"],
+  tags: ['Admin disable/re-enable an account'],
   description: "Update a user's status",
-  operationId: "updateUserStatus",
+  operationId: 'updateUserStatus',
   parameters: [
     {
-    name: 'id',
-    in: 'path',
-    description: 'user id',
-    required: true
-    }
+      name: 'id',
+      in: 'path',
+      description: 'user id',
+      required: true,
+    },
   ],
   responses: {
     200: {
-      description: "User status updated successfully",
+      description: 'User status updated successfully',
     },
     400: {
-      description: "Invalid request data",
+      description: 'Invalid request data',
     },
     404: {
-      description: "User not found",
+      description: 'User not found',
     },
     500: {
-      description: "Server error",
+      description: 'Server error',
     },
   },
   security: [
@@ -468,61 +464,57 @@ export const updateUserStatus = {
   components: {
     securitySchemes: {
       bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
       },
     },
   },
 };
 
-
-
-
-
 export const assignUserRole = {
-  tags: ["Admin set roles"],
-  description: "Assign a role to a user",
-  operationId: "assignUserRole",
+  tags: ['Admin set roles'],
+  description: 'Assign a role to a user',
+  operationId: 'assignUserRole',
   parameters: [
     {
-    name: 'id',
-    in: 'path',
-    description: 'user id',
-    required: true
-    }
+      name: 'id',
+      in: 'path',
+      description: 'user id',
+      required: true,
+    },
   ],
   requestBody: {
-    description: "User data",
+    description: 'User data',
     required: true,
     content: {
-      "application/json": {
+      'application/json': {
         schema: {
-          type: "object",
+          type: 'object',
           properties: {
             newRole: {
-              type: "string",
-              description: "User role",
-              example: "admin",
+              type: 'string',
+              description: 'User role',
+              example: 'admin',
             },
           },
-          required: ["email", "newRole"],
+          required: ['email', 'newRole'],
         },
       },
     },
   },
   responses: {
     200: {
-      description: "User role assigned successfully",
+      description: 'User role assigned successfully',
     },
     400: {
-      description: "Invalid request data",
+      description: 'Invalid request data',
     },
     404: {
-      description: "User not found",
+      description: 'User not found',
     },
     500: {
-      description: "Server error",
+      description: 'Server error',
     },
   },
   security: [
@@ -533,9 +525,9 @@ export const assignUserRole = {
   components: {
     securitySchemes: {
       bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
       },
     },
   },
@@ -617,11 +609,11 @@ export const userUpdatePassword = {
   },
 };
 
-
 export const searchProducts = {
-  tags: ["search product"],
-  description: "Search for products by name, price range, category, or best before date",
-  operationId: "searchProducts",
+  tags: ['search product'],
+  description:
+    'Search for products by name, price range, category, or best before date',
+  operationId: 'searchProducts',
   parameters: [
     {
       name: 'name',
@@ -634,7 +626,8 @@ export const searchProducts = {
     {
       name: 'minPrice',
       in: 'query',
-      description: 'Search products with a price greater than or equal to this value',
+      description:
+        'Search products with a price greater than or equal to this value',
       schema: {
         type: 'number',
       },
@@ -642,7 +635,8 @@ export const searchProducts = {
     {
       name: 'maxPrice',
       in: 'query',
-      description: 'Search products with a price less than or equal to this value',
+      description:
+        'Search products with a price less than or equal to this value',
       schema: {
         type: 'number',
       },
@@ -667,16 +661,16 @@ export const searchProducts = {
   ],
   responses: {
     200: {
-      description: "Success",
+      description: 'Success',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               products: {
-                type: "array",
+                type: 'array',
                 items: {
-                  $ref: "#/components/schemas/Product",
+                  $ref: '#/components/schemas/Product',
                 },
               },
             },
@@ -685,13 +679,13 @@ export const searchProducts = {
       },
     },
     400: {
-      description: "Invalid request data",
+      description: 'Invalid request data',
     },
     404: {
-      description: "Product not found",
+      description: 'Product not found',
     },
     500: {
-      description: "Server error",
+      description: 'Server error',
     },
   },
   security: [
@@ -702,52 +696,52 @@ export const searchProducts = {
   components: {
     securitySchemes: {
       bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
       },
     },
     schemas: {
       Product: {
-        type: "object",
+        type: 'object',
         properties: {
           id: {
-            type: "string",
-            format: "uuid",
+            type: 'string',
+            format: 'uuid',
           },
           name: {
-            type: "string",
+            type: 'string',
           },
           price: {
-            type: "number",
+            type: 'number',
           },
           quantity: {
-            type: "integer",
+            type: 'integer',
           },
           isAvailable: {
-            type: "boolean",
+            type: 'boolean',
           },
           categoryId: {
-            type: "integer",
+            type: 'integer',
           },
           sellerId: {
-            type: "integer",
+            type: 'integer',
           },
           bonus: {
-            type: "number",
+            type: 'number',
           },
           images: {
-            type: "array",
+            type: 'array',
             items: {
-              type: "string",
+              type: 'string',
             },
           },
           expiryDate: {
-            type: "string",
-            format: "date",
+            type: 'string',
+            format: 'date',
           },
           isExpired: {
-            type: "boolean",
+            type: 'boolean',
           },
         },
       },
@@ -755,33 +749,32 @@ export const searchProducts = {
   },
 };
 
-
 export const verifyEmail = {
-  tags: ["User Authentication"],
+  tags: ['User Authentication'],
   description: "Verify the user's email",
-  operationId: "verifyEmail",
+  operationId: 'verifyEmail',
   parameters: [
     {
-      name: "t",
-      in: "query",
+      name: 't',
+      in: 'query',
       description: "Token sent to the user's email",
       required: true,
       schema: {
-        type: "string",
+        type: 'string',
       },
     },
   ],
   responses: {
     200: {
-      description: "Email verified successfully",
+      description: 'Email verified successfully',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "Email verified",
+                type: 'string',
+                example: 'Email verified',
               },
             },
           },
@@ -789,15 +782,15 @@ export const verifyEmail = {
       },
     },
     404: {
-      description: "User not found",
+      description: 'User not found',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "User not found",
+                type: 'string',
+                example: 'User not found',
               },
             },
           },
@@ -805,15 +798,15 @@ export const verifyEmail = {
       },
     },
     419: {
-      description: "Token has expired",
+      description: 'Token has expired',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "Token has expired",
+                type: 'string',
+                example: 'Token has expired',
               },
             },
           },
@@ -821,54 +814,54 @@ export const verifyEmail = {
       },
     },
     500: {
-      description: "Server error",
+      description: 'Server error',
     },
   },
 };
 
 export const changeSaleStatu = {
-  tags: ["seller update status"],
-  description: "update status for a sale",
-  operationId: "updatestatus",
+  tags: ['seller update status'],
+  description: 'update status for a sale',
+  operationId: 'updatestatus',
   parameters: [
     {
-    name: 'id',
-    in: 'path',
-    description: 'sale id',
-    required: true
-    }
+      name: 'id',
+      in: 'path',
+      description: 'sale id',
+      required: true,
+    },
   ],
   requestBody: {
-    description: "sale data",
+    description: 'sale data',
     required: true,
     content: {
-      "application/json": {
+      'application/json': {
         schema: {
-          type: "object",
+          type: 'object',
           properties: {
             newStatus: {
-              type: "string",
-              description: "sale status",
-              example: "rejected",
+              type: 'string',
+              description: 'sale status',
+              example: 'rejected',
             },
           },
-          required: [ "newstatus"],
+          required: ['newstatus'],
         },
       },
     },
   },
   responses: {
     200: {
-      description: "sale status assigned successfully",
+      description: 'sale status assigned successfully',
     },
     400: {
-      description: "Invalid request data",
+      description: 'Invalid request data',
     },
     404: {
-      description: "sale not found",
+      description: 'sale not found',
     },
     500: {
-      description: "Server error",
+      description: 'Server error',
     },
   },
   security: [
@@ -879,19 +872,18 @@ export const changeSaleStatu = {
   components: {
     securitySchemes: {
       bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
       },
     },
   },
 };
 
-
 export const getSellerStats = {
-  tags: ["Seller Stats"],
-  description: "Returns the statistics for a seller",
-  operationId: "getSellerStats",
+  tags: ['Seller Stats'],
+  description: 'Returns the statistics for a seller',
+  operationId: 'getSellerStats',
   security: [
     {
       bearerAuth: [],
@@ -900,55 +892,55 @@ export const getSellerStats = {
   components: {
     securitySchemes: {
       bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
       },
     },
   },
   requestBody: {
     content: {
-      "application/json": {},
+      'application/json': {},
     },
   },
   responses: {
     200: {
-      description: "Successful operation",
+      description: 'Successful operation',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "array",
+            type: 'array',
             items: {
-              type: "object",
+              type: 'object',
               properties: {
                 year: {
-                  type: "string",
-                  example: "2023",
+                  type: 'string',
+                  example: '2023',
                 },
                 month: {
-                  type: "string",
-                  example: "March",
+                  type: 'string',
+                  example: 'March',
                 },
                 productsSold: {
-                  type: "integer",
+                  type: 'integer',
                   example: 20,
                 },
                 productsSoldRevenue: {
-                  type: "number",
-                  format: "float",
+                  type: 'number',
+                  format: 'float',
                   example: 200.5,
                 },
                 expiredProducts: {
-                  type: "integer",
+                  type: 'integer',
                   example: 5,
                 },
                 lostProductsRevenue: {
-                  type: "number",
-                  format: "float",
+                  type: 'number',
+                  format: 'float',
                   example: 50.25,
                 },
                 wishedProducts: {
-                  type: "integer",
+                  type: 'integer',
                   example: 50,
                 },
               },
@@ -958,15 +950,15 @@ export const getSellerStats = {
       },
     },
     401: {
-      description: "Unauthorized User",
+      description: 'Unauthorized User',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               message: {
-                type: "string",
-                example: "Unauthorized User",
+                type: 'string',
+                example: 'Unauthorized User',
               },
             },
           },
@@ -974,15 +966,15 @@ export const getSellerStats = {
       },
     },
     500: {
-      description: "Internal server error",
+      description: 'Internal server error',
       content: {
-        "application/json": {
+        'application/json': {
           schema: {
-            type: "object",
+            type: 'object',
             properties: {
               error: {
-                type: "string",
-                example: "Internal server error",
+                type: 'string',
+                example: 'Internal server error',
               },
             },
           },
@@ -991,4 +983,3 @@ export const getSellerStats = {
     },
   },
 };
-

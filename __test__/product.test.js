@@ -490,43 +490,47 @@ describe('Rating and feedback for a product', () => {
   });
 
   test('should allow a user to submit a rating and feedback for a product', async () => {
-  
-    const user = await User.findOne({ where: { email: 'testbuyer@gmail.com' } });
+    const user = await User.findOne({
+      where: { email: 'testbuyer@gmail.com' },
+    });
     buyerToken = generateToken(user);
     const response = await request(app)
       .post(`/api/v1/products/${product.id}/reviews`)
       .set('Authorization', `Bearer ${buyerToken}`)
-      .send({ rating:4, feedback:'This product is great!'});
+      .send({ rating: 4, feedback: 'This product is great!' });
     expect(response.status).toBe(201);
   });
   test('should return 400 status code when user tries to submit another rating and feedback for the same product', async () => {
-    const user = await User.findOne({ where: { email: 'testbuyer@gmail.com' } });
+    const user = await User.findOne({
+      where: { email: 'testbuyer@gmail.com' },
+    });
     buyerToken = generateToken(user);
     const response = await request(app)
       .post(`/api/v1/products/${product.id}/reviews`)
       .set('Authorization', `Bearer ${buyerToken}`)
-      .send({rating:3, feedback:'This product is great!'});
+      .send({ rating: 3, feedback: 'This product is great!' });
     expect(response.status).toBe(400);
   });
   test('should return 401 status code if user is not a buyer', async () => {
-  
     product = await Products.findOne({ where: { name: 'Product 1' } });
     const sellerToken = generateToken(user);
     const response = await request(app)
       .post(`/api/v1/products/${product.id}/reviews`)
       .set('Authorization', `Bearer ${sellerToken}`)
-      .send({rating:3, feedback:'This product is great!'});
+      .send({ rating: 3, feedback: 'This product is great!' });
     expect(response.status).toBe(401);
   });
   test('should return 404 status code if product to review is not found', async () => {
-    const user = await User.findOne({ where: { email: 'testbuyer@gmail.com' } });
+    const user = await User.findOne({
+      where: { email: 'testbuyer@gmail.com' },
+    });
     buyerToken = generateToken(user);
     const res = await request(app)
       .post('/api/v1/products/9974076f-e16a-486f-a923-362ec1747a12/reviews')
       .set('Authorization', `Bearer ${buyerToken}`)
       .send({ rating: 4, feedback: 'This product is great!' });
-      expect(res.status).toBe(404);
-  }); 
+    expect(res.status).toBe(404);
+  });
   test('should return 400 if feedback is not provided', async () => {
     const response = await request(app)
       .post(`/api/v1/products/${product.id}/reviews`)

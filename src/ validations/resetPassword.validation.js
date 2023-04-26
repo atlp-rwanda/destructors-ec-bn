@@ -1,18 +1,18 @@
 /* eslint-disable quotes */
-import Joi from "joi";
-import PasswordComplexity from "joi-password-complexity";
+import Joi from 'joi';
+import PasswordComplexity from 'joi-password-complexity';
 
-const validateForm = (schema) => (payload) => schema.validate(payload, { abortEarly: false });
+const validateForm = (schema) => (payload) =>
+  schema.validate(payload, { abortEarly: false });
 
 const resetPSchema = Joi.object({
-
   password: new PasswordComplexity({
     min: 8,
     max: 15,
     lowerCase: 1,
     numeric: 1,
   }).required(),
-  confirmPassword: Joi.any().valid(Joi.ref('password')).required()
+  confirmPassword: Joi.any().valid(Joi.ref('password')).required(),
 });
 
 const EmailSchema = Joi.object({
@@ -26,7 +26,9 @@ const resetPasswordValidation = (req, res, next) => {
   if (error) {
     res.status(400).json({
       status: 400,
-      error: error.details.map((detail) => detail.message.replace(/[^a-zA-Z0-9 ]/g, "")),
+      error: error.details.map((detail) =>
+        detail.message.replace(/[^a-zA-Z0-9 ]/g, '')
+      ),
     });
   } else {
     next();
@@ -40,10 +42,12 @@ const EmailValidation = (req, res, next) => {
   if (error) {
     res.status(400).json({
       status: 400,
-      error: error.details.map((detail) => detail.message.replace(/[^a-zA-Z0-9 ]/g, "")),
+      error: error.details.map((detail) =>
+        detail.message.replace(/[^a-zA-Z0-9 ]/g, '')
+      ),
     });
   } else {
     next();
   }
 };
-export {resetPasswordValidation, EmailValidation};
+export { resetPasswordValidation, EmailValidation };

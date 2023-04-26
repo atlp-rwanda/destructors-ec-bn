@@ -32,14 +32,11 @@ const registerUser = async (req, res) => {
     const token = generateToken(userData, { expiresIn: '10m' });
     await sendVerificationEmail(email, token);
     const response = await register(userData);
-    return res
-      .status(201)
-      .json({
-        message:
-          'Successful registered.Please check your email for verification',
-        user: response,
-        token: token,
-      });
+    return res.status(201).json({
+      message: 'Successful registered.Please check your email for verification',
+      user: response,
+      token: token,
+    });
   } catch (error) {
     return res.status(500).json({ status: 500, error: 'Server error' });
   }
@@ -118,7 +115,7 @@ const loginUser = async (req, res, next) => {
           await validOTPmail(foundUser, otp, token);
           return res
             .status(200)
-            .json({ message: 'please verify your email...'});
+            .json({ message: 'please verify your email...' });
         } catch (error) {
           res.status(500).json({ message: 'Error sending OTP code' });
         }
@@ -162,11 +159,9 @@ const resetEmail = async (req, res) => {
 
       await sendEmail(sendToEmail, 'Reset password', HTMLText);
 
-      res
-        .status(200)
-        .json({
-          message: 'Reset password email has been sent, check your inbox',
-        });
+      res.status(200).json({
+        message: 'Reset password email has been sent, check your inbox',
+      });
     }
   } catch (error) {
     res.status(500).json({ error: 'server error' });

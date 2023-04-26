@@ -256,7 +256,7 @@ export const updateProduct = {
     },
   },
 };
-// create product  review 
+// create product  review
 export const ratingAndFeedback = {
   tags: ['Product Review'],
   parameters: [
@@ -283,12 +283,12 @@ export const ratingAndFeedback = {
             rating: {
               type: 'integer',
               description: 'rating of product',
-              example:'4'
+              example: '4',
             },
             feedback: {
               type: 'string',
               description: 'feedback of product',
-              example:'Good quality of product',
+              example: 'Good quality of product',
             },
           },
         },

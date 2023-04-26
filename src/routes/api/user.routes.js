@@ -7,7 +7,7 @@ import {
   editUserProfile,
   logoutUser,
   verifyEmail,
-  getUserProfile
+  getUserProfile,
 } from '../../controllers/user.controller';
 import verifyUser from '../../middlewares/verifyUser';
 import signupValidation from '../../ validations/signup.validation';

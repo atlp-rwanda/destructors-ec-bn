@@ -1,16 +1,15 @@
-import Jwt from "jsonwebtoken";
+import Jwt from 'jsonwebtoken';
 
 const verfyToken = (token, env) => {
-    const payload = Jwt.verify(token, env, (error, decodedToken) => {
-        if (error) {
-          return false;
-        } else {
-          return decodedToken;
-        }
-      });
+  const payload = Jwt.verify(token, env, (error, decodedToken) => {
+    if (error) {
+      return false;
+    } else {
+      return decodedToken;
+    }
+  });
 
-      return payload;
+  return payload;
+};
 
-}
-
-export default verfyToken
+export default verfyToken;

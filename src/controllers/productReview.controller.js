@@ -18,8 +18,10 @@ const createProductReview = async (req, res) => {
       },
     });
     if (existingReview) {
-        return res.status(400).json({ message: 'You have already reviewed this product' });
-      }
+      return res
+        .status(400)
+        .json({ message: 'You have already reviewed this product' });
+    }
     const review = await productReview(productId, buyerId, rating, feedback);
 
     const reviews = await Reviews.findAll({ where: { productId } });
@@ -37,4 +39,3 @@ const createProductReview = async (req, res) => {
 };
 
 export { createProductReview };
-

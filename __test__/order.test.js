@@ -41,7 +41,6 @@ describe('Tracking the Order Status', () => {
       sellerId: 'f6053eb8-247e-4964-aae4-147f90a4fd64',
       status: 'paid',
     });
-
   });
 
   test('should return the status of the order', async () => {

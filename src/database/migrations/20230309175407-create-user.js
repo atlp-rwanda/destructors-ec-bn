@@ -45,13 +45,12 @@ module.exports = {
       lastTimePasswordUpdated: {
         type: Sequelize.DATE,
       },
-      expired:{
+      expired: {
         type: Sequelize.BOOLEAN,
-      }
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');
-   
   },
 };

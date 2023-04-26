@@ -10,10 +10,10 @@ module.exports = {
         primaryKey: true,
       },
       notificationId: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       receiverId: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       is_read: {
         type: Sequelize.BOOLEAN,
@@ -21,15 +21,15 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Mark_Notifications');
-  }
+  },
 };

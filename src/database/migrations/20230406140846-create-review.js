@@ -1,4 +1,3 @@
-
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -12,35 +11,35 @@ module.exports = {
       },
       buyerId: {
         type: Sequelize.UUID,
-        references:{
-          model:'Users',
-          key:'id',
-        }
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
       },
       productId: {
         type: Sequelize.UUID,
-        references:{
-          model:'Products',
-          key:'id',
-        }
+        references: {
+          model: 'Products',
+          key: 'id',
+        },
       },
       rating: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       feedback: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Reviews');
-  }
+  },
 };

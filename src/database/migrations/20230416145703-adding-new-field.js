@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     return Promise.all([
       queryInterface.addColumn('Products', 'averageRating', {
         type: Sequelize.DECIMAL,
@@ -10,7 +10,7 @@ module.exports = {
     ]);
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.removeColumn('Products', 'averageRating');
-  }
+  },
 };

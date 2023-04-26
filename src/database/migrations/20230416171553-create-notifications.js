@@ -10,28 +10,28 @@ module.exports = {
         primaryKey: true,
       },
       subject: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       message: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       entityId: {
-        type: Sequelize.JSONB
+        type: Sequelize.JSONB,
       },
       receiver: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Notifications');
-  }
+  },
 };

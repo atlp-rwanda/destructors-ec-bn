@@ -2,18 +2,17 @@ import request from 'supertest';
 import app from '../src/app';
 import '../src/services/googleAuth';
 import models from '../src/database/models/index';
-import jwt from 'jsonwebtoken'
-const { User,OTP } = require('../src/database/models');
+import jwt from 'jsonwebtoken';
+const { User, OTP } = require('../src/database/models');
 import generateOTP from '../src/utils/generateOTP';
 
-
 jest.setTimeout(30000);
-describe("Testing registration User", () => { 
+describe('Testing registration User', () => {
   let token, userId;
-  test("It should return 400 for bad request", async () => {
-    const response = await request(app).post("/api/v1/users/signup").send({
-      email: "dummyEmail@gmail.com",
-      password: "dummpassword435",
+  test('It should return 400 for bad request', async () => {
+    const response = await request(app).post('/api/v1/users/signup').send({
+      email: 'dummyEmail@gmail.com',
+      password: 'dummpassword435',
     });
     expect(response.statusCode).toBe(400);
   });
@@ -31,13 +30,13 @@ describe("Testing registration User", () => {
     const response = await request(app)
       .get(`/api/v1/users/verify-email?t=${token}`)
       .expect(200);
-      expect(response.body).toHaveProperty('message', 'email verified');
+    expect(response.body).toHaveProperty('message', 'email verified');
   });
- 
-  test("It should not login with invalid email", async () => {
-    const res = await request(app).post("/api/v1/users/login").send({
-      email: "test@user.com",
-      password: "@Password12",
+
+  test('It should not login with invalid email', async () => {
+    const res = await request(app).post('/api/v1/users/login').send({
+      email: 'test@user.com',
+      password: '@Password12',
     });
     expect(res.statusCode).toBe(401);
   });
@@ -49,11 +48,13 @@ describe("Testing registration User", () => {
     expect(res.statusCode).toBe(401);
   });
   test('It should login with valid email and password', async () => {
-    const res = await request(app).post('/api/v1/users/login').send({
-      email: `testemail1234@gmail.com`,
-      password: "testpass2345",
-    })
-    .expect(200);
+    const res = await request(app)
+      .post('/api/v1/users/login')
+      .send({
+        email: `testemail1234@gmail.com`,
+        password: 'testpass2345',
+      })
+      .expect(200);
     expect(res.body).toHaveProperty('message', 'Successful login');
     expect(res.body).toHaveProperty('user');
     expect(res.body).toHaveProperty('token');
@@ -191,10 +192,10 @@ describe('Testing the reset password via email', () => {
 
     expect(response.statusCode).toBe(400);
   });
-  test('should get user profile',async()=>{
+  test('should get user profile', async () => {
     const res = await request(app)
-    .get('/api/v1/users/profile')
-    .set('Authorization',`Bearer ${token}`)
+      .get('/api/v1/users/profile')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.statusCode).toBe(200);
   });
   test('should update user profile', async () => {
@@ -214,7 +215,7 @@ describe('Testing the reset password via email', () => {
       });
     expect(res.statusCode).toBe(200);
   });
-  
+
   test('should test invalid user if he/she try to update profile without valid token', async () => {
     const res = await request(app)
       .put('/api/v1/users/profile')
@@ -327,7 +328,7 @@ describe('Testing update user password after login', () => {
   });
 });
 
-describe('this is for testing the otp',()=>{
+describe('this is for testing the otp', () => {
   let token, userId;
   test('Get a status of 200', async () => {
     const response = await request(app).post('/api/v1/users/signup').send({
@@ -343,48 +344,55 @@ describe('this is for testing the otp',()=>{
     const response = await request(app)
       .get(`/api/v1/users/verify-email?t=${token}`)
       .expect(200);
-      expect(response.body).toHaveProperty('message', 'email verified');
+    expect(response.body).toHaveProperty('message', 'email verified');
   });
   test('It should login with valid email and password', async () => {
-    const res = await request(app).post('/api/v1/users/login').send({
-      email: `calvinbukarani@gmail.com`,
-      password: "testpass2345",
-    })
-    .expect(200);
+    const res = await request(app)
+      .post('/api/v1/users/login')
+      .send({
+        email: `calvinbukarani@gmail.com`,
+        password: 'testpass2345',
+      })
+      .expect(200);
     expect(res.body).toHaveProperty('message', 'Successful login');
     expect(res.body).toHaveProperty('user');
     expect(res.body).toHaveProperty('token');
     userId = res.body.user.id;
   });
   test('should generate OTP and send email for seller', async () => {
-    const user=await User.findOne({where:{email:'calvinbukarani@gmail.com'}})
-    
-    await user.update({role:'seller'})
+    const user = await User.findOne({
+      where: { email: 'calvinbukarani@gmail.com' },
+    });
+
+    await user.update({ role: 'seller' });
     const response = await request(app)
       .post('/api/v1/users/login')
       .send({ email: user.email, password: 'testpass2345' });
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toMatchObject({ message: "please verify your email..." });
+    expect(response.body).toMatchObject({
+      message: 'please verify your email...',
+    });
     const otpRecord = await OTP.findOne({ where: { email: user.email } });
     expect(otpRecord).not.toBeNull();
-
   });
   test('returns a 200 response for a valid OTP and logs the user in', async () => {
-    const user=await User.findOne({where:{email:'calvinbukarani@gmail.com'}})
-    const otp=await OTP.findOne({where:{email:user.email}})
+    const user = await User.findOne({
+      where: { email: 'calvinbukarani@gmail.com' },
+    });
+    const otp = await OTP.findOne({ where: { email: user.email } });
     const response = await request(app)
       .post(`/api/v1/users/login/validate/${token}`)
-      .send({ otp:otp.otp });
+      .send({ otp: otp.otp });
     expect(response.statusCode).toBe(200);
     expect(response.body.message).toBe('logged in successfully');
     expect(response.body.token).toBeDefined();
   });
   test('returns a 401 response with an error message for an invalid OTP', async () => {
-    const otp=123456
+    const otp = 123456;
     const response = await request(app)
       .post(`/api/v1/users/login/validate/${token}`)
       .send({ otp: otp });
     expect(response.statusCode).toBe(401);
   });
-})
+});

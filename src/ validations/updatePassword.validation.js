@@ -5,10 +5,10 @@ const updatePasswordValidation = (req, res, next) => {
   const schema = Joi.object({
     currentPassword: Joi.string().required(),
     newPassword: new PasswordComplexity({
-    min: 8,
-    max: 15,
-    lowerCase: 1,
-    numeric: 1,
+      min: 8,
+      max: 15,
+      lowerCase: 1,
+      numeric: 1,
     }),
     confirmPassword: Joi.string()
       .required()
@@ -17,7 +17,7 @@ const updatePasswordValidation = (req, res, next) => {
         'any.only': 'Passwords do not match',
       }),
   });
-  
+
   const { error } = schema.validate(req.body);
   if (error) {
     const message = error.details.map((detail) => detail.message).join(', ');

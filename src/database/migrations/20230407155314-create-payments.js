@@ -7,34 +7,34 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       cartId: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       userId: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       cardId: {
-        type: Sequelize.INTEGER
-      },  
+        type: Sequelize.INTEGER,
+      },
       amount: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('payments');
-  }
+  },
 };

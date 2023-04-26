@@ -7,8 +7,10 @@ import allRouter from './routes/index.js';
 import { sequelize } from './database/models/user.js';
 import { swaggerDocument } from './swagger.js';
 import route from './routes/api/user.routes.js';
-import { jobScheduling,prodExpirationJobScheduler} from './jobs/jobSchedules.js';
-
+import {
+  jobScheduling,
+  prodExpirationJobScheduler,
+} from './jobs/jobSchedules.js';
 
 const app = express();
 export const connectDB = async () => {
@@ -38,7 +40,6 @@ try {
 } catch (error) {
   console.log(error);
 }
-
 
 jobScheduling();
 prodExpirationJobScheduler();

@@ -1,28 +1,30 @@
-import User from "../database/models/index";
-import jwt from "jsonwebtoken"
-import { generateToken } from "../utils/generateToken";
+import User from '../database/models/index';
+import jwt from 'jsonwebtoken';
+import { generateToken } from '../utils/generateToken';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import 'dotenv/config'
-import passport from "passport";
-
-
+import 'dotenv/config';
+import passport from 'passport';
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET
+  secretOrKey: process.env.JWT_SECRET,
 };
 
-passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
-  try {
-    const adminData = await User.User.findOne({where: {email: jwt_payload.data.email}})
-    if (!adminData) {
-      return done(null, false);
+passport.use(
+  new JwtStrategy(opts, async (jwt_payload, done) => {
+    try {
+      const adminData = await User.User.findOne({
+        where: { email: jwt_payload.data.email },
+      });
+      if (!adminData) {
+        return done(null, false);
+      }
+      return done(null, adminData);
+    } catch (error) {
+      done(error, false);
     }
-    return done(null, adminData);
-  } catch (error) {
-    done(error, false);
-  }
-}));
+  })
+);
 
 const updateUserStatus = async (req, res) => {
   try {
@@ -32,11 +34,15 @@ const updateUserStatus = async (req, res) => {
       }
 
       if (!adminData) {
-        return res.status(400).json({ error: 'Enter your credentials as admin' });
+        return res
+          .status(400)
+          .json({ error: 'Enter your credentials as admin' });
       }
 
       if (adminData.role !== 'admin') {
-        return res.status(400).json({ error: 'Only admin users can update user status' });
+        return res
+          .status(400)
+          .json({ error: 'Only admin users can update user status' });
       }
 
       const user = await User.User.findOne({ where: { id: req.params.id } });
@@ -59,49 +65,49 @@ const updateUserStatus = async (req, res) => {
   }
 };
 
-
-
-
-
 const assignUserRole = async (req, res) => {
   try {
-        passport.authenticate('jwt', { session: false }, async (err, adminData) => {
+    passport.authenticate('jwt', { session: false }, async (err, adminData) => {
       if (err) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
 
       if (!adminData) {
-        return res.status(404).json({ error: 'Enter your credentials as admin' });
+        return res
+          .status(404)
+          .json({ error: 'Enter your credentials as admin' });
       }
 
       if (adminData.role !== 'admin') {
-        return res.status(400).json({ error: 'Only admin users can update user status' });
+        return res
+          .status(400)
+          .json({ error: 'Only admin users can update user status' });
       }
 
-const selectedUser = await User.User.findOne({where:{ id: req.params.id}});
+      const selectedUser = await User.User.findOne({
+        where: { id: req.params.id },
+      });
 
-    if (!selectedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
+      if (!selectedUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
 
-    const { newRole } = req.body;
+      const { newRole } = req.body;
 
-    if (!["admin", "seller"].includes(newRole)) {
-      return res.status(400).json({ error: "Invalid role specified" });
-    }
+      if (!['admin', 'seller'].includes(newRole)) {
+        return res.status(400).json({ error: 'Invalid role specified' });
+      }
 
-    const updatedUser = await User.User.update(
-      { role: newRole },
-      { where: { id: req.params.id } }
-    );
+      const updatedUser = await User.User.update(
+        { role: newRole },
+        { where: { id: req.params.id } }
+      );
 
-
-    return res.status(200).json({ user:"new role assigned succeessfully "}); 
+      return res.status(200).json({ user: 'new role assigned succeessfully ' });
     })(req, res);
   } catch (error) {
-    return res.status(500).json({ status: 500, error: "Server error" });
+    return res.status(500).json({ status: 500, error: 'Server error' });
   }
 };
 
-
-export { updateUserStatus, assignUserRole};
+export { updateUserStatus, assignUserRole };

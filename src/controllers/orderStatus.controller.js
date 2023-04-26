@@ -1,5 +1,4 @@
-import { Sales } from '../database/models';
-import { Orders } from '../database/models';
+import { Sales, Orders } from '../database/models';
 
 const trackOrderStatus = async (req, res) => {
   try {

@@ -1,5 +1,4 @@
 import request from 'supertest';
-import app from '../src/app';
 import jwt from 'jsonwebtoken';
 import { updateUserStatus, assignUserRole } from '../src/docs-data';
 import User from '../src/database/models';
@@ -74,7 +73,7 @@ describe('assignUserRole', () => {
     const response = await request(app).post('/api/v1/users/signup').send({
       firstname: 'firstname',
       lastname: 'secondname',
-      email: `metest1234@gmail.com`,
+      email: 'metest1234@gmail.com',
       password: 'testpass2345',
     });
     token = await response.body.token;

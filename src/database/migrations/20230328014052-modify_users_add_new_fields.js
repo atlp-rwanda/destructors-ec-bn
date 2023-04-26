@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     return Promise.all([
       queryInterface.addColumn('Users', 'isEmailVerified', {
         type: Sequelize.BOOLEAN,
@@ -12,5 +12,5 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.removeColumn('Users', 'isEmailVerified');
-  }
+  },
 };

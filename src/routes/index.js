@@ -6,8 +6,8 @@ import cart from './api/cart.routes.js';
 import wishlist from './api/wishlist.routes';
 import chat from './api/chat.routes';
 import payment from './api/payment.routes.js';
-import sale from './api/sale.routes.js'
-import stat from './api/stat.routes'
+import sale from './api/sale.routes.js';
+import stat from './api/stat.routes';
 import notification from './api/notification.routes.js';
 import orderStatus from './api/orderStatus.routes.js';
 
@@ -21,9 +21,9 @@ routes.use('/product-wishes', wishlist);
 routes.use('/product-wishes', wishlist);
 
 routes.use('/chats', chat);
-routes.use('/sales',sale)
-routes.use('/stats', stat)
-routes.use('/notifications', notification)
+routes.use('/sales', sale);
+routes.use('/stats', stat);
+routes.use('/notifications', notification);
 routes.use('/orders', orderStatus);
 
 export default routes;

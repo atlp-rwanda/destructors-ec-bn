@@ -1,16 +1,15 @@
-import request from "supertest";
+import request from 'supertest';
 import app from '../src/app';
-import { User } from "../src/database/models/";
+import { User } from '../src/database/models/';
 import { generateToken } from '../src/utils/generateToken';
 
 jest.setTimeout(50000);
 describe('Testing GetSellerStats endpoint', () => {
   let token;
-  let email ='testemail12@gmail.com'
+  let email = 'testemail12@gmail.com';
   let sellerToken;
 
   beforeAll(async () => {
-
     const response = await request(app).post('/api/v1/users/signup').send({
       firstname: 'myfirstname',
       lastname: 'mysecondname',
@@ -23,9 +22,9 @@ describe('Testing GetSellerStats endpoint', () => {
   test('should return 200 with stats when user is authorized to view own stats', async () => {
     const user = await User.findOne({ where: { email: email } });
     await user.update({ role: 'seller' });
-    console.log({user: user})
+    console.log({ user: user });
     sellerToken = generateToken(user);
-  
+
     const response = await request(app)
       .get('/api/v1/stats')
       .set('Authorization', `Bearer ${sellerToken}`);
@@ -37,8 +36,6 @@ describe('Testing GetSellerStats endpoint', () => {
       .get('/api/v1/stats')
       .set('Authorization', `Bearer ${token}`);
     expect(response.statusCode).toBe(401);
-    expect(response.body.message).toBe('Unauthorized User')
+    expect(response.body.message).toBe('Unauthorized User');
   });
-
 });
-

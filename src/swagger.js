@@ -10,7 +10,10 @@ import {
 import { getCart, addCart, clearCart } from './documents/cart.docs';
 import { payment } from './documents/payments.docs';
 import { orderStatus } from './documents/orderStatus.docs';
-import { MarkNotificationRead , MarkAllNotificationRead} from './documents/notifications';
+import {
+  MarkNotificationRead,
+  MarkAllNotificationRead,
+} from './documents/notifications';
 import {
   createProdWish,
   getProductWishes,
@@ -31,7 +34,7 @@ import {
   verifyEmail,
   getUserProfile,
   changeSaleStatu,
-  getSellerStats
+  getSellerStats,
 } from './docs-data';
 import 'dotenv/config';
 
@@ -152,10 +155,10 @@ export const swaggerDocument = {
       get: orderStatus,
     },
     '/api/v1/notifications/{id}': {
-      patch: MarkNotificationRead
+      patch: MarkNotificationRead,
     },
     '/api/v1/notifications': {
-      patch: MarkAllNotificationRead
+      patch: MarkAllNotificationRead,
     },
   },
 };

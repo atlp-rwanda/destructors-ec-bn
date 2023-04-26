@@ -5,11 +5,11 @@ module.exports = (sequelize, DataTypes) => {
   class Sale extends Model {
     static associate(models) {
       this.belongsTo(models.User, { foreignKey: 'sellerId', as: 'Seller' });
-      this.belongsTo(models.Orders, { foreignKey: 'orderId', as: 'order'});
+      this.belongsTo(models.Orders, { foreignKey: 'orderId', as: 'order' });
     }
   }
-Sale.init(
-  {
+  Sale.init(
+    {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -29,7 +29,7 @@ Sale.init(
       },
       status: {
         type: DataTypes.STRING,
-        defaultValue: 'payed'
+        defaultValue: 'payed',
       },
     },
     {

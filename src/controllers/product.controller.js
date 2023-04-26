@@ -97,32 +97,28 @@ const retrieveItems = async (req, res) => {
     }
 
     if (user.data.role == 'seller') {
-      const items = await findProducts('seller', user.data.id,'', size, page);
+      const items = await findProducts('seller', user.data.id, '', size, page);
       if (items.rows.length === 0) {
         return res.status(200).json({ message: 'The collection is empty' });
       }
 
-      return res
-        .status(200)
-        .json({
-          items: items.rows,
-          totalPages: Math.ceil(items.count / Number.parseInt(size)),
-        });
+      return res.status(200).json({
+        items: items.rows,
+        totalPages: Math.ceil(items.count / Number.parseInt(size)),
+      });
     }
 
     if (user.data.role == 'buyer') {
-      const items = await findProducts('', '',false, size, page);
+      const items = await findProducts('', '', false, size, page);
 
       if (items.length === 0) {
         return res.status(200).json({ message: 'The store is empty' });
       }
 
-      return res
-        .status(200)
-        .json({
-          items: items.rows,
-          totalPages: Math.ceil(items.count / Number.parseInt(size)),
-        });
+      return res.status(200).json({
+        items: items.rows,
+        totalPages: Math.ceil(items.count / Number.parseInt(size)),
+      });
     }
   } catch (error) {
     res.status(500).json('Server Error');
@@ -195,11 +191,9 @@ const updateProductAvailability = async (req, res) => {
         }
 
         if (sellerData.role !== 'seller') {
-          return res
-            .status(400)
-            .json({
-              error: 'Only seller users can update product availability',
-            });
+          return res.status(400).json({
+            error: 'Only seller users can update product availability',
+          });
         }
 
         const productId = req.params.id;
@@ -231,26 +225,28 @@ const updateProductAvailability = async (req, res) => {
         const updatedProduct = await Products.findOne({
           where: { id: productId },
         });
-        if (updatedProduct.isAvailable){
-        let userId = []
-        const user = await User.User.findAll(  {
-          where:{role: 'buyer'},
-          attributes:['id']
-        })
-        user.map(element =>{
-          userId.push(element.id)
-        })
-         const notificationDetails = {
-          receiver:'buyer',
-          subject:'new product',
-          message: `Checkout this ${updatedProduct.name}`,
-          entityId: { productId: updatedProduct.id},
-          receiverId: userId
-         } 
-          eventEmitter.emit('new-notification', notificationDetails );
-          return res.status(200).json({ product: updatedProduct,user:userId});
+        if (updatedProduct.isAvailable) {
+          let userId = [];
+          const user = await User.User.findAll({
+            where: { role: 'buyer' },
+            attributes: ['id'],
+          });
+          user.map((element) => {
+            userId.push(element.id);
+          });
+          const notificationDetails = {
+            receiver: 'buyer',
+            subject: 'new product',
+            message: `Checkout this ${updatedProduct.name}`,
+            entityId: { productId: updatedProduct.id },
+            receiverId: userId,
+          };
+          eventEmitter.emit('new-notification', notificationDetails);
+          return res
+            .status(200)
+            .json({ product: updatedProduct, user: userId });
         }
-        
+
         return res.status(200).json({ product: updatedProduct });
       }
     )(req, res);
