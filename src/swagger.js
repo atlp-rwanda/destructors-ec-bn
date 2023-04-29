@@ -31,8 +31,9 @@ import {
   verifyEmail,
   getUserProfile,
   changeSaleStatu,
-  getSellerStats
+  getSellerStats,
 } from './docs-data';
+import { addCategory, getCategory } from './documents/category.docs';
 import 'dotenv/config';
 
 export const swaggerDocument = {
@@ -81,6 +82,10 @@ export const swaggerDocument = {
     },
     '/api/v1/users/reset-password/{token}': {
       patch: ResetPassword,
+    },
+    '/api/v1/categories': {
+      post: addCategory,
+      get: getCategory,
     },
     '/api/v1/products': {
       post: createProduct,
