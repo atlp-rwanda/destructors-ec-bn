@@ -33,6 +33,9 @@ import {
   getUserProfile,
   changeSaleStatu,
   getSellerStats,
+  googleAuthentication,
+  googleCallBack,
+  getAllUsers
 } from './docs-data';
 import { addCategory, getCategory } from './documents/category.docs';
 import 'dotenv/config';
@@ -77,6 +80,18 @@ export const swaggerDocument = {
     },
     '/api/v1/users/login': {
       post: loginUser,
+    },
+    '/api/v1/users': {
+      get: getAllUsers,
+    },
+    '/api/v1/users/signup/google': {
+      get: googleAuthentication
+    },
+    '/api/v1/users/login/google': {
+      get: googleAuthentication
+    },
+    '/api/v1/users/google/callback': {
+      get: googleCallBack
     },
     '/api/v1/users/reset-password': {
       post: resetEmail,

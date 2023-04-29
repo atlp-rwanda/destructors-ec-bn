@@ -39,4 +39,8 @@ const findUserById = async (id) => {
     return UserInfo;
   }
 };
-export { register, findUserByEmail, logout, findUserById };
+const findAllUsers=async()=>{
+  const users=await User.findAll()
+  return users
+}
+export { register, findUserByEmail, logout, findUserById,findAllUsers };

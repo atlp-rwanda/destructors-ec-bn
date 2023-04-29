@@ -1,6 +1,5 @@
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import passport from 'passport';
-import { config } from 'dotenv';
 import User from '../database/models/index.js';
 import { generateToken } from '../utils/generateToken.js';
 import 'dotenv/config';
@@ -15,20 +14,34 @@ passport.use(
     },
     async (request, accessToken, refreshToken, profile, done) => {
       try {
+        console.log(profile)
         const existingUser = await User.User.findOne({
           where: { email: profile.emails[0].value },
         });
-        console.log(existingUser)
         if (existingUser) {
+          if(existingUser.provider!='google'){
+            const message="only google authenticated users!"
+            return done(message,null)
+          }
           existingUser.isEmailVerified = true;
           await existingUser.save();
-          const { firstname, email, role } = existingUser;
-          const person = { firstname, email, role };
+          const {id, firstname, email, role } = existingUser;
+          const person = { id,firstname, email, role };
           const token = generateToken(person);
           return done(null, { existingUser, token });
         } else {
-          const error = 'user not found!';
-          return done(error, null);
+          const newUser=await User.User.create({
+            firstname:profile.given_name,
+            lastname:profile.family_name,
+            profilePic: profile.picture,
+            email:profile.email,
+            isEmailVerified: true,
+            provider:'google'
+          })
+          const {id, firstname, email, role } = newUser;
+          const newPerson = { id,firstname, email, role };
+          const token=generateToken(newPerson)
+          return done(null,{newUser,token})
         }
       } catch (err) {
         return done(err);
@@ -36,6 +49,7 @@ passport.use(
     }
   )
 );
+
 passport.serializeUser((user, done) => {
   done(null, user.email);
 });
