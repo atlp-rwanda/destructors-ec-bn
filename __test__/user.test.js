@@ -39,14 +39,14 @@ describe("Testing registration User", () => {
       email: "test@user.com",
       password: "@Password12",
     });
-    expect(res.statusCode).toBe(401);
+    expect(res.statusCode).toBe(403);
   });
   test('It should not login with invalid password', async () => {
     const res = await request(app).post('/api/v1/users/login').send({
       email: 'testemail1234@gmail.com',
       password: '@Password12',
     });
-    expect(res.statusCode).toBe(401);
+    expect(res.statusCode).toBe(403);
   });
   test('It should login with valid email and password', async () => {
     const res = await request(app).post('/api/v1/users/login').send({
