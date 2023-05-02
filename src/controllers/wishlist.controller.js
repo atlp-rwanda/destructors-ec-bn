@@ -45,7 +45,8 @@ const addWishlist=async(req, res)=> {
             receiver: wishProduct.Seller.id,
             subject,
             message,
-            entityId: { productWishId: wish.id},
+            entityId: { productWishId: wish.id },
+            productImage: wishProduct.images[0],
             receiverId: wishProduct.Seller.id
         };
         eventEmitter.emit('wish-notification', notificationDetails);

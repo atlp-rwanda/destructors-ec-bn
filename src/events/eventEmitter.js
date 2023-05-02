@@ -20,4 +20,7 @@ eventEmitter.on('expired-notification', (notificationDetails) => {
 eventEmitter.on('order-notification', (notificationDetails) => {
     eventEmitter.emit('notifyBuyer', notificationDetails)
 })
+eventEmitter.on('newOrder-notification', (notificationDetails) => {
+    eventEmitter.emit('newOrderNotification', notificationDetails)
+})
 export{eventEmitter} 

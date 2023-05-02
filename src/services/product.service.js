@@ -13,6 +13,25 @@ const findProduct = async (id, role, sellerId) => {
       return false;
     }
     return product;
+  } 
+  
+  if(role === 'admin'){
+    const product = await Products.findOne({
+      where: { id },
+      include: [
+        {
+          model: User,
+          as: 'Seller',
+          attributes: ['firstname', 'lastname', 'email'],
+        },
+      ],
+    });
+
+    if (product == null) {
+      return false;
+    }
+
+    return product;
   }
 
   const product = await Products.findOne({

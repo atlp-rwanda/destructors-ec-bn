@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     subject: DataTypes.STRING,
-    message: DataTypes.STRING,
+    message: DataTypes.JSONB,
     entityId: DataTypes.JSONB,
     receiver: DataTypes.STRING,
   }, {

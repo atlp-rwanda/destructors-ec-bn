@@ -28,6 +28,7 @@ export const ExpiredProducts=async()=>{
                 subject:'Product Expiration',
                 message: `This ${element.name} has expired and removed from list of available products`,
                 entityId: { productId: element.id},
+                productImage: element.images,
                 receiverId:element.sellerId
                } 
             const HTMLText = `<div> <div> <h3 style="color:#81D8F7;">Product Expiration</h3><br><p>${notificationDetails.message}<br>Destructors</p></div> </div>`;

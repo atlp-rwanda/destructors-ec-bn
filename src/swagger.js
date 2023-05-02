@@ -56,7 +56,7 @@ export const swaggerDocument = {
       description: 'Local server', //
     },
     {
-      url: 'https://destructors-ec-bn.onrender.com/', // url
+      url: 'https://destructors-ecom-bc.onrender.com/', // url
       description: 'Hosted version', // name
     },
   ],

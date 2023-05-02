@@ -11,6 +11,7 @@ export const getCartProductInfo =async (req,res,next)=>{
     const productAllInfo = productInfo.map((product, index) => ({
         name: product.name,
         price: product.price,
+        image: product.images,
         quantity: products[index].quantity,
         sellerId: product.sellerId,
     }));

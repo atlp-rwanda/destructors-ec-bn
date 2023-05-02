@@ -50,6 +50,7 @@ const retrieveItem = async (req, res) => {
     const token = req.header('Authorization').split(' ')[1];
     const user = verfyToken(token, process.env.JWT_SECRET);
 
+
     if (user.data.role == 'seller') {
       const item = await findProduct(itemId, 'seller', user.data.id);
 
@@ -62,8 +63,18 @@ const retrieveItem = async (req, res) => {
       return res.status(200).json({ item });
     }
 
-    if (user.data.role == 'buyer' || user.data.role == 'admin') {
+    if (user.data.role == 'buyer') {
       const item = await findProduct(itemId);
+
+      if (!item) {
+        return res.status(404).json({ message: 'This product is not found' });
+      }
+      return res.status(200).json({ item });
+
+    } 
+    
+    if (user.data.role == 'admin'){
+      const item = await findProduct(itemId, 'admin');
 
       if (!item) {
         return res.status(404).json({ message: 'This product is not found' });
@@ -242,9 +253,10 @@ const updateProductAvailability = async (req, res) => {
         })
          const notificationDetails = {
           receiver:'buyer',
-          subject:'new product',
-          message: `Checkout this ${updatedProduct.name}`,
+          subject:'New product',
+          message: `Have your eyes on this 🤩 ${updatedProduct.name}`,
           entityId: { productId: updatedProduct.id},
+          productImage: updatedProduct.images[0],
           receiverId: userId
          } 
           eventEmitter.emit('new-notification', notificationDetails );

@@ -1,61 +1,105 @@
-import Stripe from "stripe";
+/* eslint-disable array-callback-return */
+/* eslint-disable import/extensions */
+import Stripe from 'stripe';
 import 'dotenv/config';
-import culculateProductTotal from "../utils/cart";
-import { createOrder,destroyCart } from "../middlewares/payment.middleware";
-import { createSale} from "../middlewares/sale.middleware";
-import {Sales}from "../database/models"
-const stripe =Stripe(process.env.KEY_SECRET)
-let paymentId 
-const userPayment =async (req,res)=>{
-    try{
-        const carts = req.cart
-        const cartId = carts.id
-        const {email,firstname,billingAddress,id} = req.user
-        const productAllInfo = req.productAllInfo
-        const products = productAllInfo
-        const productInfo = products.map(data => ({name:data.name,quantity:data.quantity,price:data.price,total:(data.quantity*data.price)}))
-        const cartTotal = culculateProductTotal(productAllInfo);
-        await stripe.customers.create({
-            email:email,
-            name:firstname
-        })
-        .then(async() => {
-            let paymentMethod = await stripe.paymentMethods.create({
-                type:'card',
-                card:{
-                    number:req.body.number,
-                    exp_month:req.body.exp_month,
-                    exp_year:req.body.exp_year,
-                    cvc:req.body.cvc
-                }
-            })
-            const pay = await stripe.paymentIntents.create({
-                payment_method:paymentMethod.id,
-                amount: cartTotal*100,
-                currency: process.env.CURRENCY,
-                description:"payment",
-                confirm:true,
-                payment_method_types:['card']
-            })
-            paymentId = pay.id
-           const createdOrder = await createOrder(paymentId,id,email,cartTotal,productAllInfo,billingAddress);
-            const orderId = createdOrder.id
-            const orderProducts = createdOrder.products
-            let sellerIds= []
-            orderProducts.map((data)=>{
-            sellerIds.push(data.sellerId)
-            })
-            for (const sellerId of sellerIds) {
-               const p = await Sales.create({
-                orderId: orderId,
-                sellerId: sellerId
-              })
-            }
-            await destroyCart(cartId)
-            res.status(200).json({message:`you have paid ${cartTotal} ${process.env.CURRENCY} for:`,productInfo})
-        })
-}catch(e){
-    res.status(403).json({message:'Some thing happened !!',err:e.raw.message})
-}
-}
-export {userPayment}
+import culculateProductTotal from '../utils/cart';
+import { createOrder, destroyCart } from '../middlewares/payment.middleware';
+import { findOrderDetails, createCheckout } from '../middlewares/sale.middleware';
+import { Sales } from '../database/models';
+import { findUserById } from '../services/user.service';
+import { eventEmitter } from '../events/eventEmitter';
+import { sendEmail } from '../services/sendEmail.service'
+
+const stripe = Stripe(process.env.KEY_SECRET);
+let paymentId;
+const userPayment = async (req, res) => {
+  try {
+    let data;
+    const carts = req.cart;
+    const cartId = carts.id;
+    const { email, firstname, id } = req.user;
+    const { productAllInfo } = req;
+    const products = productAllInfo;
+    // eslint-disable-next-line no-shadow
+    const productInfo = products.map((data) => ({
+      name: data.name,
+      quantity: data.quantity,
+      images: data.image,
+      price: data.price,
+      total: (data.quantity * data.price)
+    }));
+    const cartTotal = culculateProductTotal(productAllInfo);
+    const lineData = productInfo.map((item) => ({
+      price_data: {
+        currency: process.env.CURRENCY,
+        product_data: {
+          name: item.name,
+          description: item.quantity,
+          images: item.images,
+        },
+        unit_amount: cartTotal * 100,
+      },
+      quantity: item.quantity,
+    }));
+    await stripe.customers.create({
+      email,
+      name: firstname
+    })
+      .then(async () => {
+        const session = await createCheckout(lineData);
+        paymentId = session.id;
+        await createOrder(paymentId, id, email, cartTotal, productAllInfo);
+        await destroyCart(cartId);
+        res.status(201).json({ payment_link: session.url });
+      });
+  } catch (e) {
+    res.status(500).json({ message: 'Some thing happened !!', err: e });
+  }
+};
+const stripesuccess = async (req, res) => {
+  try {
+    const { paymentId } = req.query;
+    const session = await stripe.checkout.sessions.retrieve(
+      paymentId
+    );
+    const findOrderId = await findOrderDetails(paymentId);
+    const orderId = findOrderId.id;
+    const orderProducts = findOrderId.products;
+    const sellerIds = [];
+    orderProducts.map((data) => {
+      sellerIds.push(data.sellerId);
+    });
+    for (const sellerId of sellerIds) {
+      const p = await Sales.create({
+        orderId,
+        sellerId
+      });
+    }
+
+    const subject = 'New Order';
+    sellerIds.forEach(async (element) => {
+      const sellerDetails = await findUserById(element);
+      orderProducts.forEach(async (data) =>{
+        if (sellerDetails && data.sellerId == element) {
+          const message = `Hi ${sellerDetails.lastname}, you have a new order on ${data.name}.`
+          const HTMLText = `<div> <div> <h3 style="color:#81D8F7;">New Status</h3><br><p>${message}<br>Thank you<br><br>Destructors</p> </div> </div>`;
+          const notificationDetails = {
+            receiver: element,
+            subject,
+            message,
+            entityId: { orderId },
+            productImage: data.image,
+            receiverId: element
+          }
+          eventEmitter.emit('newOrder-notification', notificationDetails);
+          sendEmail(sellerDetails.email, subject, HTMLText);
+        }
+      })
+    });
+
+    res.status(201).json({message:'your order has been created successfully!!', order:orderId})
+  } catch (error) {
+    res.status(500).json({message: ' something went wrong',error})
+  }
+};
+export { userPayment, stripesuccess };
