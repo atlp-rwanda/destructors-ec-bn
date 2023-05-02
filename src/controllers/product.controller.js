@@ -1,6 +1,7 @@
 /* eslint-disable object-curly-newline */
 import {
   createProduct,
+  findAllProducts,
   findProduct,
   findProducts,
 } from '../services/product.service.js';
@@ -318,6 +319,37 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const retrieveAllProducts = async(req, res) => {
+  try {
+
+    const pageAsNumber = Number.parseInt(req.query.page);
+    const sizeAsNumber = Number.parseInt(req.query.size);
+
+    let page = 0;
+    if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
+      page = pageAsNumber;
+    }
+
+    let size = 10;
+    if (
+      !Number.isNaN(sizeAsNumber) &&
+      !(sizeAsNumber > 10) &&
+      !(sizeAsNumber < 1)
+    ) {
+      size = sizeAsNumber;
+    }
+    const products = await findAllProducts(size, page);
+    return res
+    .status(200)
+    .json({
+      products: products.rows,
+      totalPages: Math.ceil(products.count / Number.parseInt(size)),
+    });
+  } catch (error){
+    return res.status(500).json({ message: 'Server Error' });
+  }
+}
+
 export {
   createProducts,
   updateProductAvailability,
@@ -326,4 +358,5 @@ export {
   retrieveItem,
   retrieveItems,
   searchProducts,
+  retrieveAllProducts
 };

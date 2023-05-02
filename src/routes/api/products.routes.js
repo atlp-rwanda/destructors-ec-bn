@@ -7,6 +7,7 @@ import {
   updateProduct,
   deleteProduct,
   searchProducts,
+  retrieveAllProducts
 } from '../../controllers/product.controller.js';
 import { getWishesPerProduct } from '../../controllers/wishlist.controller.js';
 import { productValidation } from '../../ validations/product.validation.js';
@@ -34,6 +35,7 @@ route.post(
   createProducts
 );
 route.get('/search', extractToken, searchProducts);
+route.get('/public',  retrieveAllProducts);
 route.get('/:id', extractToken, retrieveItem);
 route.get('/', extractToken, retrieveItems);
 route.patch(

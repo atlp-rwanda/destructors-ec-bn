@@ -83,6 +83,14 @@ const findProducts = async (role, sellerId,isExpired, size, page) => {
 const findProductById = async (id) => {
   return await Products.findByPk(id);
 };
+const findAllProducts = async (size, page) => {
+  const products = await Products.findAndCountAll({
+    limit: size,
+    offset: page * size,
+  });
+
+  return products;
+};
 
 export const productReview = async (productId, buyerId, rating, feedback) => {
   const review = await Reviews.create({
@@ -94,4 +102,4 @@ export const productReview = async (productId, buyerId, rating, feedback) => {
   return review;
 };
 
-export { createProduct, findProduct, findProducts, findProductById };
+export { createProduct, findProduct, findProducts, findProductById, findAllProducts };

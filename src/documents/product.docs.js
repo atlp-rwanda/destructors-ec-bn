@@ -106,12 +106,12 @@ export const retrieveAllProducts = {
     {
       name: 'page',
       in: 'path',
-      description: 'page of the page',
+      description: 'number of the page starting from 0',
     },
     {
       name: 'size',
       in: 'path',
-      description: 'the limit of items to display',
+      description: 'the limit of items to be displayed on a page',
     },
   ],
   summary: 'Retrieve list of products',
@@ -128,7 +128,6 @@ export const retrieveAllProducts = {
     },
   },
 };
-
 export const updateProductAvailability = {
   tags: ['Products'],
   description: 'Product availability',
@@ -307,5 +306,32 @@ export const ratingAndFeedback = {
     },
   },
 };
+export const retrieveProducts = {
+  tags: ['Products'],
+  operationId: 'Retrieve all products',
+  parameters: [
+    {
+      name: 'page',
+      in: 'path',
+      description: 'number of the page starting from 0',
+    },
+    {
+      name: 'size',
+      in: 'path',
+      description: 'the limit of items to be displayed on a page',
+    },
+  ],
+  summary: 'Retrieve list of all products for all users',
+  responses: {
+    // response code
+    200: {
+      description: 'Ok', // response desc
+    },
+    500: {
+      description: 'Server error', // response desc
+    },
+  },
+};
+
 
 export const path = {};
