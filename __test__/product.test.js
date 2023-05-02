@@ -119,6 +119,11 @@ describe('Testing Products service', () => {
       .set('Authorization', `Bearer ${token}`);
     expect(response.statusCode).toBe(200);
   });
+  test('it should return 200 for retrieving list of all products for all users', async () => {
+    const response = await request(app)
+      .get('/api/v1/products/public')
+    expect(response.statusCode).toBe(200);
+  });
   test('it should return 200 for retrieving  a product', async () => {
     item = await Products.findOne({ where: { name: 'two people sofa' } });
     const response = await request(app)

@@ -6,6 +6,7 @@ import {
   updateProduct,
   deleteProduct,
   ratingAndFeedback,
+  retrieveProducts,
 } from './documents/product.docs';
 import { getCart, addCart, clearCart } from './documents/cart.docs';
 import { payment } from './documents/payments.docs';
@@ -89,6 +90,9 @@ export const swaggerDocument = {
     },
     '/api/v1/products': {
       post: createProduct,
+    },
+    '/api/v1/products/public?page={page}&size={size}': {
+      get: retrieveProducts,
     },
     '/api/v1/products?page={page}&size={size}': {
       get: retrieveAllProducts,
