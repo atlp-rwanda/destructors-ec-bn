@@ -7,7 +7,8 @@ import {
   editUserProfile,
   logoutUser,
   verifyEmail,
-  getUserProfile
+  getUserProfile,
+  getAllUsers
 } from '../../controllers/user.controller';
 import verifyUser from '../../middlewares/verifyUser';
 import signupValidation from '../../ validations/signup.validation';
@@ -32,6 +33,8 @@ import updatePasswordValidation from '../../ validations/updatePassword.validati
 import { updatePassword } from '../../controllers/user.controller';
 import verifyOTP from '../../controllers/verifyOTP';
 import { checkIfPasswordIsExpired } from '../../middlewares/checkPassword';
+import { otpValidation } from '../../ validations/OTP.validation';
+import checkRole from '../../middlewares/checkRole';
 
 const route = Router();
 route.post('/signup', signupValidation, verifyUser, registerUser);
@@ -45,7 +48,7 @@ route.patch(
   updatePassword
 );
 
-route.post('/login/validate/:token', verifyOTP);
+route.post('/login/validate/:token',otpValidation, verifyOTP);
 route.get('/auth', (req, res) => {
   res
     .status(200)
@@ -73,5 +76,7 @@ route.get(
 route.post('/logout', extractToken, logoutUser);
 route.patch('/:id/status', checkIfPasswordIsExpired, updateUserStatus);
 route.patch('/:id/roles', checkIfPasswordIsExpired, assignUserRole);
+route.get('/signup/google',googleAuthentication);
+route.get('/',extractToken,checkRole(['admin']),getAllUsers)
 
 export default route;

@@ -63,9 +63,9 @@ const addWishlist=async(req, res)=> {
         }
     }
     catch (error) {
-        console.log(error);
         return res.status(500).json({
-            message: "something went wrong!"
+            message: "something went wrong!",
+            error:error.message.replace(/[^a-zA-Z0-9 ]/g, '')
         });
     }
 }
@@ -138,7 +138,7 @@ const getWishesPerProduct=async(req,res)=>{
     return res.status(200).json(productWishes)
     }
     catch(error){
-        res.status(500).json(error)
+        res.status(500).json({error: error.message.replace(/[^a-zA-Z0-9 ]/g, '')})
     }
     
 }

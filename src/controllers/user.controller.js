@@ -1,4 +1,4 @@
-import { register, findUserByEmail, logout } from '../services/user.service';
+import { register, findUserByEmail, logout,findAllUsers } from '../services/user.service';
 import { generateToken } from '../utils/generateToken';
 import passport from 'passport';
 import { User } from '../database/models';
@@ -313,6 +313,20 @@ const updatePassword = async (req, res, next) => {
   }
 };
 
+const getAllUsers=async(req,res)=>{
+  try{
+  if(!req.user){
+    res.status(401).json({message:"you are not Authorized!"})
+  }
+  const users=await findAllUsers();
+  res.status(200).json({users:users})
+  }
+  catch(error){
+    res.status(500).json({message:"server Error!",
+    error:error.message.replace(/[^a-zA-Z0-9 ]/g, '')
+  })
+  }
+}
 export {
   registerUser,
   resetEmail,
@@ -323,4 +337,5 @@ export {
   updatePassword,
   verifyEmail,
   getUserProfile,
+  getAllUsers
 };

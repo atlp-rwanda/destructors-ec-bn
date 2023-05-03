@@ -386,6 +386,7 @@ export const verifyOTP = {
             otp: {
               type: "string",
               description: "One time password",
+              required: true,
               example: "123459",
             },
           },
@@ -991,4 +992,191 @@ export const getSellerStats = {
     },
   },
 };
+export const googleAuthentication = {
+  tags: ["User Authentication with Google"],
+  description: "Authenticate a user with Google",
+  operationId: "googleAuthentication",
+  parameters: [
+    {
+      name: "redirect_uri",
+      in: "query",
+      required: false,
+      schema: {
+        type: "string",
+      },
+      description: "The URI to redirect to after authentication is complete",
+    },
+  ],
+  responses: {
+    302: {
+      description: "Redirect to Google authentication page",
+      headers: {
+        Location: {
+          schema: {
+            type: "string",
+          },
+          description: "The URL of the Google authentication page",
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              error: {
+                type: "string",
+                example: "Internal server error",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
+export const googleCallBack = {
+  tags: ["User Authentication with Google"],
+  description: "Callback for Google authentication",
+  operationId: "googleCallBack",
+  parameters: [
+    {
+      name: "code",
+      in: "query",
+      required: true,
+      schema: {
+        type: "string",
+      },
+      description: "The authorization code returned by Google",
+    },
+    {
+      name: "state",
+      in: "query",
+      required: true,
+      schema: {
+        type: "string",
+      },
+      description: "The state parameter returned by Google",
+    },
+  ],
+  responses: {
+    302: {
+      description: "Redirect to the homepage with JWT token in query string",
+      headers: {
+        Location: {
+          schema: {
+            type: "string",
+          },
+          description: "The URL of the homepage with JWT token in query string",
+        },
+      },
+    },
+    500: {
+      description: "Internal server error",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              error: {
+                type: "string",
+                example: "Internal server error",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+export const getAllUsers = {
+  tags: ["User Management"],
+  description: "Get all users",
+  operationId: "getAllUsers",
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  responses: {
+    200: {
+      description: "Returns all users",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              users: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "integer",
+                      example: 1,
+                    },
+                    firstname: {
+                      type: "string",
+                      example: "John",
+                    },
+                    lastname: {
+                      type: "string",
+                      example: "Doe",
+                    },
+                    email: {
+                      type: "string",
+                      example: "user@test.com",
+                    },
+                    role: {
+                      type: "string",
+                      example: "admin",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    401: {
+      description: "Unauthorized",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "You are not authorized to perform this action.",
+              },
+            },
+          },
+        },
+      },
+    },
+    500: {
+      description: "Internal Server Error",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                example: "Server Error",
+              },
+              error: {
+                type: "string",
+                example: "Internal Server Error Occurred",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};

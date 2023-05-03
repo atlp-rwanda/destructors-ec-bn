@@ -5,6 +5,7 @@ import models from '../src/database/models/index';
 import jwt from 'jsonwebtoken'
 const { User,OTP } = require('../src/database/models');
 import generateOTP from '../src/utils/generateOTP';
+import { generateToken } from '../src/utils/generateToken';
 
 
 jest.setTimeout(30000);
@@ -59,6 +60,26 @@ describe("Testing registration User", () => {
     expect(res.body).toHaveProperty('token');
     userId = res.body.user.id;
   });
+  test('should return a list of all users', async () => {
+    const user=await User.findOne({where:{email:`testemail1234@gmail.com`}})
+    await user.update({role:'admin'})
+    token=generateToken(user)
+    const response = await request(app).get('/api/v1/users').set('Authorization', `Bearer ${token}`);
+    expect(response.status).toBe(200);
+    expect(response.body.users).toBeDefined();
+    expect(response.body.users.length).toBeGreaterThan(0);
+  });
+  test('should return 401 if user is not authorized', async () => {
+    const response = await request(app).get('/api/v1/users');
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe('Please sign in');
+  });
+  test('should return 500 if server error occurs', async () => {
+    jest.spyOn(User, 'findAll').mockRejectedValueOnce(new Error('fake error'));
+    const response = await request(app).get('/api/v1/users').set('Authorization', `Bearer ${token}`);
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe('No valid credentials');
+  });
 });
 
 describe('this is for the user logging in ', () => {
@@ -84,6 +105,53 @@ describe('GET /api/v1/users/google/callback', () => {
     expect(res.header['location']).toBe(
       'https://accounts.google.com/o/oauth2/v2/auth?response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fv1%2Fusers%2Fgoogle%2Fcallback&client_id=314235844636-883r065qgdf7aglpqgndd8sg6fu6t9hj.apps.googleusercontent.com'
     );
+  });
+});
+describe('Google authentication registration', () => {
+  let server;
+  let newUser;
+
+  beforeAll(async () => {
+    server = app.listen(3000);
+    // Create a new user for testing
+    newUser = await User.create({
+      firstname: 'Test',
+      lastname: 'User',
+      email: 'testuser@example.com',
+      isEmailVerified: true,
+      provider: 'google'
+    });
+  });
+
+  afterAll(async () => {
+    // Delete the test user
+    await User.destroy({ where: { email: newUser.email } });
+    server.close();
+  });
+
+  it('should register a new user with Google authentication', async () => {
+    const mockProfile = {
+      given_name: 'Test',
+      family_name: 'User',
+      email: 'testuser@example.com',
+      picture: 'https://example.com/profile.png'
+    };
+    const mockToken = generateToken({ 
+      id: newUser.id, 
+      firstname: newUser.firstname, 
+      email: newUser.email, 
+      role: newUser.role 
+    });
+    const response = await request(app)
+      .get('/api/v1/users/signup/google')
+      .send({
+        profile: mockProfile,
+        token: mockToken
+      });
+      expect(response.status).toBe(302);
+      expect(response.header['location']).toContain(
+        'https://accounts.google.com/o/oauth2/v2/auth'
+      );
   });
 });
 
@@ -381,7 +449,7 @@ describe('this is for testing the otp',()=>{
     expect(response.body.token).toBeDefined();
   });
   test('returns a 401 response with an error message for an invalid OTP', async () => {
-    const otp=123456
+    const otp="123456"
     const response = await request(app)
       .post(`/api/v1/users/login/validate/${token}`)
       .send({ otp: otp });

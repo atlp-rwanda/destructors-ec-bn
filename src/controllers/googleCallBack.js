@@ -7,6 +7,7 @@ const googleAuthentication=(req, res, next)=>{
 }
 const googleCallBack=(req, res)=>{
     const { user, token } = req.user;
-    res.status(200).json({ user, token});
+
+    return res.status(200).json({ user, token});
 }
-export {googleAuthentication,googleCallBack};
+export {googleAuthentication,googleCallBack}; 

@@ -15,6 +15,7 @@ export const createProdWish = {
                 productId: {
                   type: 'string',
                   description: 'enter the productId for the product',
+                  required: true,
                   example: '1265316163fg13f31g3ft163',
                 },
               },

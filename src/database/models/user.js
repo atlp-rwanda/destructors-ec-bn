@@ -49,7 +49,8 @@ module.exports = (sequelize, DataTypes) => {
       expired:{
         type:DataTypes.BOOLEAN,
         defaultValue:false
-      }
+      },
+      provider:DataTypes.STRING
     },
     {
       sequelize,
