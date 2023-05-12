@@ -69,7 +69,6 @@ const verifyEmail = async (req, res) => {
     return res.status(500).send({ err: 'something went wrong' });
   }
 };
-
 const loginUser = async (req, res, next) => {
   passport.authenticate('local', async (err, user) => {
     if (err) {

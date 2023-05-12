@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       name: DataTypes.STRING,
+      description: DataTypes.STRING,
       price: DataTypes.NUMBER,
       quantity: DataTypes.INTEGER,
       isAvailable: { type: DataTypes.BOOLEAN, defaultValue: false },

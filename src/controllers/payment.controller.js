@@ -37,7 +37,7 @@ const userPayment = async (req, res) => {
           description: item.quantity,
           images: item.images,
         },
-        unit_amount: cartTotal * 100,
+        unit_amount: cartTotal,
       },
       quantity: item.quantity,
     }));
@@ -53,7 +53,7 @@ const userPayment = async (req, res) => {
         res.status(201).json({ payment_link: session.url });
       });
   } catch (e) {
-    res.status(500).json({ message: 'Some thing happened !!', err: e });
+    res.status(500).json({ message: 'Some thing happened !!', err: e.raw.message });
   }
 };
 const stripesuccess = async (req, res) => {
