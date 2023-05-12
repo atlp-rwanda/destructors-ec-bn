@@ -69,7 +69,6 @@ const verifyEmail = async (req, res) => {
     return res.status(500).send({ err: 'something went wrong' });
   }
 };
-
 const loginUser = async (req, res, next) => {
   passport.authenticate('local', async (err, user) => {
     if (err) {
@@ -118,7 +117,7 @@ const loginUser = async (req, res, next) => {
           await validOTPmail(foundUser, otp, token);
           return res
             .status(200)
-            .json({ message: 'please verify your email...'});
+            .json({ message: 'please verify your email...' });
         } catch (error) {
           res.status(500).json({ message: 'Error sending OTP code' });
         }

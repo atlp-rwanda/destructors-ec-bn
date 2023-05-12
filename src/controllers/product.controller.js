@@ -19,11 +19,12 @@ import { generateToken } from '../utils/generateToken';
 import { eventEmitter } from '../events/eventEmitter.js';
 const createProducts = async (req, res) => {
   try {
-    const { name, price, quantity, bonus, expiryDate, categoryId } = req.body;
+    const { name, price, quantity, bonus, expiryDate, categoryId, description } = req.body;
     const images = req.files.map((img) => img.path);
     const sellerId = req.user.id;
     const productDetails = {
       name,
+      description,
       price,
       quantity,
       bonus,

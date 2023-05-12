@@ -18,6 +18,11 @@ export const createProduct = {
               description: 'Product name',
               required: true,
             },
+            description: {
+              type: 'string',
+              description: 'Product description',
+              required: true,
+            },
             price: {
               type: 'number',
               description: 'Price of product',

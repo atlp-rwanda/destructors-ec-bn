@@ -3,6 +3,7 @@ import Joi from 'joi';
 
 const productValidationSchema = Joi.object({
   name: Joi.string().min(2).required(),
+  description: Joi.string().min(2).required(),
   price: Joi.number().integer().required(),
   categoryId: Joi.string().uuid(),
   expiryDate: Joi.string(),
