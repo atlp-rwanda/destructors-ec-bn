@@ -8,9 +8,11 @@ import { sequelize } from './database/models/user.js';
 import { swaggerDocument } from './swagger.js';
 import route from './routes/api/user.routes.js';
 import { jobScheduling,prodExpirationJobScheduler} from './jobs/jobSchedules.js';
+import cors from 'cors'
 
 
 const app = express();
+app.use(cors({}));
 export const connectDB = async () => {
   try {
     await sequelize.authenticate();
@@ -18,6 +20,9 @@ export const connectDB = async () => {
   } catch (err) {
     console.log(`Database connection failed: ${err}`);
     process.exit(1);
+
+
+    
   }
 };
 
@@ -38,7 +43,6 @@ try {
 } catch (error) {
   console.log(error);
 }
-
 
 jobScheduling();
 prodExpirationJobScheduler();

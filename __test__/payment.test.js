@@ -75,6 +75,7 @@ describe('Test user payments', () => {
       .post('/api/v1/products')
       .set('Authorization', `Bearer ${sellerToken}`)
       .field('name', productName)
+      .field('description', 'two people sofa')
       .field('price', 5000)
       .field('categoryId', categories.id)
       .field('quantity', 5)
