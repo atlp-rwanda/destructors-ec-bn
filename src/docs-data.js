@@ -827,8 +827,43 @@ export const verifyEmail = {
   },
 };
 
+export const getSales = {
+  tags: ["get sales"],
+  description: "seller retrieve his/her sales",
+  operationId: "getSales",
+  responses: {
+    200: {
+      description: "sales retrieved successfully",
+    },
+    400: {
+      description: "Invalid request data",
+    },
+    404: {
+      description: "sales not found",
+    },
+    500: {
+      description: "Server error",
+    },
+  },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
+  },
+};
+
+
 export const changeSaleStatu = {
-  tags: ["seller update status"],
+  tags: ["seller update  sale status"],
   description: "update status for a sale",
   operationId: "updatestatus",
   parameters: [
