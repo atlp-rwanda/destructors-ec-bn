@@ -476,6 +476,19 @@ describe('Search products endpoint', () => {
       .set('Authorization', `Bearer ${UserToken}`);
     expect(response.status).toBe(200);
   });
+
+  test('should filter products by price bestBefore', async () => {
+    const response = await request(app)
+      .get('/api/v1/products/search?bestBefore=2023-01-01')
+      .set('Authorization', `Bearer ${UserToken}`);
+    expect(response.status).toBe(200);
+  });
+  test('should filter products by price bestBefore', async () => {
+    const response = await request(app)
+      .get('/api/v1/products/search?bestBefore=07-2009')
+      .set('Authorization', `Bearer ${UserToken}`);
+    expect(response.status).toBe(400);
+  });
 });
 
 describe('Rating and feedback for a product', () => {
