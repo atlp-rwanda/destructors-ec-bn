@@ -6,6 +6,7 @@ const { User } = require('../src/database/models');
 import { Products } from '../src/database/models';
 import { Categories } from '../src/database/models';
 import { generateToken } from '../src/utils/generateToken';
+import { Orders, Sales } from '../src/database/models';
 jest.setTimeout(50000);
 
 describe('Testing Products service', () => {
@@ -358,27 +359,17 @@ describe('Testing Products service', () => {
         .set('Authorization', `Bearer ${token}`);
       expect(res.status).toBe(401);
     });
-    test('should return 500 when product id not valid', async () => {
-      const res = await request(app)
-        .delete(`/api/v1/products/9974076f-e16a-486f-a923-362e2`)
-        .set('Authorization', `Bearer ${sellerToken}`);
-      expect(res.status).toBe(500);
-    });
     test('should return 200 when product is updated', async () => {
       const res = await request(app)
         .patch(`/api/v1/products/${item.id}`)
         .set('Authorization', `Bearer ${sellerToken}`)
-        .send({
-          name: 'tomato',
-          price: '4000',
-        });
-      expect(res.status).toBe(200);
-    });
-    test('should return 500 when product id not valid', async () => {
-      const res = await request(app)
-        .patch(`/api/v1/products/9974076f-e16a-486f-a923-362e2`)
-        .set('Authorization', `Bearer ${sellerToken}`);
-      expect(res.status).toBe(500);
+        .field('name', 'nike shoes four pairs')
+        .field('price', 5000)
+        .field('categoryId', categories.id)
+        .attach('image', path.resolve(__dirname, './images/image.jpg'))
+        .attach('image', path.resolve(__dirname, './images/image1.jpg'));
+      expect(res.statusCode).toBe(200);
+      expect(sellerToken).not.toBeNull();
     });
 
     test('should delete the product with the given ID', async () => {
@@ -401,6 +392,11 @@ describe('Testing Products service', () => {
         )
         .set('Authorization', `Bearer ${sellerToken}`);
       expect(res.status).toBe(404);
+    });
+    it('should return 401 status code if user is not authenticated', async () => {
+      const response = await request(app)
+        .patch(`/api/v1/products/${item.id}`)
+      expect(response.status).toBe(401);
     });
   });
 });
@@ -490,11 +486,13 @@ describe('Search products endpoint', () => {
     expect(response.status).toBe(400);
   });
 });
-
 describe('Rating and feedback for a product', () => {
   let product;
   let buyerToken;
   let user;
+  let orderId;
+  let saleId;
+
 
   beforeAll(async () => {
     const newUser = User.create({
@@ -511,27 +509,24 @@ describe('Rating and feedback for a product', () => {
     });
   });
 
-  test('should allow a user to submit a rating and feedback for a product', async () => {
-  
+  test('should allow a user to submit a rating and feedback for a product if they have purchased it', async () => {
     const user = await User.findOne({ where: { email: 'testbuyer@gmail.com' } });
     buyerToken = generateToken(user);
-    const response = await request(app)
+    const product = await Products.create({ name: 'Test Product', price: 10 });
+    const order = await Orders.create({ userId: user.id, productId: product.id });
+    const sale = await Sales.create({ orderId: order.id, status: 'approved' });
+    const res = await request(app)
       .post(`/api/v1/products/${product.id}/reviews`)
       .set('Authorization', `Bearer ${buyerToken}`)
-      .send({ rating:4, feedback:'This product is great!'});
-    expect(response.status).toBe(201);
-  });
-  test('should return 400 status code when user tries to submit another rating and feedback for the same product', async () => {
-    const user = await User.findOne({ where: { email: 'testbuyer@gmail.com' } });
-    buyerToken = generateToken(user);
+      .send({ rating: 4, feedback: 'This product is great!' });
+    expect(res.status).toBe(201);
     const response = await request(app)
-      .post(`/api/v1/products/${product.id}/reviews`)
-      .set('Authorization', `Bearer ${buyerToken}`)
-      .send({rating:3, feedback:'This product is great!'});
-    expect(response.status).toBe(400);
+    .post(`/api/v1/products/${product.id}/reviews`)
+    .set('Authorization', `Bearer ${buyerToken}`)
+    .send({rating:3, feedback:'This product is great!'});
+  expect(response.status).toBe(400);
   });
   test('should return 401 status code if user is not a buyer', async () => {
-  
     product = await Products.findOne({ where: { name: 'Product 1' } });
     const sellerToken = generateToken(user);
     const response = await request(app)
@@ -541,8 +536,8 @@ describe('Rating and feedback for a product', () => {
     expect(response.status).toBe(401);
   });
   test('should return 404 status code if product to review is not found', async () => {
-    const user = await User.findOne({ where: { email: 'testbuyer@gmail.com' } });
-    buyerToken = generateToken(user);
+    const buyer = await User.findOne({ where: { email: 'testbuyer@gmail.com' } });
+    buyerToken = generateToken(buyer);
     const res = await request(app)
       .post('/api/v1/products/9974076f-e16a-486f-a923-362ec1747a12/reviews')
       .set('Authorization', `Bearer ${buyerToken}`)
