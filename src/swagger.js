@@ -35,7 +35,8 @@ import {
   getSellerStats,
   googleAuthentication,
   googleCallBack,
-  getAllUsers
+  getAllUsers,
+  getSales
 } from './docs-data';
 import { addCategory, getCategory } from './documents/category.docs';
 import 'dotenv/config';
@@ -172,6 +173,9 @@ export const swaggerDocument = {
     '/api/v1/sales/{id}/status': {
       patch: changeSaleStatu,
     },
+    '/api/v1/sales': {
+      get: getSales,
+    },
     '/api/v1/orders/{id}/status': {
       get: orderStatus,
     },
@@ -180,6 +184,5 @@ export const swaggerDocument = {
     },
     '/api/v1/notifications': {
       patch: MarkAllNotificationRead
-    },
-  },
+    }}
 };
