@@ -1,25 +1,30 @@
-import { register, findUserByEmail, logout,findAllUsers } from '../services/user.service';
-import { generateToken } from '../utils/generateToken';
 import passport from 'passport';
-import { User } from '../database/models';
+import {
+  register, findUserByEmail, logout, findAllUsers,
+  findUserById
+} from '../services/user.service';
+import { generateToken } from '../utils/generateToken';
+import model, { User, OTP } from '../database/models';
 import { BcryptUtil } from '../utils/bcrypt';
-import model from '../database/models/index.js';
+
 import 'dotenv/config';
 import verfyToken from '../utils/verifytoken';
 import { request } from 'express';
-import { findUserById } from '../services/user.service';
+
 import {
   sendVerificationEmail,
   sendEmail,
 } from '../services/sendEmail.service';
 import generateOTP from '../utils/generateOTP';
-import { OTP } from '../database/models/index';
+
 import validOTPmail from '../services/emailValidation.service';
 import { now } from 'lodash';
 
 const registerUser = async (req, res) => {
   try {
-    const { firstname, lastname, email, password, role, isActive } = req.body;
+    const {
+      firstname, lastname, email, password, role, isActive
+    } = req.body;
 
     const userData = {
       firstname,
@@ -38,7 +43,7 @@ const registerUser = async (req, res) => {
         message:
           'Successful registered.Please check your email for verification',
         user: response,
-        token: token,
+        token,
       });
   } catch (error) {
     return res.status(500).json({ status: 500, error: 'Server error' });
@@ -76,7 +81,7 @@ const loginUser = async (req, res, next) => {
     }
 
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(403).json({ message: 'Invalid email or password' });
     }
 
     try {
@@ -104,27 +109,27 @@ const loginUser = async (req, res, next) => {
         expired: user.expired,
       };
 
-      //<---------this is for generating the one time password------->
+      // <---------this is for generating the one time password------->
       const token = generateToken(UserToken);
       const otp = generateOTP();
       if (foundUser.role == 'seller') {
         OTP.otp = otp;
         await OTP.create({
-          otp: otp,
+          otp,
           email: foundUser.email,
         });
         try {
           await validOTPmail(foundUser, otp, token);
           return res
             .status(200)
-            .json({ message: 'please verify your email...'});
+            .json({ message: 'please verify your email...' });
         } catch (error) {
           res.status(500).json({ message: 'Error sending OTP code' });
         }
       }
 
       if (foundUser.role == 'admin' || foundUser.role == 'buyer') {
-        if(foundUser.expired){
+        if (foundUser.expired) {
           return res.status(200).json({
             message: 'Successful login!! your password has expired⚠️⚠️',
             user: {
@@ -134,7 +139,7 @@ const loginUser = async (req, res, next) => {
               email: foundUser.email,
               role: foundUser.role,
             },
-            token: token,
+            token,
           });
         }
         return res.status(200).json({
@@ -146,7 +151,7 @@ const loginUser = async (req, res, next) => {
             email: foundUser.email,
             role: foundUser.role,
           },
-          token: token,
+          token,
         });
       }
     } catch (error) {
@@ -160,7 +165,7 @@ const resetEmail = async (req, res) => {
     const userEml = req.body.email;
     const user = await findUserByEmail(userEml);
     if (user == false) {
-      res.status(404).json({message: 'User not found'});
+      res.status(404).json({ message: 'User not found' });
     } else {
       const userDetails = {
         email: user.email,
@@ -187,7 +192,7 @@ const resetEmail = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
-    const token = req.params.token;
+    const { token } = req.params;
     const payload = verfyToken(token, process.env.JWT_SECRET);
 
     if (payload) {
@@ -214,7 +219,7 @@ const resetPassword = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const user = await findUserById(userId)
+    const user = await findUserById(userId);
     if (user) {
       res.status(200).json({ user_details: user });
     }
@@ -238,12 +243,10 @@ const editUserProfile = async (req, res) => {
     });
     let profilePic;
     if (req.body.gender === 'male') {
-      profilePic =
-        'https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487826/icons8-administrator-male-90_dlmsde.png';
+      profilePic = 'https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487826/icons8-administrator-male-90_dlmsde.png';
     }
     if (req.body.gender === 'female') {
-      profilePic =
-        'https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487628/icons8-female-user-150_lwhby0.png';
+      profilePic = 'https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487628/icons8-female-user-150_lwhby0.png';
     }
     const user = await User.update(
       {
@@ -312,20 +315,20 @@ const updatePassword = async (req, res, next) => {
   }
 };
 
-const getAllUsers=async(req,res)=>{
-  try{
-  if(!req.user){
-    res.status(401).json({message:"you are not Authorized!"})
+const getAllUsers = async (req, res) => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ message: 'you are not Authorized!' });
+    }
+    const users = await findAllUsers();
+    res.status(200).json({ users });
+  } catch (error) {
+    res.status(500).json({
+      message: 'server Error!',
+      error: error.message.replace(/[^a-zA-Z0-9 ]/g, '')
+    });
   }
-  const users=await findAllUsers();
-  res.status(200).json({users:users})
-  }
-  catch(error){
-    res.status(500).json({message:"server Error!",
-    error:error.message.replace(/[^a-zA-Z0-9 ]/g, '')
-  })
-  }
-}
+};
 export {
   registerUser,
   resetEmail,

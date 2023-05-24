@@ -10,7 +10,7 @@ const extractToken = async (req, res, next) => {
     const token = req.header('Authorization').split(' ')[1];
     const isTokenExist = await Blacklist.findOne({where: {token}})
 
-    if(isTokenExist) return res.status(403).json({message: "Your session has expired, please login!"});
+    if(isTokenExist) return res.status(200).json({message: "Your session has expired, please login!"});
 
     const details = verifyToken(token);
     const userExists = await User.findOne({

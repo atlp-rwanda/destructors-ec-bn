@@ -3,7 +3,7 @@ import {
   createProduct,
   findAllProducts,
   findProduct,
-  findProducts,
+  findProducts
 } from '../services/product.service.js';
 import verfyToken from '../utils/verifytoken.js';
 import 'dotenv/config';
@@ -169,7 +169,7 @@ const searchProducts = async (req, res) => {
       if (err) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
-
+      try {
       const { name, minPrice, maxPrice, categoryId, bestBefore } = req.query;
 
       const where = {};
@@ -177,7 +177,14 @@ const searchProducts = async (req, res) => {
       if (minPrice) where.price = { [Op.gte]: minPrice };
       if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
       if (categoryId) where.categoryId = categoryId;
-      if (bestBefore) where.expiryDate = { [Op.lt]: new Date(bestBefore) };
+      let expiryDate;
+      if (bestBefore) {
+        expiryDate = new Date(bestBefore);
+        if (isNaN(expiryDate)) {
+          return res.status(400).json({ error: 'Invalid date format for bestBefore' });
+        }
+        where.expiryDate = { [Op.lt]: expiryDate };
+      }
 
       if (UserData.role == 'seller') {
         where.sellerId = UserData.id;
@@ -185,6 +192,9 @@ const searchProducts = async (req, res) => {
 
       const products = await Products.findAll({ where });
       return res.status(200).json({ products });
+    } catch (err) {
+      return res.status(500).json({ error:"enter valid uuid" });
+    }
     })(req, res);
   } catch (err) {
     return res.status(500).json({ error: err.message });
@@ -269,34 +279,45 @@ const updateProductAvailability = async (req, res) => {
       }
     )(req, res);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: 'Server error' });
   }
 };
+
 const updateProduct = async (req, res) => {
+  const id = req.params.id;
+  const { name, price, quantity, categoryId, bonus, expiryDate } = req.body;
   try {
-    const { id } = req.params;
-    const seller = req.user;
-
     const product = await Products.findOne({
-      where: { id, sellerId: seller.id },
+      where: { id, sellerId: req.user.id },
     });
-
     if (!product) {
-      return res.status(404).json({ error: 'Product not found ' });
+      return res.status(404).json({ error: 'Product not found' });
     }
-    const { name, price, quantity, bonus, expiryDate, categoryId } = req.body;
-    await Products.update(
-      { name, price, quantity, categoryId, bonus, expiryDate },
-      { where: { id, sellerId: seller.id } }
-    );
-
-    const updatedProduct = await Products.findOne({ where: { id } });
-
-    return res.status(200).json({ product: updatedProduct });
+    const currentImages = product.images;
+    let newImages = [];
+    const updatedProduct = {
+      name: name || product.name,
+      price: price || product.price,
+      quantity: quantity || product.quantity,
+      categoryId: categoryId || product.categoryId,
+      bonus: bonus || product.bonus,
+      expiryDate: expiryDate || product.expiryDate,
+      images: currentImages, 
+    };
+    if (req.files && req.files.length > 0) {
+      newImages = req.files.map((file) => file.path);
+      updatedProduct.images = newImages;
+    }
+    await product.update(updatedProduct);
+    const finalProduct = await Products.findOne({ where: { id } });
+    if (newImages.length > 0) {
+      finalProduct.images = updatedProduct.images;
+    }
+    return res
+      .status(200)
+      .json({ message: 'Product updated successfully', product: finalProduct });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
