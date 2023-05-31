@@ -8,10 +8,18 @@ import {
   ratingAndFeedback,
   retrieveProducts,
 } from './documents/product.docs';
-import { getCart, addCart, clearCart } from './documents/cart.docs';
+import {
+  getCart,
+  addCart,
+  clearCart,
+  removeFromCart,
+} from './documents/cart.docs';
 import { payment } from './documents/payments.docs';
 import { orderStatus } from './documents/orderStatus.docs';
-import { MarkNotificationRead , MarkAllNotificationRead} from './documents/notifications';
+import {
+  MarkNotificationRead,
+  MarkAllNotificationRead,
+} from './documents/notifications';
 import {
   createProdWish,
   getProductWishes,
@@ -36,7 +44,7 @@ import {
   googleAuthentication,
   googleCallBack,
   getAllUsers,
-  getSales
+  getSales,
 } from './docs-data';
 import { addCategory, getCategory } from './documents/category.docs';
 import 'dotenv/config';
@@ -86,13 +94,13 @@ export const swaggerDocument = {
       get: getAllUsers,
     },
     '/api/v1/users/signup/google': {
-      get: googleAuthentication
+      get: googleAuthentication,
     },
     '/api/v1/users/login/google': {
-      get: googleAuthentication
+      get: googleAuthentication,
     },
     '/api/v1/users/google/callback': {
-      get: googleCallBack
+      get: googleCallBack,
     },
     '/api/v1/users/reset-password': {
       post: resetEmail,
@@ -145,6 +153,9 @@ export const swaggerDocument = {
       get: getCart,
       put: clearCart,
     },
+    '/api/v1/carts/{productId}': {
+      patch: removeFromCart,
+    },
     '/api/v1/products/search': {
       get: searchProducts,
     },
@@ -180,9 +191,10 @@ export const swaggerDocument = {
       get: orderStatus,
     },
     '/api/v1/notifications/{id}': {
-      patch: MarkNotificationRead
+      patch: MarkNotificationRead,
     },
     '/api/v1/notifications': {
-      patch: MarkAllNotificationRead
-    }}
+      patch: MarkAllNotificationRead,
+    },
+  },
 };

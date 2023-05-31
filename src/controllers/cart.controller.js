@@ -63,6 +63,7 @@ const viewCart = async (req, res) => {
     const productInfo = await getCartProducts(pId);
 
     const productAllInfo = productInfo.map((product, index) => ({
+      id: product.id,
       name: product.name,
       price: product.price,
       quantity: products[index].quantity,
@@ -99,4 +100,25 @@ const clearCart = async (req, res) => {
   }
 };
 
-export { addToCart, viewCart, clearCart };
+const removeFromCart = async (req, res) => {
+  try {
+    const cart = req.cart;
+    const { productId } = req.params;
+    const productToRemove = cart.products.findIndex(
+      (product) => product.productId === productId
+    );
+    cart.products.splice(productToRemove, 1);
+    await updateCart({ products: cart.products }, cart.id);
+    return res.status(200).json({
+      id: cart.id,
+      message: 'Item removed from cart successfully',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+      message: 'Could not remove item from cart, try again',
+    });
+  }
+};
+
+export { addToCart, viewCart, clearCart, removeFromCart };

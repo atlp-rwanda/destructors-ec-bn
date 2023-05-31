@@ -68,4 +68,24 @@ const isProductExpired = async (req, res, next) => {
   next();
 };
 
-export { getUserCart, addProductToCart, isProductExpired, isProductAvailable };
+const checkProductInCart = async (req, res, next) => {
+  const cart = req.cart;
+  let { productId } = req.params;
+  if (!cart) {
+    return next();
+  }
+  const products = cart.products;
+  const existingProduct = products.find((p) => p.productId === productId);
+  if (!existingProduct) {
+    return res.status(404).json({ message: 'Product not in cart' });
+  }
+  next();
+};
+
+export {
+  getUserCart,
+  addProductToCart,
+  isProductExpired,
+  isProductAvailable,
+  checkProductInCart,
+};
