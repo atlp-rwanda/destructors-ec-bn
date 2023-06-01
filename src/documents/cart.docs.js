@@ -81,5 +81,36 @@ const clearCart = {
     },
   ],
 };
+const removeFromCart = {
+  tags: ['Cart'],
+  summary: 'Remove from cart',
+  description: 'User can remove a product from their cart',
+  parameters: [
+    {
+      name: 'productId',
+      in: 'path',
+      description: 'Product id',
+      schema: {
+        type: 'string',
+        format: 'uuid',
+      },
+    },
+  ],
+  consumes: ['application/json'],
+  responses: {
+    200: {
+      description: 'cart successfully cleared',
+    },
 
-export { addCart, getCart, clearCart };
+    500: {
+      description: 'Server error', // r
+    },
+  },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+};
+
+export { addCart, getCart, clearCart, removeFromCart };

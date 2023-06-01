@@ -2,6 +2,7 @@ import express from 'express';
 import {
   addToCart,
   clearCart,
+  removeFromCart,
   viewCart,
 } from '../../controllers/cart.controller';
 import {
@@ -9,6 +10,7 @@ import {
   addProductToCart,
   isProductExpired,
   isProductAvailable,
+  checkProductInCart,
 } from '../../middlewares/cart.middleware';
 import { cartValidation } from '../../ validations/cart.validation';
 import checkRole from '../../middlewares/checkRole';
@@ -28,6 +30,14 @@ route.post(
   addToCart
 );
 route.get('/', extractToken, checkRole(['buyer']), getUserCart, viewCart);
-route.put('/', extractToken, checkRole(['buyer']), getUserCart, clearCart); //check if cart is empty
+route.put('/', extractToken, checkRole(['buyer']), getUserCart, clearCart);
+route.patch(
+  '/:productId',
+  extractToken,
+  checkRole(['buyer']),
+  getUserCart,
+  checkProductInCart,
+  removeFromCart
+);
 
 export default route;

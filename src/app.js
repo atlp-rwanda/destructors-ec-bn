@@ -1,18 +1,21 @@
 import express from 'express';
 import passport from 'passport';
 import session from 'express-session';
+import cors from 'cors';
 import './config/passport.config.js';
 import swaggerUi from 'swagger-ui-express';
 import allRouter from './routes/index.js';
 import { sequelize } from './database/models/user.js';
 import { swaggerDocument } from './swagger.js';
 import route from './routes/api/user.routes.js';
-import { jobScheduling,prodExpirationJobScheduler} from './jobs/jobSchedules.js';
-import cors from 'cors'
-
+import {
+  jobScheduling,
+  prodExpirationJobScheduler,
+} from './jobs/jobSchedules.js';
 
 const app = express();
-app.use(cors({}));
+app.use(cors());
+
 export const connectDB = async () => {
   try {
     await sequelize.authenticate();
@@ -20,9 +23,6 @@ export const connectDB = async () => {
   } catch (err) {
     console.log(`Database connection failed: ${err}`);
     process.exit(1);
-
-
-    
   }
 };
 
