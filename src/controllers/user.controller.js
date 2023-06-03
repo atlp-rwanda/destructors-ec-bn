@@ -35,7 +35,7 @@ const registerUser = async (req, res) => {
       isActive,
     };
     const token = generateToken(userData, { expiresIn: '10m' });
-    await sendVerificationEmail(email, token);
+    await sendVerificationEmail(email, lastname, token);
     const response = await register(userData);
     return res
       .status(201)
@@ -108,8 +108,6 @@ const loginUser = async (req, res, next) => {
         isActive: user.isActive,
         expired: user.expired,
       };
-
-      // <---------this is for generating the one time password------->
       const token = generateToken(UserToken);
       const otp = generateOTP();
       if (foundUser.role == 'seller') {
@@ -173,9 +171,54 @@ const resetEmail = async (req, res) => {
       };
       const userToken = generateToken(userDetails, { expiresIn: '10m' });
       const sendToEmail = req.body.email;
-      const HTMLText = `<p stlye='font-size: 30px'><strong> Hi <br> <br>
-           Please click on this link below to reset your password:<br> ${userToken}<br>Remember, beware of scams and keep this one-time verification link confidential.<br>
-            Thanks, </strong><br> DESTRUCTORS </p>`;
+      const link = `${process.env.FRONTEND_URL}auth/reset-password?token=${userToken}`;
+      const HTMLText = `<html>
+         <head>
+         <style>
+            .container {
+              border: 2px;
+            }
+            .button {
+              background-color: #2D719D;
+              padding: 10px 20px;
+              text-decoration: none;
+              font-weight: bold;
+              border-radius: 4px;
+            }
+            img{
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+            .header{
+              background-repeat: no-repeat;
+              background-size: fit;
+              width: 100%;
+              height: 120px;
+            }
+            a{
+              text-decoration: none;
+              color: white;
+            }
+            span{
+              color: #fff;
+            }
+          </style>
+        </head>
+        <body>
+        <div style='font-size: 12px'><strong> <h3>Hi ${user.lastname}<h3/><br> <br>
+         <div class = "header">
+         <img src='https://d1u4v6449fgzem.cloudfront.net/2020/03/The-Ecommerce-Business-Model-Explained.jpg' alt='header'/>
+         </div><br> <br>
+         <div class="container">
+         <h3>Please click  here to reset your password.</h3>
+         <a href="${link}" class="button"><span>Reset Password</span></a>
+         </div>
+         <br> <br>Remember, beware of scams and keep this one-time verification link confidential.<br>
+         </strong><br> DESTRUCTORS </div>
+         </body>
+         </html>
+       `;
 
       await sendEmail(sendToEmail, 'Reset password', HTMLText);
 
@@ -186,7 +229,7 @@ const resetEmail = async (req, res) => {
         });
     }
   } catch (error) {
-    res.status(500).json({ error: 'server error' });
+    res.status(500).json({ error: error });
   }
 };
 
@@ -197,7 +240,7 @@ const resetPassword = async (req, res) => {
 
     if (payload) {
       const hashPassword = BcryptUtil.hash(req.body.password);
-      await model.User.update(
+     await model.User.update(
         {
           password: hashPassword,
           lastTimePasswordUpdated: new Date(),

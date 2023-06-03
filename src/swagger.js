@@ -11,7 +11,7 @@ import {
 import { getCart, addCart, clearCart } from './documents/cart.docs';
 import { payment } from './documents/payments.docs';
 import { orderStatus } from './documents/orderStatus.docs';
-import { MarkNotificationRead , MarkAllNotificationRead} from './documents/notifications';
+import { MarkNotificationRead, MarkAllNotificationRead } from './documents/notifications';
 import {
   createProdWish,
   getProductWishes,
@@ -61,7 +61,7 @@ export const swaggerDocument = {
       description: 'Local server', //
     },
     {
-      url: 'https://destructors-ecom-bc.onrender.com/', // url
+      url: `${process.env.DEPLOYED_VERSION}`, // url
       description: 'Hosted version', // name
     },
   ],
@@ -184,5 +184,6 @@ export const swaggerDocument = {
     },
     '/api/v1/notifications': {
       patch: MarkAllNotificationRead
-    }}
+    }
+  }
 };

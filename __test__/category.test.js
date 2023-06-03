@@ -65,7 +65,7 @@ describe('Testing Categories endpoint', () => {
       });
     expect(response.statusCode).toBe(404);
   });
-  test('it should return 401 when for getting category to buyer', async () => {
+  test('it should return 200 when for getting category to buyer', async () => {
     await buyerCategory.update({ role: 'buyer' });
     token = generateToken(buyerCategory);
     const response = await request(app)
@@ -74,19 +74,19 @@ describe('Testing Categories endpoint', () => {
       .send({
         name: 'shoes women',
       });
-    expect(response.statusCode).toBe(401);
+    expect(response.statusCode).toBe(200);
   });
   test('should return 401 for retrieving category when user is not logged in', async () => {
     const response = await request(app).get('/api/v1/categories');
     expect(response.statusCode).toBe(401);
   });
-  test('it should return 401 when for getting category to buyer', async () => {
+  test('it should return 200 when for getting category to buyer', async () => {
     await buyerCategory.update({ role: 'buyer' });
     token = generateToken(buyerCategory);
     const response = await request(app)
       .get('/api/v1/categories')
       .set('Authorization', `Bearer ${token}`);
-    expect(response.statusCode).toBe(401);
+    expect(response.statusCode).toBe(200);
   });
   test('it should return 200 when for getting category to seller or admin', async () => {
     await buyerCategory.update({ role: 'seller' });
