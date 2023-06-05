@@ -381,6 +381,6 @@ export {
   logoutUser,
   updatePassword,
   verifyEmail,
+  getAllUsers,
   getUserProfile,
-  getAllUsers
 };
