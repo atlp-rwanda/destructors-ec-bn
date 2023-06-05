@@ -94,7 +94,7 @@ describe('Testing Products service', () => {
       .attach('image', path.resolve(__dirname, './images/image1.jpg'));
     expect(response.statusCode).toBe(404);
     expect(response.body.message).toStrictEqual(
-      'Product is already exist, Please the update the stock instead'
+      'Product is already exist, Please update the stock instead'
     );
   });
   test('it should return 200 for retrieving list of all products which are available', async () => {
