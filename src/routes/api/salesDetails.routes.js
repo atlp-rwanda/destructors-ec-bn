@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import extractToken from '../../middlewares/checkUserWithToken';
-import trackOrderStatus from '../../controllers/orderStatus.controller';
+import {
+  getSales
+} from '../../controllers/orders.controller';
 
 const route = Router();
 
-route.get('/:id/status', extractToken, trackOrderStatus);
+route.get('/', extractToken, getSales);
 
 export default route;
