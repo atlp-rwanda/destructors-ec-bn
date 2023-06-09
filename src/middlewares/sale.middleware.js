@@ -47,8 +47,8 @@ const createCheckout = async (linedata) => {
     },
     line_items: linedata,
     mode: 'payment',
-    success_url: 'http://localhost:3000/api/v1/success?paymentId={CHECKOUT_SESSION_ID}',
-    cancel_url: 'http://localhost:3000/cancel'
+    success_url: `${process.env.STRIPECHECKOUT_SUCCESS}?paymentId={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.STRIPECHECKOUT_SUCCESS}`
   });
   return session;
 };
