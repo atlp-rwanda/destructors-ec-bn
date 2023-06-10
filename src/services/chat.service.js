@@ -20,6 +20,7 @@ function initializeChat(server) {
         'update',
         user.firstname + ' joined the conversation'
       );
+      // console.log(user.firstname)
       const messages = await Chat.findAll({
         include: User,
         attributes: ['senderId', 'message', 'createdAt'],
@@ -30,6 +31,11 @@ function initializeChat(server) {
         username: message.User.firstname,
         isMine: userId == message.senderId,
         text: message.message,
+        time:message.createdAt.toLocaleString(undefined, {
+          hour: 'numeric',
+          minute: 'numeric',
+          weekday: 'short',
+        }),
       }));
       socket.emit('getOldMessages', messagesData);
     });
@@ -39,10 +45,17 @@ function initializeChat(server) {
     socket.on('chat', async ({ userId, text }) => {
       const user = await findUserById(userId);
       const sender_username = user.firstname;
-      Chat.create({ senderId: userId, message: text });
+      const currentTime=new Date()
+      const formattedTime = currentTime.toLocaleString(undefined, {
+        hour: 'numeric',
+        minute: 'numeric',
+        weekday: 'long',
+      });
+      Chat.create({ senderId: userId, message: text,createdAt:currentTime });
       socket.broadcast.emit('chat', {
         username: sender_username,
         text,
+        time: formattedTime
       });
     });
 

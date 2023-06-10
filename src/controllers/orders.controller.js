@@ -43,21 +43,27 @@ const getOrders = async (req, res) => {
 
 const getSales = async (req, res) => {
   const sellerId = req.user.id;
-  const allOrders = await Orders.findAll({ attributes: ['products'] });
+  const allOrders = await Orders.findAll({ attributes: ['products', 'id', 'amount'] });
   let allSales = [];
+  let allSellerOrders = [];
     const mySales = allOrders.forEach((data) => {
+      allSales=[]
       data.products.map((element) => {
         if (element.sellerId === sellerId) {
         allSales.push(element);
       }
       })
-      
+      allSellerOrders.push({
+        id: data.id,
+        amount: data.amount,
+        products: allSales
+       })
     });
       
   if (allSales.length === 0) {
     return res.status(404).json({ message: 'You have no order yet' });
   }
-  return res.status(200).json({ Orders: allSales });
+  return res.status(200).json({ Orders: allSellerOrders });
 };
 
 export { trackOrderStatus, getOrders, getSales };

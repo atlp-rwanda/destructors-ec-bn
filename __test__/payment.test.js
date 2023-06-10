@@ -117,7 +117,7 @@ describe('Test user payments', () => {
 
   test('It should pay a user cart', async () => {
     await Orders.create({
-      paymentId: 'cs_test_a12sPchPeGK9Uhppq990qzf0i5vbN3a2OFDHSShffSa5LgaeANf2d9nhDl',
+      paymentId: 'cs_test_a1PucVBlRW3Bx7Dqzcbd6cbaay1ym6C2GcOBdMaDESfzsBU9grWIWn8H6L',
       userId: 'd0db925d-03b7-4e7a-a800-7a8d0823fd00',
       email: 'buyer@gmail.com',
       amount: 30000,
@@ -131,7 +131,7 @@ describe('Test user payments', () => {
         },
       ],
     });
-    const response = await request(app).get('/api/v1/success?paymentId=cs_test_a12sPchPeGK9Uhppq990qzf0i5vbN3a2OFDHSShffSa5LgaeANf2d9nhDl')
+    const response = await request(app).get('/api/v1/success?paymentId=cs_test_a1PucVBlRW3Bx7Dqzcbd6cbaay1ym6C2GcOBdMaDESfzsBU9grWIWn8H6L')
     expect(response.statusCode).toBe(201);
   });
   test('It should return 500 when stripe session id is not provided', async () => {
