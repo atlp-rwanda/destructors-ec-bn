@@ -7,6 +7,7 @@ import {
   deleteProduct,
   ratingAndFeedback,
   retrieveProducts,
+  getReviews
 } from './documents/product.docs';
 import {
   getCart,
@@ -180,6 +181,7 @@ export const swaggerDocument = {
     },
     '/api/v1/products/{id}/reviews': {
       post: ratingAndFeedback,
+      get: getReviews,
     },
     '/api/v1/sales/{id}/status': {
       patch: changeSaleStatu,

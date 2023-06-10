@@ -562,4 +562,19 @@ describe('Rating and feedback for a product', () => {
       });
     expect(response.status).toBe(400);
   });
+  test('should return 401 status code if user is not a buyer', async () => {
+    product = await Products.findOne({ where: { name: 'Product 1' } });
+    const sellerToken = generateToken(user);
+    const response = await request(app)
+      .get(`/api/v1/products/${product.id}/reviews`)
+      .set('Authorization', `Bearer ${sellerToken}`)
+    expect(response.status).toBe(401);
+  });
+  test('should return 404 status code if no reviews', async () => {
+    product = await Products.findOne({ where: { name: 'Product 1' } });
+    const response = await request(app)
+      .get(`/api/v1/products/${product.id}/reviews`)
+      .set('Authorization', `Bearer ${buyerToken}`)
+    expect(response.status).toBe(404);
+  });
 });
