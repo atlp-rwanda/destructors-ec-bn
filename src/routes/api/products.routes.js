@@ -19,7 +19,7 @@ import {
 import checkRole from '../../middlewares/checkRole.js';
 import extractToken from '../../middlewares/checkUserWithToken.js';
 import { checkIfPasswordIsExpired } from '../../middlewares/checkPassword.js';
-import { createProductReview } from '../../controllers/productReview.controller.js';
+import { createProductReview, getAllProductReviews } from '../../controllers/productReview.controller.js';
 import { validateReviewProduct } from '../../ validations/productReview.validation.js';
 import checkIfOrderIsApproved from '../../middlewares/purchasedProduct.middleware.js';
 
@@ -48,5 +48,5 @@ route.patch('/:id', extractToken, checkRole(['seller']), uploadArray('image'), c
 route.delete('/:id', extractToken, checkRole(['seller']), checkIfPasswordIsExpired, deleteProduct,);
 route.get('/:id/product-wishes', extractToken, getWishesPerProduct);
 route.post('/:id/reviews', extractToken, checkRole(['buyer']), validateReviewProduct, checkIfOrderIsApproved, createProductReview);
-
+route.get('/:id/reviews', extractToken, checkRole(['buyer', 'seller', 'admin']), getAllProductReviews);
 export default route;

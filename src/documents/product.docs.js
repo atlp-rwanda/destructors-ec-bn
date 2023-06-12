@@ -319,6 +319,33 @@ export const ratingAndFeedback = {
     },
   },
 };
+// get all reviews on product 
+export const getReviews = {
+  tags: ['Product Review'],
+  parameters: [
+    {
+      name: 'id',
+      in: 'path',
+      description: 'the product id',
+      required: true,
+    },
+  ],
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+  summary: 'get all reviews product',
+  responses: {
+    201: {
+      description: 'product reviewes fetched  successfully',
+    },
+  
+    500: {
+      description: 'Server error', 
+    },
+  },
+};
 export const retrieveProducts = {
   tags: ['Products'],
   operationId: 'Retrieve all products',

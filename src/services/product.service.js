@@ -102,4 +102,9 @@ export const productReview = async (productId, buyerId, rating, feedback) => {
   return review;
 };
 
+export const getAllReviews = async () => {
+    const reviews = await Reviews.find(); // Retrieve all reviews
+    return reviews;
+};
+
 export { createProduct, findProduct, findProducts, findProductById, findAllProducts };

@@ -1,4 +1,4 @@
-import { findProductById, productReview } from '../services/product.service';
+import { findProductById, productReview, getAllReviews } from '../services/product.service';
 import { calculateAverageRating } from '../utils/averageRating';
 import { Reviews } from '../database/models';
 
@@ -36,6 +36,23 @@ const createProductReview = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+  const getAllProductReviews = async (req, res) => {
+    const { id: productId } = req.params;
+    try {
+      const reviewsProduct = await Reviews.findAll({ where: { productId } });
+  
+      if (reviewsProduct.length === 0) {
+       return res.status(404).json({ error: 'No reviews found for the product' });
+      }
+  
+      return res.status(200).json({
+        message: 'You fetched product review successfully',
+        reviewsProduct
+      });
+    } catch (error) {
+     return res.status(500).json({ error: error.message });
+    }
+  };
 
-export { createProductReview };
+export { createProductReview, getAllProductReviews };
 
