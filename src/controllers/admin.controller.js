@@ -1,9 +1,10 @@
-import User from '../database/models/index';
+import User, { Log } from '../database/models/index';
 import jwt from 'jsonwebtoken';
 import { generateToken } from '../utils/generateToken';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import 'dotenv/config';
 import passport from 'passport';
+import { Op } from 'sequelize';
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -101,4 +102,56 @@ const assignUserRole = async (req, res) => {
   }
 };
 
-export { updateUserStatus, assignUserRole };
+const getLogs = async (req, res) => {
+  try {
+    passport.authenticate('jwt', { session: false }, async (err, adminData) => {
+      if (err) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      if (!adminData) {
+        return res.status(400).json({ error: 'Enter your credentials as admin' });
+      }
+
+      if (adminData.role !== 'admin') {
+        return res.status(400).json({ error: 'Only admin users can update user status' });
+      }
+
+      try {
+        const { date, type } = req.body;
+        let filter = {};
+
+        if (date) {
+          const startDate = new Date(date);
+          const endDate = new Date(date);
+          endDate.setDate(startDate.getDate() + 1);
+
+          filter.timestamp = {
+            [Op.gte]: startDate,
+            [Op.lt]: endDate,
+          };
+        }
+
+        if (type) {
+          filter.type = type;
+        }
+
+        const allLogs = await Log.findAll({ where: filter, order: [['createdAt', 'DESC']] });
+
+        if (allLogs.length === 0) {
+          return res.json({ message: 'No data!' });
+        }
+
+        return res.json({ logs: allLogs });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+    })(req, res);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export { updateUserStatus, assignUserRole, getLogs };
