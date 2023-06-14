@@ -1,0 +1,4 @@
+Write codes should be in the following files:
+1. The `src/controllers/invoice.controller.js`  controller file will handle the logic for generating and retrieving invoices.
+2. The `src/utils/invoiceGenerator.js` file will contain utility functions or classes responsible for generating PDF invoices based on the provided data.
+3. The `src/routes/invoice.routes.js` file will define the API endpoints for generating and retrieving invoices.

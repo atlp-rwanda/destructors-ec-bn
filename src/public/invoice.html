@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Invoice Email</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Add your custom styles here */
+
+        /* General styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Lato', Arial, Helvetica, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f1f1f1;
+            -webkit-text-size-adjust: none;
+        }
+
+        /* Header styles */
+        .header {
+            background-color: #383e56;
+            text-align: center;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .logo {
+            width: 220px;
+            height: 35px;
+        }
+
+        /* Content styles */
+        .content {
+            text-align: center;
+            padding: 20px;
+            color: #45535C;
+        }
+
+        .title {
+            font-weight: 800;
+            font-size: 34px;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-weight: 800;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        /* Invoice details styles */
+        .invoice-details {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .invoice-details th,
+        .invoice-details td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .invoice-details th {
+            background-color: #f9f9f9;
+            color: #5a5a5a;
+            font-weight: bold;
+        }
+
+        .invoice-details td {
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        /* Footer styles */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #5a5a5a;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <img src="/public/assets/logo-light-01.png" alt="Logo" class="logo">
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <h1 class="title">Thanks for your order!</h1>
+        <h2 class="subtitle">Here’s what you purchased</h2>
+        <p class="message">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        </p>
+
+        <!-- Invoice details -->
+        <table class="invoice-details">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% order.items.forEach(function(item) { %>
+                    <tr>
+                        <td>
+                            <%= item.name %>
+                        </td>
+                        <td>
+                            <%= item.quantity %>
+                        </td>
+                        <td>
+                            <%= item.price %>
+                        </td>
+                        <td>
+                            <%= item.quantity * item.price %>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+                    <td>
+                        <%= order.total %>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>
+            If you have any questions, feel free to contact us at <a
+                href="mailto:contact@example.com">contact@example.com</a>.
+        </p>
+    </div>
+</body>
+
+</html>
