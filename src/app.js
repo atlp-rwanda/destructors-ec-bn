@@ -7,7 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 import allRouter from './routes/index.js';
 import { sequelize } from './database/models/user.js';
 import { swaggerDocument } from './swagger.js';
-import { logAccess, logError } from './middlewares/logs.js';
+import { logError, logger, logMiddleware } from './middlewares/logs.js';
 import route from './routes/api/user.routes.js';
 import {
   jobScheduling,
@@ -37,7 +37,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(logAccess);
+app.use(logMiddleware);
 app.use(logError);
 try {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

@@ -1,35 +1,33 @@
 import winston from 'winston';
-import { Log } from '../database/models';
 
-export const logAccess = async (req, res, next) => {
-  try {
-    const logData = {
-      type: 'access',
-      message: 'Access Request',
-      method: req.method,
-      url: req.originalUrl,
-      timestamp: new Date().toISOString().split('T')[0]
-    };
-    await Log.create(logData);
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp({ format: 'YYYY-MM-DD' }),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.File({ filename: 'logs.log' })
+  ]
+});
 
-    next();
-  } catch (error) {
-    next(error);
-  }
+const logMiddleware = (req, res, next) => {
+  logger.info({
+    type: 'access',
+    method: req.method,
+    url: req.url
+  });
+
+  next();
 };
 
-export const logError = async (err, req, res, next) => {
-  try {
-    const logData = {
-      type: 'error',
-      message: 'Error occurred',
-      method: err.message,
-      stack: err.stack,
-      timestamp: new Date().toISOString().split('T')[0]
-    };
-    await Log.create(logData);
-    next(err);
-  } catch (error) {
-    next(error);
-  }
+const logError = (err, req, res, next) => {
+  logger.error({
+    type: 'error',
+    message: err.message,
+    stack: err.stack,
+  });
+  res.status(500).json({ error: 'Internal server error' });
+  next();
 };
+export { logMiddleware, logger, logError };

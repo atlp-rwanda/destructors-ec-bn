@@ -5,6 +5,8 @@ import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import 'dotenv/config';
 import passport from 'passport';
 import { Op } from 'sequelize';
+import fs from 'fs';
+
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -121,9 +123,11 @@ const getLogs = async (req, res) => {
         const { date, type } = req.body;
         let filter = {};
 
+        let startDate, endDate; // Declare the variables here
+
         if (date) {
-          const startDate = new Date(date);
-          const endDate = new Date(date);
+          startDate = new Date(date);
+          endDate = new Date(date);
           endDate.setDate(startDate.getDate() + 1);
 
           filter.timestamp = {
@@ -136,13 +140,57 @@ const getLogs = async (req, res) => {
           filter.type = type;
         }
 
-        const allLogs = await Log.findAll({ where: filter, order: [['createdAt', 'DESC']] });
+        const readFilePromise = new Promise((resolve, reject) => {
+          fs.readFile('logs.log', 'utf8', (err, data) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve(data);
+            }
+          });
+        });
 
-        if (allLogs.length === 0) {
+        const data = await readFilePromise;
+
+        const logs = data
+          .split('\n')
+          .filter(log => log !== '')
+          .map(log => {
+            try {
+              return JSON.parse(log);
+            } catch (error) {
+              console.error('Error parsing log:', error);
+              return null;
+            }
+          })
+          .filter(log => log !== null)
+          .filter(log => {
+            if (type && date) {
+              return (
+                log.type &&
+                log.type.match(new RegExp(filter.type, 'i')) &&
+                new Date(log.timestamp) >= startDate &&
+                new Date(log.timestamp) < endDate 
+              );
+            } else if (type) {
+              return log.type && log.type.match(new RegExp(filter.type, 'i'));
+            } else if (date) {
+              return (
+                log.type &&
+                new Date(log.timestamp) >= startDate && // Use the variables here
+                new Date(log.timestamp) < endDate // Use the variables here
+              );
+            }
+            return true;
+          })
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        if (logs.length === 0) {
           return res.json({ message: 'No data!' });
         }
 
-        return res.json({ logs: allLogs });
+        return res.json({ logs });
       } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal server error' });
@@ -153,5 +201,4 @@ const getLogs = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
-
 export { updateUserStatus, assignUserRole, getLogs };
