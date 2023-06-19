@@ -11,7 +11,8 @@ import stat from './api/stat.routes';
 import notification from './api/notification.routes.js';
 import category from './api/category.routes.js';
 import orders from './api/orders.routes.js';
-import saleDetails from './api/salesDetails.routes.js'
+import saleDetails from './api/salesDetails.routes.js';
+import invoices from './api/invoice.routes.js';
 
 const routes = express.Router();
 routes.use('/', payment);
@@ -29,8 +30,5 @@ routes.use('/stats', stat);
 routes.use('/notifications', notification);
 routes.use('/orders', orders);
 routes.use('/sales-details', saleDetails);
-
-
-
-
+routes.use('/', invoices);
 export default routes;

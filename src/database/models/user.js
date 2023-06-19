@@ -1,10 +1,12 @@
 const { Model } = require('sequelize');
-const { Sequelize } = require('.');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    static associate(models) {}
+    static associate(models) {
+      User.hasMany(models.Orders, { foreignKey: 'userId' });
+    }
   }
+
   User.init(
     {
       id: {
@@ -17,15 +19,16 @@ module.exports = (sequelize, DataTypes) => {
       lastname: DataTypes.STRING,
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      gender:DataTypes.STRING,
-      DOB:DataTypes.DATE,
-      prefferedLanguage:DataTypes.STRING,
-      prefferedCurrency:DataTypes.STRING,
-      billingAddress:DataTypes.JSONB,
-      profilePic:{
-        type:DataTypes.STRING,
-      defaultValue:"https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487348/icons8-male-user-96_vufiae.png",
-    },
+      gender: DataTypes.STRING,
+      DOB: DataTypes.DATE,
+      prefferedLanguage: DataTypes.STRING,
+      prefferedCurrency: DataTypes.STRING,
+      billingAddress: DataTypes.JSONB,
+      profilePic: {
+        type: DataTypes.STRING,
+        defaultValue:
+          'https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487348/icons8-male-user-96_vufiae.png',
+      },
       role: {
         type: DataTypes.STRING,
         defaultValue: 'buyer',
@@ -42,20 +45,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      lastTimePasswordUpdated:{
+      lastTimePasswordUpdated: {
         type: DataTypes.DATE,
-        defaultValue:new Date()
+        defaultValue: new Date(),
       },
-      expired:{
-        type:DataTypes.BOOLEAN,
-        defaultValue:false
+      expired: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
-      provider:DataTypes.STRING
+      provider: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: 'User',
     }
   );
+
   return User;
 };
