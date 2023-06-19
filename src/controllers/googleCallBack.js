@@ -10,9 +10,8 @@ const googleAuthentication = (req, res, next) => {
 const googleCallBack = (req, res) => {
   const { user, token } = req.user;
 
-  res.setHeader("Authorization", `Bearer ${token}`);
-
-  res.redirect("http://localhost:5173/home"); 
+  res.status(200).json({ message: 'login successfully', token });
+  
 };
 
 export { googleAuthentication, googleCallBack };

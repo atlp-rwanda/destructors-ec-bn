@@ -48,38 +48,38 @@ const createProducts = async (req, res) => {
 const retrieveItem = async (req, res) => {
   try {
     const itemId = req.params.id;
-    const token = req.header('Authorization').split(' ')[1];
-    const user = verfyToken(token, process.env.JWT_SECRET);
+    // const token = req.header('Authorization').split(' ')[1];
+    // const user = verfyToken(token, process.env.JWT_SECRET);
 
-    if (user.data.role == 'seller') {
-      const item = await findProduct(itemId, 'seller', user.data.id);
+    // if (user.data.role == 'seller') {
+    const item = await findProduct(itemId);
 
-      if (!item) {
-        return res
-          .status(404)
-          .json({ message: 'This product is not found in your collection' });
-      }
-
-      return res.status(200).json({ item });
+    if (!item) {
+      return res
+        .status(404)
+        .json({ message: 'This product is not found in your collection' });
     }
 
-    if (user.data.role == 'buyer') {
-      const item = await findProduct(itemId);
+    return res.status(200).json({ item });
+    // }
 
-      if (!item) {
-        return res.status(404).json({ message: 'This product is not found' });
-      }
-      return res.status(200).json({ item });
-    }
+    // if (user.data.role == 'buyer') {
+    //   const item = await findProduct(itemId);
 
-    if (user.data.role == 'admin') {
-      const item = await findProduct(itemId, 'admin');
+    //   if (!item) {
+    //     return res.status(404).json({ message: 'This product is not found' });
+    //   }
+    //   return res.status(200).json({ item });
+    // }
 
-      if (!item) {
-        return res.status(404).json({ message: 'This product is not found' });
-      }
-      return res.status(200).json({ item });
-    }
+    // if (user.data.role == 'admin') {
+    //   const item = await findProduct(itemId, 'admin');
+
+    //   if (!item) {
+    //     return res.status(404).json({ message: 'This product is not found' });
+    //   }
+    //   return res.status(200).json({ item });
+    // }
   } catch (error) {
     res.status(500).json(error);
   }
@@ -161,37 +161,37 @@ passport.use(
 
 const searchProducts = async (req, res) => {
   try {
-    passport.authenticate('jwt', { session: false }, async (err, UserData) => {
-      if (err) {
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
-      try {
-        const { name, minPrice, maxPrice, categoryId, bestBefore } = req.query;
+    // passport.authenticate('jwt', { session: false }, async (err, UserData) => {
+    //   if (err) {
+    //     return res.status(401).json({ error: 'Unauthorized' });
+    //   }
+    try {
+      const { name, minPrice, maxPrice, categoryId, bestBefore } = req.query;
 
-        const where = {};
-        if (name) where.name = { [Op.iLike]: `%${name}%` };
-        if (minPrice) where.price = { [Op.gte]: minPrice };
-        if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
-        if (categoryId) where.categoryId = categoryId;
-        let expiryDate;
-        if (bestBefore) {
-          expiryDate = new Date(bestBefore);
-          if (isNaN(expiryDate)) {
-            return res.status(400).json({ error: 'Invalid date format for bestBefore' });
-          }
-          where.expiryDate = { [Op.lt]: expiryDate };
+      const where = {};
+      if (name) where.name = { [Op.iLike]: `%${name}%` };
+      if (minPrice) where.price = { [Op.gte]: minPrice };
+      if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
+      if (categoryId) where.categoryId = categoryId;
+      let expiryDate;
+      if (bestBefore) {
+        expiryDate = new Date(bestBefore);
+        if (isNaN(expiryDate)) {
+          return res.status(400).json({ error: 'Invalid date format for bestBefore' });
         }
-
-        if (UserData.role == 'seller') {
-          where.sellerId = UserData.id;
-        }
-
-        const products = await Products.findAll({ where });
-        return res.status(200).json({ products });
-      } catch (err) {
-        return res.status(500).json({ error: 'enter valid uuid' });
+        where.expiryDate = { [Op.lt]: expiryDate };
       }
-    })(req, res);
+
+      // if (UserData.role == 'seller') {
+      //   where.sellerId = UserData.id;
+      // }
+
+      const products = await Products.findAll({ where });
+      return res.status(200).json({ products });
+    } catch (err) {
+      return res.status(500).json({ error: 'enter valid uuid' });
+    }
+    (req, res);
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -258,15 +258,6 @@ const updateProductAvailability = async (req, res) => {
           user.map((element) => {
             userId.push(element.id);
           });
-          const notificationDetails = {
-            receiver: 'buyer',
-            subject: 'New product',
-            message: `Have your eyes on this 🤩 ${updatedProduct.name}`,
-            entityId: { productId: updatedProduct.id },
-            productImage: updatedProduct.images[0],
-            receiverId: userId
-          };
-          eventEmitter.emit('new-notification', notificationDetails);
           return res.status(200).json({ product: updatedProduct, user: userId });
         }
 

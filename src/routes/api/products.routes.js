@@ -34,9 +34,9 @@ route.post(
   isProductExist,
   createProducts
 );
-route.get('/search', extractToken, searchProducts);
+route.get('/search', searchProducts);
 route.get('/public',  retrieveAllProducts);
-route.get('/:id', extractToken, retrieveItem);
+route.get('/:id', retrieveItem);
 route.get('/', extractToken, retrieveItems);
 route.patch(
   '/:id/availability',

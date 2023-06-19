@@ -15,6 +15,7 @@ import {
 import { cartValidation } from '../../ validations/cart.validation';
 import checkRole from '../../middlewares/checkRole';
 import extractToken from '../../middlewares/checkUserWithToken';
+import { checkRoleCart } from '../../middlewares/checkRole';
 
 const route = express.Router();
 
@@ -29,7 +30,7 @@ route.post(
   addProductToCart,
   addToCart
 );
-route.get('/', extractToken, checkRole(['buyer']), getUserCart, viewCart);
+route.get('/', extractToken, checkRoleCart(['buyer']), getUserCart, viewCart);
 route.put('/', extractToken, checkRole(['buyer']), getUserCart, clearCart);
 route.patch(
   '/:productId',

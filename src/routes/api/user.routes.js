@@ -58,7 +58,10 @@ route.get('/auth', (req, res) => {
 });
 route.get('/verify-email', verifyEmail);
 route.get('/login/google', googleAuthentication);
-route.get('/google/callback', passport.authenticate('google'), googleCallBack);
+route.get('/google/callback', passport.authenticate('google', {
+  session: false,
+  failureRedirect: '/',
+}), googleCallBack);
 route.put(
   '/profile',
   extractToken,

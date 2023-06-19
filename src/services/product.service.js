@@ -35,7 +35,7 @@ const findProduct = async (id, role, sellerId) => {
   }
 
   const product = await Products.findOne({
-    where: { id, isExpired:false },
+    where: { id },
     include: [
       {
         model: User,
@@ -88,7 +88,7 @@ const findAllProducts = async (size, page) => {
     limit: size,
     offset: page * size,
   });
-
+  
   return products;
 };
 

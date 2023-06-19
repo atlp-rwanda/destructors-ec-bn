@@ -18,6 +18,6 @@ route.post(
   isCategoryExistByName,
   addCategories
 );
-route.get('/', extractToken, checkRole(['seller', 'admin', 'buyer']), getAllCategories);
+route.get('/', getAllCategories);
 
 export default route;
