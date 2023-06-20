@@ -23,6 +23,7 @@ import { createProductReview, getAllProductReviews } from '../../controllers/pro
 import { validateReviewProduct } from '../../ validations/productReview.validation.js';
 import checkIfOrderIsApproved from '../../middlewares/purchasedProduct.middleware.js';
 
+
 const route = Router();
 route.post(
   '/',
@@ -49,4 +50,5 @@ route.delete('/:id', extractToken, checkRole(['seller']), checkIfPasswordIsExpir
 route.get('/:id/product-wishes', extractToken, getWishesPerProduct);
 route.post('/:id/reviews', extractToken, checkRole(['buyer']), validateReviewProduct, checkIfOrderIsApproved, createProductReview);
 route.get('/:id/reviews', extractToken, checkRole(['buyer', 'seller', 'admin']), getAllProductReviews);
+
 export default route;
