@@ -133,7 +133,7 @@ function initializeChat(server) {
     if (socket.user.role === 'seller') {
       room = socket.user.role;
       socket.join(room);
-      const sellerNotifications = await Notifications.findAll({ where: { receiver: socket.id } });
+      const sellerNotifications = await Notifications.findAll({ where: { receiver: socket.id }, order: [['createdAt', 'DESC']] });
       const notificationStatus = await Mark_Notifications.findAll({ where: { receiverId: socket.id } });
       let notifications = [];
       sellerNotifications.map((data) => {
@@ -144,8 +144,11 @@ function initializeChat(server) {
               id: data.id,
               subject: data.subject,
               message: data.message,
-              status: element.is_read
-
+              status: element.is_read,time: data.createdAt.toLocaleString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              }),
             }
             notifications.push(notificationDetails);
           }
@@ -161,8 +164,8 @@ function initializeChat(server) {
     } else {
       room = socket.user.role;
       socket.join(room)
-      const notifications = await Notifications.findAll({ where: { receiver: 'buyer' } });
-      const specificBuyNotif = await Notifications.findAll({ where: { receiver: socket.id } });
+      const notifications = await Notifications.findAll({ where: { receiver: 'buyer' }, order: [['createdAt', 'DESC']] });
+      const specificBuyNotif = await Notifications.findAll({ where: { receiver: socket.id }, order: [['createdAt', 'DESC']] });
       const notificationStatus = await Mark_Notifications.findAll({ where: { receiverId: socket.id } });
       let allNotification = [];
       let buyerNotification = [];
@@ -173,9 +176,13 @@ function initializeChat(server) {
               id: data.id,
               subject: data.subject,
               message: data.message,
-              status: element.is_read
-
-            }
+              status: element.is_read,
+              time: data.createdAt.toLocaleString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              }),
+            };
             allNotification.push(notificationDetails);
 
           }
@@ -190,9 +197,13 @@ function initializeChat(server) {
               id: data.id,
               subject: data.subject,
               message: data.message,
-              status: element.is_read
-
-            }
+              status: element.is_read,
+              time: data.createdAt.toLocaleString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              }),
+            };
             buyerNotification.push(notificationDetails);
 
           }
@@ -235,19 +246,6 @@ function initializeChat(server) {
     notifyNamespace.to(notificationDetails.receiver).emit('new-notification', notificationDetails.subject, notificationDetails.message, notificationDetails.productImage, newNotification.id);
     markNotications(newNotification.id, notificationDetails.receiverId)
   })
-  eventEmitter.on('notifyBuyers', async (notificationDetails) => {
-    const message = {
-      text: notificationDetails.message,
-      image: notificationDetails.productImage
-    }
-    const newNotification = await notifyUser(notificationDetails.subject, message, notificationDetails.entityId, notificationDetails.receiver)
-    notifyNamespace.to(notificationDetails.receiver).emit('new-notification', notificationDetails.subject, notificationDetails.message, notificationDetails.productImage, newNotification.id);
-    const receiverIds = await notificationDetails.receiverId
-    const newNotificationId = await newNotification.id
-    receiverIds.forEach(element => {
-      markNotications(newNotificationId, element)
-    });
-  })
   eventEmitter.on('notifySellers', async (notificationDetails) => {
     const message = {
       text: notificationDetails.message,
@@ -258,8 +256,11 @@ function initializeChat(server) {
     markNotications(newNotification.id, notificationDetails.receiverId)
   })
   eventEmitter.on('notifyBuyer', async (notificationDetails) => {
-
-    const newNotification = await notifyUser(notificationDetails.subject, notificationDetails.message, notificationDetails.entityId, notificationDetails.receiver)
+    const message = {
+      text: notificationDetails.message,
+      image: notificationDetails.productImage
+    };
+    const newNotification = await notifyUser(notificationDetails.subject, message, notificationDetails.entityId, notificationDetails.receiver)
     notifyNamespace.to(notificationDetails.receiver).emit('new-notification', notificationDetails.subject, notificationDetails.message, newNotification.id);
     markNotications(newNotification.id, notificationDetails.receiverId)
   })

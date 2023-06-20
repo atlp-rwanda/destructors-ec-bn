@@ -42,6 +42,39 @@ const changeSaleStatus = async (req, res) => {
       { status: newStatus },
       { where: { id: req.params.id } }
     );
+    const updateProducts=orderProducts.map((product)=>{
+      if(product.sellerId===sellerId){
+      return {
+        ...product,
+        status:newStatus
+      }
+    }
+    else if(!product.status){
+      return {
+        ...product,
+        status:'...pending'
+      }
+    }
+    return product;
+    })
+
+    await Orders.update({products:updateProducts},{where:{id:selectedOrder.id}})
+    
+    const allProductsApproved = updateProducts.every((product) => product.status === "approved");
+    const allProductsRejected = updateProducts.every((product) => product.status === "rejected");
+
+    let orderStatus = "..pending";
+    if (allProductsApproved) {
+      orderStatus = "approved";
+    } else if (allProductsRejected) {
+      orderStatus = "rejected";
+    }
+    else{
+      orderStatus='..pending'
+    }
+
+    await Orders.update({ status: orderStatus }, { where: { id: selectedOrder.id } });
+
 
     
   if (newStatus === "approved") {
@@ -62,6 +95,7 @@ const changeSaleStatus = async (req, res) => {
             receiver: selectedOrder.userId,
             subject,
             message,
+            productImage: 'https://res.cloudinary.com/dboqnapgi/image/upload/v1687008710/shopping-bag_b4pdgu.png',
             entityId: { saleId: selectedSale.id},
             receiverId: selectedOrder.userId
         }
@@ -78,6 +112,7 @@ const changeSaleStatus = async (req, res) => {
       receiver: selectedOrder.userId,
       subject,
       message,
+      productImage: 'https://res.cloudinary.com/dboqnapgi/image/upload/v1687011102/cross-button_fqhm0j.png',
       entityId: { saleId: selectedSale.id},
       receiverId: selectedOrder.userId
   }
@@ -85,7 +120,6 @@ const changeSaleStatus = async (req, res) => {
   sendEmail(selectedOrder.email, subject, HTMLText );
     return res.status(200).json({ status:"sale rejected"}); 
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ status: 500, error: error});
   
   }

@@ -286,10 +286,10 @@ const editUserProfile = async (req, res) => {
     });
     let profilePic;
     if (req.body.gender === 'male') {
-      profilePic = 'https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487826/icons8-administrator-male-90_dlmsde.png';
+      profilePic = 'https://res.cloudinary.com/dboqnapgi/image/upload/v1687259119/172628_user_male_icon_hqmwjh.svg';
     }
     if (req.body.gender === 'female') {
-      profilePic = 'https://res.cloudinary.com/ddsml4rsl/image/upload/v1679487628/icons8-female-user-150_lwhby0.png';
+      profilePic = 'https://res.cloudinary.com/dboqnapgi/image/upload/v1687259111/172624_female_user_icon_pgj7lc.svg';
     }
     const user = await User.update(
       {

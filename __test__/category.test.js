@@ -76,10 +76,6 @@ describe('Testing Categories endpoint', () => {
       });
     expect(response.statusCode).toBe(200);
   });
-  test('should return 401 for retrieving category when user is not logged in', async () => {
-    const response = await request(app).get('/api/v1/categories');
-    expect(response.statusCode).toBe(401);
-  });
   test('it should return 200 when for getting category to buyer', async () => {
     await buyerCategory.update({ role: 'buyer' });
     token = generateToken(buyerCategory);

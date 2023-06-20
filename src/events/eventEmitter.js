@@ -10,10 +10,6 @@ eventEmitter.on('passwordExpiration',(message)=>{
 eventEmitter.on('wish-notification', (notificationDetails) => {
     eventEmitter.emit('notifySeller', notificationDetails)
 })
-
-eventEmitter.on('new-notification', (notificationDetails) => {
-    eventEmitter.emit('notifyBuyers', notificationDetails)
-})
 eventEmitter.on('expired-notification', (notificationDetails) => {
     eventEmitter.emit('notifySellers', notificationDetails)
 })

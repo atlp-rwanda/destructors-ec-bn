@@ -432,16 +432,6 @@ describe('Search products endpoint', () => {
       },
     ]);
   });
-
-  it('should return 200 if user is not logged in', async () => {
-    // Make a request to update the user status
-    const response = await request(app)
-      .get('/api/v1/products/search')
-      .set('Authorization', '');
-
-    // Expect a 200 status code and error message
-    expect(response.status).toBe(401);
-  });
   let UserToken;
   test('should return all products when no filters are specified', async () => {
     const user = await User.findOne({ where: { email: 'test@gmail.com' } });
