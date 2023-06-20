@@ -28,6 +28,7 @@ import { editUserProfil } from '../../ validations/user.validations';
 import {
   assignUserRole,
   updateUserStatus,
+  getLogs,
 } from '../../controllers/admin.controller';
 import updatePasswordValidation from '../../ validations/updatePassword.validation';
 import { updatePassword } from '../../controllers/user.controller';
@@ -41,6 +42,7 @@ route.post('/signup', signupValidation, verifyUser, registerUser);
 route.post('/login', userValdation, loginUser);
 route.post('/reset-password', EmailValidation, resetEmail);
 route.patch('/reset-password/:token', resetPasswordValidation, resetPassword);
+route.get('/logs', getLogs);
 route.patch(
   '/update-password',
   extractToken,
